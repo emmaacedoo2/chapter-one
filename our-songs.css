@@ -90,14 +90,24 @@
 
 /* Common Section Card */
 .music-section-card {
-  background: var(--bg-card);
+  background: #FAF8F5;
   backdrop-filter: blur(8px);
-  border: 1px solid var(--border-delicate);
+  border: 1.5px solid #8B1E2D;
   border-radius: 14px;
   padding: 2.2rem;
   margin-bottom: 3rem;
-  box-shadow: var(--shadow-subtle);
+  box-shadow: 0 7px 22px rgba(36, 33, 38, 0.08);
   position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.music-section-card:nth-of-type(even) {
+  border-color: #242126;
+}
+
+.music-section-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(36, 33, 38, 0.12);
 }
 
 .section-badge-tag {
@@ -132,7 +142,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background: #1db954;
+  background: #8B1E2D;
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 600;
@@ -140,19 +150,19 @@
   padding: 0.4rem 0.95rem;
   border-radius: 20px;
   transition: all 0.25s ease;
-  box-shadow: 0 2px 8px rgba(29, 185, 84, 0.2);
+  box-shadow: 0 2px 8px rgba(139, 30, 45, 0.2);
 }
 
 .btn-spotify-pill:hover {
-  background: #1ed760;
+  background: #242126;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(29, 185, 84, 0.3);
+  box-shadow: 0 4px 14px rgba(36, 33, 38, 0.24);
 }
 
 .btn-action-outline {
   background: transparent;
   color: var(--text-main);
-  border: 1px solid rgba(0, 0, 0, 0.14);
+  border: 1.5px solid #242126;
   padding: 0.4rem 0.95rem;
   border-radius: 20px;
   font-size: 0.75rem;
@@ -183,11 +193,17 @@
 }
 
 .remind-song-card {
-  background: #ffffff;
-  border: 1px solid var(--border-delicate);
-  border-radius: 10px;
+  background: #FAF8F5;
+  border: 1.5px solid #242126;
+  border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 14px rgba(36, 33, 38, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.remind-song-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(36, 33, 38, 0.09);
 }
 
 .remind-song-header {
@@ -347,11 +363,17 @@
 
 /* Active Artist Spotlight Player */
 .active-artist-spotlight {
-  background: #ffffff;
-  border: 1px solid var(--border-delicate);
-  border-radius: 12px;
+  background: #FAF8F5;
+  border: 1.5px solid #8B1E2D;
+  border-radius: 14px;
   padding: 1.8rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 7px 20px rgba(36, 33, 38, 0.07);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.active-artist-spotlight:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(36, 33, 38, 0.1);
 }
 
 .spotlight-header {
@@ -428,10 +450,11 @@
 }
 
 .game-view-panel {
-  background: #ffffff;
-  border: 1px solid var(--border-delicate);
-  border-radius: 10px;
+  background: #FAF8F5;
+  border: 1.5px solid #242126;
+  border-radius: 14px;
   padding: 1.8rem;
+  box-shadow: 0 5px 16px rgba(36, 33, 38, 0.05);
 }
 
 .game-status-header {
@@ -547,9 +570,9 @@
 }
 
 .song-choice-card {
-  background: #fbfbfd;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 10px;
+  background: #FAF8F5;
+  border: 1.5px solid #242126;
+  border-radius: 12px;
   padding: 1.5rem 1.2rem;
   text-align: center;
   cursor: pointer;
@@ -606,8 +629,8 @@
    Music Wrapped Section
    ========================================================================== */
 .wrapped-carousel-box {
-  background: linear-gradient(145deg, #ffffff 0%, #faf8f8 100%);
-  border: 1px solid rgba(168, 29, 29, 0.25);
+  background: #FAF8F5;
+  border: 1.5px solid #8B1E2D;
   border-radius: 14px;
   padding: 2.5rem 2rem;
   text-align: center;
@@ -687,9 +710,9 @@
 }
 
 .concert-card {
-  background: #ffffff;
-  border: 1px solid var(--border-delicate);
-  border-radius: 10px;
+  background: #FAF8F5;
+  border: 1.5px solid #242126;
+  border-radius: 12px;
   padding: 1.2rem;
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
@@ -837,10 +860,21 @@
 }
 
 .bucket-card {
-  background: #ffffff;
-  border: 1px solid var(--border-delicate);
-  border-radius: 8px;
+  background: #FAF8F5;
+  border: 1.5px solid #8B1E2D;
+  border-radius: 12px;
   padding: 1rem;
+  box-shadow: 0 4px 14px rgba(36, 33, 38, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.bucket-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(36, 33, 38, 0.08);
+}
+
+.bucket-columns-grid > div:nth-child(2) .bucket-card {
+  border-color: #242126;
 }
 
 .bucket-card-header {
@@ -948,8 +982,8 @@
 }
 
 .modal-content-card {
-  background: #ffffff;
-  border: 1px solid var(--border-delicate);
+  background: #FAF8F5;
+  border: 1.5px solid #8B1E2D;
   border-radius: 14px;
   padding: 2rem;
   max-width: 480px;

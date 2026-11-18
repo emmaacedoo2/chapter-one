@@ -1,0 +1,205 @@
+.placeholder-page-container {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 3.5rem 1.25rem 7rem;
+  position: relative;
+}
+
+.placeholder-top-nav {
+  margin-bottom: 2.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.placeholder-top-nav .main-site-nav {
+  margin: 0;
+  justify-content: flex-end;
+}
+
+.placeholder-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 2.2rem;
+}
+
+.placeholder-overline {
+  display: block;
+  color: #8B1E2D;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.placeholder-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.3rem, 6vw, 3.4rem);
+  font-weight: 500;
+  color: #242126;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.55rem;
+}
+
+.placeholder-intro {
+  color: #5e5e6e;
+  font-family: var(--font-sans);
+  font-size: 0.94rem;
+  line-height: 1.7;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.placeholder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.placeholder-card {
+  min-height: 210px;
+  position: relative;
+  overflow: hidden;
+  background: #FAF8F5;
+  border: 1.5px solid #8B1E2D;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 7px 22px rgba(36, 33, 38, 0.07);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.placeholder-card:nth-child(even) {
+  border-color: #242126;
+}
+
+.placeholder-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(36, 33, 38, 0.11);
+}
+
+.placeholder-card.featured {
+  grid-column: 1 / -1;
+  min-height: 250px;
+}
+
+.placeholder-card-icon {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  border: 1px solid rgba(139, 30, 45, 0.2);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+  font-size: 1.15rem;
+}
+
+.placeholder-card h2 {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  color: #242126;
+  margin-bottom: 0.45rem;
+}
+
+.placeholder-card p {
+  color: #77717a;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.placeholder-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 105px;
+  margin-top: 1rem;
+  border: 1px dashed rgba(36, 33, 38, 0.16);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.58);
+  text-align: center;
+}
+
+.placeholder-empty span {
+  color: #8B1E2D;
+  font-size: 1.15rem;
+  margin-bottom: 0.15rem;
+}
+
+.placeholder-empty p {
+  color: #77717a;
+  font-style: italic;
+}
+
+.memory-frame {
+  min-height: 120px;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(36, 33, 38, 0.22);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.46);
+  color: #77717a;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.little-surprises-page .placeholder-card {
+  border-color: #242126;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(139, 30, 45, 0.055), transparent 20%),
+    #FAF8F5;
+}
+
+.little-surprises-page .placeholder-card:nth-child(even) {
+  border-color: #8B1E2D;
+}
+
+.secret-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  color: #8B1E2D;
+  border: 1px solid rgba(139, 30, 45, 0.24);
+  border-radius: 16px;
+  background: #fff;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .placeholder-page-container {
+    padding-top: 2.5rem;
+  }
+
+  .placeholder-top-nav {
+    flex-direction: column;
+  }
+
+  .placeholder-top-nav .main-site-nav {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .placeholder-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .placeholder-card.featured {
+    grid-column: auto;
+  }
+
+  .placeholder-card {
+    min-height: 190px;
+  }
+}

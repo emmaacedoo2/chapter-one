@@ -7,6 +7,28 @@ const CalendarApp = {
   // Storage keys
   STORAGE_CUSTOM_EVENTS: 'chapter_one_calendar_custom_events',
   STORAGE_FIREBASE_CONFIG: 'chapter_one_firebase_config',
+  RELATIONSHIP_START_DATE: '2025-12-08',
+  STORAGE_MONTHIVERSARY_DISMISSED: 'chapter_one_monthiversary_dismissed',
+  monthiversaryMessages: [
+    'another month of putting up with each other hahaha ❤️',
+    'look at us, still choosing each other.',
+    'one more month of being my favorite person.',
+    'another month, another million memories.',
+    'still my favorite notification.',
+    'another month of us being us.',
+    'how are you still not tired of me? hahaha',
+    'another month closer to all our future adventures.',
+    'same two idiots, another month together ❤️',
+    "i'd still choose you. even when you're annoying.",
+    'thanks for being my favorite person to do nothing with.',
+    'another month of making ordinary days better.',
+    'you are still my favorite plot twist.',
+    'one more month of laughing at our own jokes.',
+    'another month, and you still have not returned my hoodie.',
+    'you make even the boring bits my favorite.',
+    'still glad we ended up in each other’s story.',
+    'another month of being each other’s plus-one for everything.'
+  ],
 
   // Current view state
   currentYear: new Date().getFullYear(),
@@ -24,11 +46,11 @@ const CalendarApp = {
 
   // Category definitions with aesthetic muted pastel palette
   categories: {
-    anniversary: { name: 'Anniversary / Romantic', color: '#a81d1d', bg: '#fce8e8', border: '#f0a8a8', icon: '❤️' },
-    birthday: { name: 'Birthday', color: '#583b8b', bg: '#f1ecf9', border: '#cfbfe8', icon: '🎂' },
-    trip: { name: 'Trip / Travel', color: '#1e5985', bg: '#e8f3fc', border: '#b8daf5', icon: '✈️' },
-    holiday: { name: 'Holiday', color: '#2a6632', bg: '#eaf3eb', border: '#bde0bf', icon: '🎄' },
-    date: { name: 'Date / Little Plan', color: '#87541a', bg: '#fbf1e4', border: '#f2d5b6', icon: '✨' }
+    anniversary: { name: 'Anniversary / Romantic', color: '#8B1E2D', bg: '#f1dce1', border: '#d9adb7', icon: '❤️' },
+    birthday: { name: 'Birthday', color: '#685378', bg: '#eee8f4', border: '#cdbde0', icon: '🎂' },
+    trip: { name: 'Trip / Travel', color: '#4e7892', bg: '#e7f1f7', border: '#b8d6e8', icon: '✈️' },
+    holiday: { name: 'Holiday', color: '#5f8067', bg: '#e8efe9', border: '#bdd0c1', icon: '🎄' },
+    date: { name: 'Date / Little Plan', color: '#9a7045', bg: '#f4e8d5', border: '#dfc7a4', icon: '✨' }
   },
 
   // --------------------------------------------------------------------------
@@ -43,6 +65,7 @@ const CalendarApp = {
     this.renderMonth();
     this.bindEvents();
     this.renderUpcoming();
+    this.maybeShowTodayMilestone();
   },
 
   // --------------------------------------------------------------------------
@@ -55,6 +78,16 @@ const CalendarApp = {
     return `${y}-${m}-${day}`;
   },
 
+  escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    })[char]);
+  },
+
   parseDate(str) {
     const [y, m, d] = str.split('-').map(Number);
     return new Date(y, m - 1, d);
@@ -64,6 +97,109 @@ const CalendarApp = {
     const s = ['th', 'st', 'nd', 'rd'];
     const v = n % 100;
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  },
+
+  getMonthsTogether(date) {
+    const [startYear, startMonth, startDay] = this.RELATIONSHIP_START_DATE.split('-').map(Number);
+    if (date.getFullYear() < startYear ||
+        (date.getFullYear() === startYear && date.getMonth() + 1 < startMonth) ||
+        (date.getFullYear() === startYear && date.getMonth() + 1 === startMonth && date.getDate() < startDay)) {
+      return null;
+    }
+
+    return (date.getFullYear() - startYear) * 12 + date.getMonth() + 1 - startMonth;
+  },
+
+  getRelationshipMilestone(dateStr) {
+    const date = this.parseDate(dateStr);
+    if (date.getDate() !== 8) return null;
+
+    const monthsTogether = this.getMonthsTogether(date);
+    if (monthsTogether === null) return null;
+
+    const isAnnualAnniversary = date.getMonth() === 11 && monthsTogether > 0 && monthsTogether % 12 === 0;
+    const anniversaryNumber = isAnnualAnniversary ? monthsTogether / 12 : 0;
+    const message = this.getMonthiversaryMessage(monthsTogether);
+
+    return {
+      id: `relationship-milestone-${dateStr}`,
+      date: dateStr,
+      isRelationshipMilestone: true,
+      isAnnualAnniversary,
+      monthsTogether,
+      anniversaryNumber,
+      title: monthsTogether === 0
+        ? 'Our story begins ❤️'
+        : isAnnualAnniversary
+          ? `Our ${this.getOrdinal(anniversaryNumber)} anniversary ❤️`
+          : `${monthsTogether} ${monthsTogether === 1 ? 'month' : 'months'} together ❤️`,
+      message,
+      time: '',
+      isAllDay: true,
+      category: 'anniversary',
+      notes: message
+    };
+  },
+
+  getRelationshipMilestonesForYear(year) {
+    return Array.from({ length: 12 }, (_, month) => {
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-08`;
+      return this.getRelationshipMilestone(dateStr);
+    }).filter(Boolean);
+  },
+
+  getMonthiversaryMessage(monthsTogether) {
+    if (monthsTogether <= 0) return 'the start of our story ❤️';
+    return this.monthiversaryMessages[(monthsTogether - 1) % this.monthiversaryMessages.length];
+  },
+
+  openMilestoneSurprise(milestone) {
+    const modal = document.getElementById('monthiversary-modal');
+    if (!modal || !milestone) return;
+
+    const title = document.getElementById('monthiversary-title');
+    const message = document.getElementById('monthiversary-message');
+    const date = document.getElementById('monthiversary-date');
+    const heart = document.getElementById('monthiversary-heart');
+
+    if (milestone.isAnnualAnniversary) {
+      title.textContent = `happy ${this.getOrdinal(milestone.anniversaryNumber)} anniversary, us! ❤️`;
+    } else if (milestone.monthsTogether === 0) {
+      title.textContent = 'our story starts today ❤️';
+    } else {
+      title.textContent = `happy ${milestone.monthsTogether} months, us! ❤️`;
+    }
+    message.textContent = milestone.message;
+    date.textContent = this.parseDate(milestone.date).toLocaleDateString('en-US', {
+      month: 'long', day: 'numeric', year: 'numeric'
+    });
+    heart.classList.remove('heart-pop');
+    void heart.offsetWidth;
+    heart.classList.add('heart-pop');
+    modal.classList.toggle('annual', milestone.isAnnualAnniversary);
+    modal.dataset.monthKey = milestone.date.slice(0, 7);
+    modal.classList.remove('hidden');
+  },
+
+  maybeShowTodayMilestone() {
+    const todayStr = this.formatDate(new Date());
+    const milestone = this.getRelationshipMilestone(todayStr);
+    if (!milestone) return;
+
+    const monthKey = todayStr.slice(0, 7);
+    if (localStorage.getItem(`${this.STORAGE_MONTHIVERSARY_DISMISSED}_${monthKey}`)) return;
+    this.openMilestoneSurprise(milestone);
+  },
+
+  closeMilestoneSurprise() {
+    const modal = document.getElementById('monthiversary-modal');
+    if (!modal) return;
+
+    const monthKey = modal.dataset.monthKey;
+    if (monthKey) {
+      localStorage.setItem(`${this.STORAGE_MONTHIVERSARY_DISMISSED}_${monthKey}`, 'true');
+    }
+    modal.classList.add('hidden');
   },
 
   getThanksgivingDate(year) {
@@ -83,13 +219,6 @@ const CalendarApp = {
     // Dom was born Dec 7, 2001 (turns 26 in 2027)
     const domAge = year - 2001;
     const domAgeText = domAge > 0 ? `dom's ${this.getOrdinal(domAge)} birthday 🎂` : "dom's birthday 🎂";
-
-    // Started dating Dec 8, 2025 (2026 is 1st, 2027 is 2nd)
-    const anniNum = year - 2025;
-    let anniText = "our anniversary ❤️";
-    if (anniNum > 0) {
-      anniText = `our ${this.getOrdinal(anniNum)} anniversary ❤️`;
-    }
 
     const events = [
       {
@@ -133,16 +262,6 @@ const CalendarApp = {
         notes: `celebrating Dom! (${domAge > 0 ? this.getOrdinal(domAge) + ' birthday' : 'birthday'})`
       },
       {
-        id: `rec-anni-${year}`,
-        isRecurring: true,
-        title: anniText,
-        date: `${year}-12-08`,
-        time: '',
-        isAllDay: true,
-        category: 'anniversary',
-        notes: `dating since December 8, 2025. ${anniNum > 0 ? this.getOrdinal(anniNum) + ' year anniversary!' : ''}`
-      },
-      {
         id: `rec-xmas-eve-${year}`,
         isRecurring: true,
         title: "christmas eve 🎄",
@@ -175,6 +294,16 @@ const CalendarApp = {
     ];
 
     return events;
+  },
+
+  getCustomEventsForYear(year) {
+    return this.customEvents.flatMap(event => {
+      if (!event.isRecurring) {
+        return event.date.startsWith(`${year}-`) ? [event] : [];
+      }
+      const monthDay = event.date.includes('-') ? event.date.slice(5) : event.date;
+      return [{ ...event, date: `${year}-${monthDay}` }];
+    });
   },
 
   // Initial one-time events seed (Jan 6, 2027)
@@ -223,25 +352,30 @@ const CalendarApp = {
 
   getAllEventsForMonth(year, month) {
     const recurring = this.getRecurringEventsForYear(year);
+    const customRecurring = this.getCustomEventsForYear(year);
     const monthStr = String(month + 1).padStart(2, '0');
+    const milestoneDate = `${year}-${monthStr}-08`;
+    const milestone = this.getRelationshipMilestone(milestoneDate);
 
     // Recurring in this month
     const recInMonth = recurring.filter(e => e.date.startsWith(`${year}-${monthStr}`));
 
     // Custom events in this month
-    const customInMonth = this.customEvents.filter(e => e.date.startsWith(`${year}-${monthStr}`));
+    const customInMonth = customRecurring.filter(e => e.date.startsWith(`${year}-${monthStr}`));
 
-    return [...recInMonth, ...customInMonth];
+    return [...recInMonth, ...customInMonth, ...(milestone ? [milestone] : [])];
   },
 
   getEventsForDate(dateStr) {
     const [y] = dateStr.split('-').map(Number);
     const recurring = this.getRecurringEventsForYear(y);
+    const customRecurring = this.getCustomEventsForYear(y);
 
     const matchRec = recurring.filter(e => e.date === dateStr);
-    const matchCustom = this.customEvents.filter(e => e.date === dateStr);
+    const matchCustom = customRecurring.filter(e => e.date === dateStr);
+    const milestone = this.getRelationshipMilestone(dateStr);
 
-    return [...matchRec, ...matchCustom];
+    return [...matchRec, ...matchCustom, ...(milestone ? [milestone] : [])];
   },
 
   // --------------------------------------------------------------------------
@@ -252,8 +386,8 @@ const CalendarApp = {
     if (!select) return;
     select.innerHTML = '';
 
-    const startYear = 2025;
-    const endYear = 2035;
+    const startYear = 2020;
+    const endYear = 2040;
 
     for (let y = startYear; y <= endYear; y++) {
       const opt = document.createElement('option');
@@ -303,6 +437,7 @@ const CalendarApp = {
     for (let d = 1; d <= totalDaysInMonth; d++) {
       const dateStr = `${this.currentYear}-${String(this.currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
       const events = this.getEventsForDate(dateStr);
+      const milestone = this.getRelationshipMilestone(dateStr);
 
       const cell = document.createElement('div');
       cell.className = 'calendar-day-cell';
@@ -310,15 +445,18 @@ const CalendarApp = {
 
       if (dateStr === todayStr) cell.classList.add('is-today');
       if (dateStr === this.selectedDateStr) cell.classList.add('is-selected');
+      if (milestone) cell.classList.add('has-relationship-milestone');
+      if (milestone?.isAnnualAnniversary) cell.classList.add('is-annual-anniversary');
 
-      // Check special icons: Anniversary (Dec 8) or Birthday (Dec 7, Sep 9)
-      const isAnniversaryDay = (this.currentMonth === 11 && d === 8);
+      // Milestone hearts and birthday markers
       const isDomBday = (this.currentMonth === 11 && d === 7);
       const isEmmaBday = (this.currentMonth === 8 && d === 9);
 
       let specialIconBadge = '';
-      if (isAnniversaryDay) {
-        specialIconBadge = `<span class="day-special-icon anni-heart" title="Our Anniversary ❤️">❤️</span>`;
+      if (milestone?.isAnnualAnniversary) {
+        specialIconBadge = `<span class="day-special-icon annual-heart" title="${this.escapeHtml(milestone.title)}">♥</span>`;
+      } else if (milestone) {
+        specialIconBadge = `<span class="day-special-icon monthiversary-heart" title="${this.escapeHtml(milestone.title)}">♡</span>`;
       } else if (isDomBday || isEmmaBday) {
         specialIconBadge = `<span class="day-special-icon bday-cake" title="Birthday!">🎂</span>`;
       }
@@ -327,10 +465,11 @@ const CalendarApp = {
       let eventsHtml = '<div class="day-events-wrapper">';
       events.forEach(ev => {
         const cat = this.categories[ev.category] || this.categories.date;
+        const safeTitle = this.escapeHtml(ev.title);
         eventsHtml += `
-          <div class="day-event-pill" style="background:${cat.bg}; border-color:${cat.border}; color:${cat.color};" title="${ev.title}">
+          <div class="day-event-pill" style="background:${cat.bg}; border-color:${cat.border}; color:${cat.color};" title="${safeTitle}">
             <span class="pill-dot" style="background:${cat.color}"></span>
-            <span class="pill-title">${ev.title}</span>
+            <span class="pill-title">${safeTitle}</span>
           </div>
         `;
       });
@@ -346,6 +485,7 @@ const CalendarApp = {
 
       cell.addEventListener('click', () => {
         this.selectDate(dateStr);
+        if (milestone) this.openMilestoneSurprise(milestone);
       });
 
       gridEl.appendChild(cell);
@@ -389,6 +529,24 @@ const CalendarApp = {
     const dateFormatted = d.toLocaleDateString('en-US', options);
 
     const events = this.getEventsForDate(this.selectedDateStr);
+    const milestone = this.getRelationshipMilestone(this.selectedDateStr);
+    const milestoneDetails = milestone ? `
+      <div class="relationship-milestone-details${milestone.isAnnualAnniversary ? ' annual' : ''}">
+        <span class="milestone-heart" aria-hidden="true">${milestone.isAnnualAnniversary ? '♥' : '♡'}</span>
+        <strong>${milestone.isAnnualAnniversary
+          ? `Our ${this.getOrdinal(milestone.anniversaryNumber)} anniversary ❤️`
+          : milestone.monthsTogether === 0
+            ? 'Our story begins ❤️'
+            : `${milestone.monthsTogether} ${milestone.monthsTogether === 1 ? 'month' : 'months'} together ❤️`}</strong>
+        <span>${milestone.monthsTogether} full ${milestone.monthsTogether === 1 ? 'month' : 'months'} together</span>
+        ${milestone.anniversaryNumber
+          ? `<span>${this.getOrdinal(milestone.anniversaryNumber)} anniversary · ${milestone.anniversaryNumber} ${milestone.anniversaryNumber === 1 ? 'year' : 'years'} together</span>`
+          : milestone.monthsTogether >= 12
+            ? `<span>${Math.floor(milestone.monthsTogether / 12)} full ${Math.floor(milestone.monthsTogether / 12) === 1 ? 'year' : 'years'} together</span>`
+            : ''}
+        <span class="milestone-message">${this.escapeHtml(milestone.message)}</span>
+      </div>
+    ` : '';
 
     let eventsHtml = '';
     if (events.length === 0) {
@@ -404,22 +562,29 @@ const CalendarApp = {
     } else {
       eventsHtml = events.map(ev => {
         const cat = this.categories[ev.category] || this.categories.date;
+        const safeTitle = this.escapeHtml(ev.title);
+        const safeNotes = this.escapeHtml(ev.notes);
+        const safeTime = this.escapeHtml(ev.time);
         return `
           <article class="event-detail-card" style="border-left: 3px solid ${cat.color};">
             <div class="event-detail-header">
               <span class="event-cat-badge" style="background:${cat.bg}; color:${cat.color};">
                 ${cat.icon} ${cat.name}
               </span>
-              ${ev.isRecurring ? '<span class="recurring-tag">Recurring Yearly</span>' : `
+              ${ev.isRelationshipMilestone ? `
+                <button type="button" class="btn-milestone-reopen" onclick="event.stopPropagation(); CalendarApp.openMilestoneSurprise(CalendarApp.getRelationshipMilestone('${ev.date}'))">
+                  celebrate ♡
+                </button>
+              ` : ev.isRecurring && String(ev.id).startsWith('rec-') ? '<span class="recurring-tag">Recurring Yearly</span>' : `
                 <div class="event-action-btns">
                   <button type="button" class="btn-icon-action" onclick="CalendarApp.openEditModal('${ev.id}')" title="Edit">✎</button>
                   <button type="button" class="btn-icon-action" onclick="CalendarApp.deleteEvent('${ev.id}')" title="Delete">✕</button>
                 </div>
               `}
             </div>
-            <h4 class="event-detail-title">${ev.title}</h4>
-            ${ev.time ? `<p class="event-detail-time">⏰ ${ev.time}</p>` : ''}
-            ${ev.notes ? `<p class="event-detail-notes">"${ev.notes}"</p>` : ''}
+            <h4 class="event-detail-title">${safeTitle}</h4>
+            ${ev.time ? `<p class="event-detail-time">⏰ ${safeTime}</p>` : ''}
+            ${ev.notes ? `<p class="event-detail-notes">"${safeNotes}"</p>` : ''}
           </article>
         `;
       }).join('');
@@ -438,6 +603,7 @@ const CalendarApp = {
         ` : ''}
       </div>
       <div class="selected-day-events-list">
+        ${milestoneDetails}
         ${eventsHtml}
       </div>
     `;
@@ -460,7 +626,10 @@ const CalendarApp = {
     const allEvents = [
       ...this.getRecurringEventsForYear(y1),
       ...this.getRecurringEventsForYear(y2),
-      ...this.customEvents
+      ...this.getRelationshipMilestonesForYear(y1),
+      ...this.getRelationshipMilestonesForYear(y2),
+      ...this.getCustomEventsForYear(y1),
+      ...this.getCustomEventsForYear(y2)
     ];
 
     // Filter to upcoming
@@ -481,6 +650,8 @@ const CalendarApp = {
       const options = { month: 'short', day: 'numeric' };
       const formatted = evDate.toLocaleDateString('en-US', options);
       const cat = this.categories[ev.category] || this.categories.date;
+      const safeTitle = this.escapeHtml(ev.title);
+      const safeMeta = this.escapeHtml(ev.notes ? ev.notes : cat.name);
 
       return `
         <div class="upcoming-item-row" onclick="CalendarApp.jumpToDate('${ev.date}')">
@@ -489,8 +660,8 @@ const CalendarApp = {
             <span class="badge-day">${evDate.getDate()}</span>
           </div>
           <div class="upcoming-info">
-            <span class="upcoming-title">${ev.title}</span>
-            <span class="upcoming-meta">${ev.notes ? ev.notes : cat.name}</span>
+            <span class="upcoming-title">${safeTitle}</span>
+            <span class="upcoming-meta">${safeMeta}</span>
           </div>
         </div>
       `;
@@ -516,27 +687,42 @@ const CalendarApp = {
   updateCountdown() {
     const now = new Date();
     const currentYear = now.getFullYear();
-
-    // Target is Dec 8 of this year or next year
-    let target = new Date(currentYear, 11, 8, 0, 0, 0);
-    if (now > target) {
-      target = new Date(currentYear + 1, 11, 8, 0, 0, 0);
-    }
-
-    const diff = target - now;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-
-    const anniNum = target.getFullYear() - 2025;
+    const todayStr = this.formatDate(now);
+    const thisYearAnniversary = `${currentYear}-12-08`;
+    const countdownValues = document.querySelector('.countdown-values');
+    const countdownLabel = document.querySelector('.countdown-label');
     const anniLabel = document.getElementById('countdown-anni-label');
     const daysEl = document.getElementById('countdown-days');
     const hoursEl = document.getElementById('countdown-hours');
 
-    if (anniLabel) {
-      anniLabel.textContent = `until our ${this.getOrdinal(anniNum)} anniversary ❤️`;
+    if (todayStr === thisYearAnniversary && currentYear > 2025) {
+      const anniversaryNumber = currentYear - 2025;
+      if (countdownLabel) countdownLabel.textContent = 'Our anniversary';
+      if (anniLabel) {
+        anniLabel.textContent = anniversaryNumber === 1
+          ? 'Happy 1st Anniversary! ❤️ We made it!'
+          : `Happy ${this.getOrdinal(anniversaryNumber)} Anniversary! ❤️`;
+      }
+      if (countdownValues) countdownValues.hidden = true;
+      return;
     }
-    if (daysEl) daysEl.textContent = days;
-    if (hoursEl) hoursEl.textContent = hours;
+
+    const targetYear = Math.max(2026, todayStr < thisYearAnniversary ? currentYear : currentYear + 1);
+    const anniversaryNumber = targetYear - 2025;
+    const target = new Date(targetYear, 11, 8, 0, 0, 0);
+    const daysRemaining = Math.ceil((
+      Date.UTC(targetYear, 11, 8) -
+      Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
+    ) / 86400000);
+    const hoursRemaining = Math.floor(Math.max(0, target - now) % 86400000 / 3600000);
+
+    if (countdownLabel) countdownLabel.textContent = 'Counting down';
+    if (anniLabel) {
+      anniLabel.textContent = `Countdown to our ${this.getOrdinal(anniversaryNumber)} anniversary ❤️`;
+    }
+    if (countdownValues) countdownValues.hidden = false;
+    if (daysEl) daysEl.textContent = daysRemaining;
+    if (hoursEl) hoursEl.textContent = hoursRemaining;
   },
 
   // --------------------------------------------------------------------------
@@ -555,6 +741,8 @@ const CalendarApp = {
     document.getElementById('event-category-select').value = 'date';
     document.getElementById('event-allday-check').checked = true;
     document.getElementById('event-time-group').style.display = 'none';
+    document.getElementById('event-recurring-check').checked = false;
+    document.getElementById('recurring-help').textContent = 'Repeats on the same month and day each year.';
 
     modal.classList.remove('hidden');
   },
@@ -573,6 +761,10 @@ const CalendarApp = {
     document.getElementById('event-category-select').value = ev.category || 'date';
     document.getElementById('event-time-input').value = ev.time || '';
     document.getElementById('event-notes-input').value = ev.notes || '';
+    document.getElementById('event-recurring-check').checked = ev.isRecurring === true;
+    document.getElementById('recurring-help').textContent = ev.isRecurring
+      ? 'This plan repeats every year on the same month and day.'
+      : 'Repeats on the same month and day each year.';
 
     const isAllDay = !ev.time;
     document.getElementById('event-allday-check').checked = isAllDay;
@@ -589,6 +781,7 @@ const CalendarApp = {
     const isAllDay = document.getElementById('event-allday-check').checked;
     const time = isAllDay ? '' : document.getElementById('event-time-input').value;
     const notes = document.getElementById('event-notes-input').value.trim();
+    const isRecurring = document.getElementById('event-recurring-check').checked;
 
     if (!title || !date) {
       alert('Please give our plan a title and a date!');
@@ -602,6 +795,7 @@ const CalendarApp = {
       category,
       time,
       isAllDay,
+      isRecurring,
       notes,
       updatedAt: new Date().toISOString()
     };
@@ -648,13 +842,14 @@ const CalendarApp = {
     const statusPill = document.getElementById('sync-status-indicator');
 
     if (!configStr) {
-      // Running in Demo / Local mode
+      // Running in local-only mode until a Firebase project is configured and tested.
       if (statusPill) {
         statusPill.innerHTML = `
           <span class="status-dot demo"></span>
-          <span>Demo / Local Mode (click to connect Firebase)</span>
+          <span>Local only — events stay on this device</span>
         `;
-        statusPill.onclick = () => this.openFirebaseConfigModal();
+        statusPill.removeAttribute('onclick');
+        statusPill.setAttribute('title', 'Firebase synchronization is not configured.');
       }
       return;
     }
@@ -676,7 +871,7 @@ const CalendarApp = {
         if (statusPill) {
           statusPill.innerHTML = `
             <span class="status-dot live"></span>
-            <span>Real-time Synced with Firebase</span>
+            <span>Firebase configured — connection pending</span>
           `;
           statusPill.onclick = () => this.openFirebaseConfigModal();
         }
@@ -715,6 +910,11 @@ const CalendarApp = {
         remoteEvents.push({ id: doc.id, ...doc.data() });
       });
 
+      const statusPill = document.getElementById('sync-status-indicator');
+      if (statusPill) {
+        statusPill.innerHTML = '<span class="status-dot live"></span><span>Firebase listener connected</span>';
+      }
+
       if (remoteEvents.length > 0) {
         // Merge with existing seed events
         this.customEvents = remoteEvents;
@@ -722,6 +922,10 @@ const CalendarApp = {
       }
     }, err => {
       console.error('Firestore listener error:', err);
+      const statusPill = document.getElementById('sync-status-indicator');
+      if (statusPill) {
+        statusPill.innerHTML = '<span class="status-dot warning"></span><span>Firebase connection failed</span>';
+      }
     });
   },
 
@@ -782,6 +986,10 @@ const CalendarApp = {
   // Navigation & Events Binding
   // --------------------------------------------------------------------------
   bindEvents() {
+    document.getElementById('sync-status-indicator')?.addEventListener('click', () => {
+      this.openFirebaseConfigModal();
+    });
+
     // Prev / Next month
     document.getElementById('btn-prev-month')?.addEventListener('click', () => {
       this.currentMonth--;
@@ -840,6 +1048,20 @@ const CalendarApp = {
     });
     document.getElementById('btn-cancel-firebase-config')?.addEventListener('click', () => {
       document.getElementById('firebase-config-modal').classList.add('hidden');
+    });
+
+    document.getElementById('btn-close-monthiversary')?.addEventListener('click', () => {
+      this.closeMilestoneSurprise();
+    });
+
+    document.getElementById('monthiversary-modal')?.addEventListener('click', (event) => {
+      if (event.target.id === 'monthiversary-modal') this.closeMilestoneSurprise();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !document.getElementById('monthiversary-modal')?.classList.contains('hidden')) {
+        this.closeMilestoneSurprise();
+      }
     });
   }
 };

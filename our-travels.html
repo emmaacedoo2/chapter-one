@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>our travels 🌍 • Chapter One</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="our-travels.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="site-background" aria-hidden="true"></div>
+  <div class="corner-web corner-web-left" aria-hidden="true">
+    <svg viewBox="0 0 100 100" class="corner-web-svg" fill="none" stroke="#242126" stroke-width="0.75" stroke-linecap="round">
+      <line x1="0" y1="0" x2="100" y2="0"/><line x1="0" y1="0" x2="0" y2="100"/>
+      <line x1="0" y1="0" x2="100" y2="35"/><line x1="0" y1="0" x2="85" y2="70"/>
+      <path d="M 0,22 Q 16,19 22,0"/><path d="M 0,42 Q 30,36 42,0"/>
+      <path d="M 0,62 Q 46,55 62,0"/><path d="M 0,82 Q 64,74 82,0"/>
+    </svg>
+  </div>
+  <div class="corner-web corner-web-right" aria-hidden="true">
+    <svg viewBox="0 0 100 100" class="corner-web-svg" fill="none" stroke="#242126" stroke-width="0.75" stroke-linecap="round">
+      <line x1="0" y1="0" x2="100" y2="0"/><line x1="0" y1="0" x2="0" y2="100"/>
+      <line x1="0" y1="0" x2="100" y2="35"/><line x1="0" y1="0" x2="85" y2="70"/>
+      <path d="M 0,22 Q 16,19 22,0"/><path d="M 0,42 Q 30,36 42,0"/>
+      <path d="M 0,62 Q 46,55 62,0"/><path d="M 0,82 Q 64,74 82,0"/>
+    </svg>
+  </div>
+
+  <main class="travels-page-container">
+    <nav class="main-site-nav travels-site-nav" aria-label="Main navigation">
+      <a href="index.html">Our Story</a>
+      <a href="date-ideas.html">What Are We Doing Today?</a>
+      <a href="our-songs.html">Our Songs</a>
+      <a href="our-calendar.html">Our Calendar</a>
+      <a href="movie-night.html">Movie Night</a>
+      <a href="our-bucket-list.html">Our Bucket List</a>
+      <a href="our-travels.html" aria-current="page">Our Travels</a>
+      <a href="little-surprises.html">Little Surprises</a>
+    </nav>
+
+    <header class="travels-header">
+      <span class="travels-overline">Postcards from our story</span>
+      <h1 class="travels-title">our travels 🌍</h1>
+      <p class="travels-intro">all the places we've been, separately and together. and all the places we still have to see.</p>
+    </header>
+
+    <section class="travel-map-card" aria-labelledby="map-section-title">
+      <div class="travel-section-heading">
+        <div>
+          <span class="travel-eyebrow">Our map</span>
+          <h2 id="map-section-title">places we've been</h2>
+        </div>
+        <button type="button" class="travel-primary-button" id="btn-add-place">+ add a place</button>
+      </div>
+
+      <div class="travel-map-toolbar">
+        <div class="travel-map-legend" aria-label="Map legend">
+          <span><i class="legend-pin emma"></i> Emma</span>
+          <span><i class="legend-pin dom"></i> Dom</span>
+          <span><i class="legend-pin together"></i> Together</span>
+          <span><i class="legend-pin separate"></i> Both, separately</span>
+        </div>
+        <div class="travel-map-filters" role="group" aria-label="Filter map pins">
+          <button type="button" class="travel-filter active" data-map-filter="all">All</button>
+          <button type="button" class="travel-filter" data-map-filter="emma">Emma</button>
+          <button type="button" class="travel-filter" data-map-filter="dom">Dom</button>
+          <button type="button" class="travel-filter" data-map-filter="together">Together</button>
+        </div>
+      </div>
+
+      <div id="travel-map" class="travel-map" role="application" aria-label="Interactive map of visited places"></div>
+      <p id="travel-map-status" class="travel-map-status" role="status">Loading the map and our starter places…</p>
+      <p class="travel-provider-note">
+        Place search uses the Photon geocoder. Broad regions use its approximate regional center.
+        Map tiles © CARTO; map data © OpenStreetMap contributors.
+      </p>
+    </section>
+
+    <section class="travel-places-card">
+      <div class="travel-section-heading">
+        <div>
+          <span class="travel-eyebrow">Our travel journal</span>
+          <h2>visited places</h2>
+        </div>
+        <span class="travel-count" id="travel-place-count">0 places</span>
+      </div>
+      <div id="travel-place-list" class="travel-place-list"></div>
+    </section>
+
+    <section class="travel-bucket-card">
+      <div class="travel-section-heading">
+        <div>
+          <span class="travel-eyebrow">Future postcards</span>
+          <h2>where to next? ✈️</h2>
+        </div>
+        <button type="button" class="travel-primary-button" id="btn-add-destination">+ add a destination</button>
+      </div>
+      <form id="destination-form" class="destination-form">
+        <label>
+          <span>Destination</span>
+          <input type="text" id="destination-name" maxlength="120" placeholder="somewhere we want to go…" required>
+        </label>
+        <label>
+          <span>A little note <small>(optional)</small></span>
+          <input type="text" id="destination-note" maxlength="240" placeholder="what should we do there?">
+        </label>
+        <label>
+          <span>Status</span>
+          <select id="destination-status">
+            <option value="dreaming">Dreaming of</option>
+            <option value="planning">Planning</option>
+            <option value="visited">We've been!</option>
+          </select>
+        </label>
+        <button type="submit" class="travel-secondary-button">save destination</button>
+      </form>
+      <div id="destination-list" class="destination-list"></div>
+    </section>
+
+    <p class="travel-local-note"><span aria-hidden="true">♡</span> These places are saved on this device for now. They are not shared between devices yet.</p>
+  </main>
+
+  <div id="place-modal" class="travel-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="place-modal-title">
+    <form id="place-form" class="travel-modal-card">
+      <div class="travel-modal-heading">
+        <div>
+          <span class="travel-eyebrow">Add to our map</span>
+          <h2 id="place-modal-title">A place we've been</h2>
+        </div>
+        <button type="button" class="travel-modal-x" data-close-modal="place-modal" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="place-id">
+      <div class="travel-form-field">
+        <label for="place-search">Search for a city, region, or country</label>
+        <div class="travel-search-row">
+          <input type="search" id="place-search" autocomplete="off" placeholder="e.g. Madrid, Spain" required>
+          <button type="button" id="btn-search-place" class="travel-secondary-button">search</button>
+        </div>
+        <p class="travel-field-hint">Choose a result below to use its geocoded position. Nothing is pinned from a guess.</p>
+        <div id="geocode-results" class="geocode-results" aria-live="polite"></div>
+        <div id="selected-location-summary" class="selected-location-summary hidden"></div>
+      </div>
+      <div class="travel-form-field">
+        <label for="place-visitors">Who visited?</label>
+        <select id="place-visitors" required>
+          <option value="">Choose one…</option>
+          <option value="emma">Emma only</option>
+          <option value="dom">Dom only</option>
+          <option value="separately">Both visited separately</option>
+          <option value="together">Visited together</option>
+        </select>
+      </div>
+      <div class="travel-form-grid">
+        <div class="travel-form-field">
+          <label for="place-date">Date <small>(optional)</small></label>
+          <input type="date" id="place-date">
+        </div>
+        <div class="travel-form-field">
+          <label for="place-photo">Photo URL <small>(optional)</small></label>
+          <input type="url" id="place-photo" placeholder="https://…">
+        </div>
+      </div>
+      <div class="travel-form-field">
+        <label for="place-notes">Notes <small>(optional)</small></label>
+        <textarea id="place-notes" rows="3" maxlength="1000" placeholder="A little memory from the trip…"></textarea>
+      </div>
+      <p id="place-form-error" class="travel-form-error" role="alert"></p>
+      <div class="travel-modal-actions">
+        <button type="button" class="travel-secondary-button" data-close-modal="place-modal">cancel</button>
+        <button type="submit" class="travel-primary-button">save place</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="destination-modal" class="travel-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="destination-modal-title">
+    <form id="destination-edit-form" class="travel-modal-card">
+      <div class="travel-modal-heading">
+        <div>
+          <span class="travel-eyebrow">Where to next?</span>
+          <h2 id="destination-modal-title">Edit destination</h2>
+        </div>
+        <button type="button" class="travel-modal-x" data-close-modal="destination-modal" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="destination-edit-id">
+      <div class="travel-form-field">
+        <label for="destination-edit-name">Destination</label>
+        <input type="text" id="destination-edit-name" maxlength="120" required>
+      </div>
+      <div class="travel-form-field">
+        <label for="destination-edit-note">A little note</label>
+        <textarea id="destination-edit-note" rows="3" maxlength="500"></textarea>
+      </div>
+      <div class="travel-form-field">
+        <label for="destination-edit-status">Status</label>
+        <select id="destination-edit-status">
+          <option value="dreaming">Dreaming of</option>
+          <option value="planning">Planning</option>
+          <option value="visited">We've been!</option>
+        </select>
+      </div>
+      <p id="destination-form-error" class="travel-form-error" role="alert"></p>
+      <div class="travel-modal-actions">
+        <button type="button" class="travel-secondary-button" data-close-modal="destination-modal">cancel</button>
+        <button type="submit" class="travel-primary-button">save changes</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="our-travels.js"></script>
+</body>
+</html>

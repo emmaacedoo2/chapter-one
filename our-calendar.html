@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>our calendar • Chapter One</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="our-calendar.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="site-background" aria-hidden="true"></div>
+
+  <div class="corner-web corner-web-left" aria-hidden="true">
+    <svg viewBox="0 0 100 100" class="corner-web-svg" fill="none" stroke="#242126" stroke-width="0.75" stroke-linecap="round">
+      <line x1="0" y1="0" x2="100" y2="0"/><line x1="0" y1="0" x2="0" y2="100"/>
+      <line x1="0" y1="0" x2="100" y2="35"/><line x1="0" y1="0" x2="85" y2="70"/>
+      <path d="M 0,22 Q 16,19 22,0"/><path d="M 0,42 Q 30,36 42,0"/>
+      <path d="M 0,62 Q 46,55 62,0"/><path d="M 0,82 Q 64,74 82,0"/>
+      <path d="M 0,100 Q 82,90 100,0"/>
+    </svg>
+  </div>
+  <div class="corner-web corner-web-right" aria-hidden="true">
+    <svg viewBox="0 0 100 100" class="corner-web-svg" fill="none" stroke="#242126" stroke-width="0.75" stroke-linecap="round">
+      <line x1="0" y1="0" x2="100" y2="0"/><line x1="0" y1="0" x2="0" y2="100"/>
+      <line x1="0" y1="0" x2="100" y2="35"/><line x1="0" y1="0" x2="85" y2="70"/>
+      <path d="M 0,22 Q 16,19 22,0"/><path d="M 0,42 Q 30,36 42,0"/>
+      <path d="M 0,62 Q 46,55 62,0"/><path d="M 0,82 Q 64,74 82,0"/>
+      <path d="M 0,100 Q 82,90 100,0"/>
+    </svg>
+  </div>
+
+  <main class="calendar-page-container">
+    <nav class="top-nav calendar-top-nav" aria-label="Page navigation">
+      <a href="index.html" class="back-link">← back to our story</a>
+      <div class="calendar-nav-pills">
+        <a href="date-ideas.html" class="quick-jump-pill">date ideas</a>
+        <a href="our-songs.html" class="quick-jump-pill">our songs</a>
+      </div>
+    </nav>
+    <nav class="main-site-nav" aria-label="Main navigation">
+      <a href="index.html">Our Story</a>
+      <a href="date-ideas.html">What Are We Doing Today?</a>
+      <a href="our-songs.html">Our Songs</a>
+      <a href="our-calendar.html" aria-current="page">Our Calendar</a>
+      <a href="movie-night.html">Movie Night</a>
+      <a href="our-bucket-list.html">Our Bucket List</a>
+      <a href="our-travels.html">Our Travels</a>
+      <a href="little-surprises.html">Little Surprises</a>
+    </nav>
+
+    <header class="calendar-header">
+      <span class="calendar-overline">Chapter One</span>
+      <h1 class="calendar-main-title">our calendar</h1>
+      <p class="calendar-subtitle">plans, birthdays, holidays, and every little moment in between.</p>
+    </header>
+
+    <section class="calendar-status-row" aria-label="Calendar status">
+      <button type="button" id="sync-status-indicator" class="sync-status-pill" title="Calendar storage status">
+        <span class="status-dot demo"></span>
+        <span>Local only — events stay on this device</span>
+      </button>
+      <button type="button" class="btn-calendar-primary" id="btn-open-add-plan">+ add a little plan</button>
+    </section>
+
+    <section class="countdown-card" aria-label="Anniversary countdown">
+      <div class="countdown-copy">
+        <span class="countdown-label">Counting down</span>
+        <h2 id="countdown-anni-label">until our next anniversary ❤️</h2>
+      </div>
+      <div class="countdown-values">
+        <div class="countdown-unit"><strong id="countdown-days">0</strong><span>days</span></div>
+        <div class="countdown-unit"><strong id="countdown-hours">0</strong><span>hours</span></div>
+      </div>
+    </section>
+
+    <div class="calendar-layout">
+      <section class="calendar-main-card" aria-label="Calendar month view">
+        <div class="calendar-toolbar">
+          <button type="button" class="calendar-arrow-btn" id="btn-prev-month" aria-label="Previous month">←</button>
+          <div class="calendar-toolbar-center">
+            <h2 id="calendar-month-title">Month Year</h2>
+            <select id="calendar-year-select" class="calendar-year-select" aria-label="Choose year"></select>
+          </div>
+          <button type="button" class="calendar-arrow-btn" id="btn-next-month" aria-label="Next month">→</button>
+        </div>
+
+        <button type="button" class="calendar-today-btn" id="btn-calendar-today">today</button>
+
+        <div class="calendar-weekdays" aria-hidden="true">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
+          <span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div id="calendar-days-grid" class="calendar-days-grid" role="grid"></div>
+      </section>
+
+      <aside class="calendar-sidebar">
+        <section class="selected-day-card" id="selected-day-details" aria-live="polite">
+          <p class="empty-note">Click any day on the calendar to see what we have planned!</p>
+        </section>
+
+        <section class="upcoming-card">
+          <div class="upcoming-heading">
+            <span class="section-badge-tag">Coming up</span>
+            <h2>for us</h2>
+          </div>
+          <div id="upcoming-events-list" class="upcoming-events-list"></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <div id="monthiversary-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="monthiversary-title">
+    <section class="monthiversary-popup" aria-describedby="monthiversary-message">
+      <span class="monthiversary-heart" id="monthiversary-heart" aria-hidden="true">♥</span>
+      <span class="monthiversary-date" id="monthiversary-date"></span>
+      <h2 id="monthiversary-title">happy another month, us! ❤️</h2>
+      <p class="monthiversary-message" id="monthiversary-message"></p>
+      <button type="button" class="btn-calendar-primary" id="btn-close-monthiversary">one more month with you ♡</button>
+    </section>
+  </div>
+
+  <div id="event-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="event-modal-title">
+    <div class="modal-content-card event-modal-card">
+      <h2 class="modal-title" id="event-modal-title">Add a Little Plan</h2>
+      <input type="hidden" id="event-id-hidden">
+      <div class="modal-form-group">
+        <label class="modal-label" for="event-title-input">Event title</label>
+        <input type="text" id="event-title-input" class="modal-input" placeholder="Dinner, movie night, road trip...">
+      </div>
+      <div class="modal-form-row">
+        <div class="modal-form-group">
+          <label class="modal-label" for="event-date-input">Date</label>
+          <input type="date" id="event-date-input" class="modal-input">
+        </div>
+        <div class="modal-form-group">
+          <label class="modal-label" for="event-category-select">Category</label>
+          <select id="event-category-select" class="modal-input">
+            <option value="anniversary">Anniversary / Romantic</option>
+            <option value="birthday">Birthday</option>
+            <option value="trip">Trip / Travel</option>
+            <option value="holiday">Holiday</option>
+            <option value="date">Date / Little Plan</option>
+          </select>
+        </div>
+      </div>
+      <label class="calendar-check-row">
+        <input type="checkbox" id="event-allday-check" checked>
+        <span>All day</span>
+      </label>
+      <div class="modal-form-group" id="event-time-group">
+        <label class="modal-label" for="event-time-input">Time</label>
+        <input type="time" id="event-time-input" class="modal-input">
+      </div>
+      <label class="calendar-check-row">
+        <input type="checkbox" id="event-recurring-check">
+        <span>Repeat every year</span>
+      </label>
+      <p class="recurring-help" id="recurring-help">Repeats on the same month and day each year.</p>
+      <div class="modal-form-group">
+        <label class="modal-label" for="event-notes-input">Notes</label>
+        <textarea id="event-notes-input" class="modal-textarea" placeholder="A little reminder or special detail..."></textarea>
+      </div>
+      <div class="modal-actions-row">
+        <button type="button" class="btn-calendar-secondary" id="btn-cancel-event">Cancel</button>
+        <button type="button" class="btn-calendar-primary" id="btn-save-event">Save Plan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="firebase-config-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="firebase-config-title">
+    <div class="modal-content-card firebase-modal-card">
+      <h2 class="modal-title" id="firebase-config-title">Firebase setup</h2>
+      <p class="modal-desc">
+        Paste only your Firebase web app configuration here. Do not paste service-account keys or private credentials.
+        Shared synchronization must use Firebase Authentication and restricted Firestore rules.
+      </p>
+      <div class="modal-form-group">
+        <label class="modal-label" for="firebase-config-textarea">Firebase web config JSON</label>
+        <textarea id="firebase-config-textarea" class="modal-textarea firebase-config-textarea" placeholder='{"apiKey":"...","authDomain":"...","projectId":"..."}'></textarea>
+      </div>
+      <div class="modal-actions-row">
+        <button type="button" class="btn-calendar-secondary" id="btn-cancel-firebase-config">Close</button>
+        <button type="button" class="btn-calendar-primary" id="btn-save-firebase-config">Save Configuration</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="our-calendar.js"></script>
+</body>
+</html>
