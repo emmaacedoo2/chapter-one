@@ -23,24 +23,24 @@ const MusicApp = {
       name: 'Mac Miller',
       genre: 'Hip Hop / Jazz Rap',
       bio: 'One of Dom\'s all-time favorites. From Swimming to Circles and Watching Movies.',
-      spotifyId: '4LLpKhyESsy2m20YgfWMKN',
-      spotifyUrl: 'https://open.spotify.com/artist/4LLpKhyESsy2m20YgfWMKN',
+      playlistId: '37i9dQZF1DZ06evO2NufN6',
+      spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DZ06evO2NufN6',
       color: '#d4a373'
     },
     suicideboys: {
       name: '$uicideboy$',
       genre: 'Underground Hip Hop / Dark Trap',
       bio: 'Scrim & Ruby. Hard-hitting 808s and raw emotion.',
-      spotifyId: '1VPdgZBMT69kVOFAG592oI',
-      spotifyUrl: 'https://open.spotify.com/artist/1VPdgZBMT69kVOFAG592oI',
+      playlistId: '37i9dQZF1DZ06evO15CHq8',
+      spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DZ06evO15CHq8',
       color: '#a81d1d'
     },
     x: {
       name: 'XXXTENTACION',
       genre: 'Alternative / Emo Rap',
       bio: 'Jahseh Onfroy. From acoustic ballads like Jocelyn Flores to energetic anthems.',
-      spotifyId: '15UsOTVnJzReFVN1VCnxy4',
-      spotifyUrl: 'https://open.spotify.com/artist/15UsOTVnJzReFVN1VCnxy4',
+      playlistId: '37i9dQZF1DZ06evO0AnZXW',
+      spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DZ06evO0AnZXW',
       color: '#2b2b36'
     }
   },
@@ -265,9 +265,12 @@ const MusicApp = {
   // --------------------------------------------------------------------------
   initPlaylistSection() {
     const storedUrl = localStorage.getItem(this.STORAGE_PLAYLIST_URL);
-    const savedUrl = storedUrl === this.previousDefaultPlaylistUrl
+    let savedUrl = storedUrl === this.previousDefaultPlaylistUrl
       ? this.defaultPlaylistUrl
-      : storedUrl || this.defaultPlaylistUrl;
+      : this.normalizePlaylistUrl(storedUrl) || this.defaultPlaylistUrl;
+    if (storedUrl === this.previousDefaultPlaylistUrl) {
+      localStorage.setItem(this.STORAGE_PLAYLIST_URL, this.defaultPlaylistUrl);
+    }
     this.renderPlaylistEmbed(savedUrl);
 
     const editBtn = document.getElementById('btn-edit-playlist');
@@ -295,8 +298,15 @@ const MusicApp = {
 
     if (saveBtn && input && modal) {
       saveBtn.addEventListener('click', () => {
-        const val = input.value.trim();
+        const val = this.normalizePlaylistUrl(input.value.trim());
+        if (!val) {
+          input.setCustomValidity('Please enter a valid Spotify playlist link or URI.');
+          input.reportValidity();
+          input.setCustomValidity('');
+          return;
+        }
         if (val) {
+          savedUrl = val;
           localStorage.setItem(this.STORAGE_PLAYLIST_URL, val);
           this.renderPlaylistEmbed(val);
           [openSpotifyBtn, addSongSpotifyBtn].forEach(button => {
@@ -306,6 +316,13 @@ const MusicApp = {
         modal.classList.add('hidden');
       });
     }
+  },
+
+  normalizePlaylistUrl(value) {
+    if (!value) return null;
+    const match = value.match(/^spotify:playlist:([a-zA-Z0-9]{22})$/) ||
+      value.match(/^https:\/\/open\.spotify\.com\/(?:embed\/)?playlist\/([a-zA-Z0-9]{22})(?:[/?#].*)?$/);
+    return match ? `https://open.spotify.com/playlist/${match[1]}` : null;
   },
 
   renderPlaylistEmbed(url) {
@@ -411,7 +428,7 @@ const MusicApp = {
         </div>
         ${song.spotifyTrackId ? `
           <div class="remind-spotify-embed">
-            <iframe style="border-radius:12px" 
+            <iframe class="artist-playlist-frame" style="border-radius:12px"
               src="https://open.spotify.com/embed/track/${song.spotifyTrackId}?utm_source=generator&theme=0" 
               width="100%" height="152" 
               frameBorder="0" 
@@ -437,13 +454,14 @@ const MusicApp = {
       });
     });
 
-    this.selectArtist('mac');
+    const closeBtn = document.getElementById('btn-close-artist-player');
+    if (closeBtn) closeBtn.addEventListener('click', () => this.closeArtistPlayer());
   },
 
   selectArtist(key) {
-    this.activeArtistKey = key;
     const artist = this.artists[key];
     if (!artist) return;
+    this.activeArtistKey = key;
 
     // Update active vinyl styling
     document.querySelectorAll('.interactive-vinyl').forEach(el => {
@@ -458,16 +476,19 @@ const MusicApp = {
     const bioEl = document.getElementById('active-artist-bio');
     const linkEl = document.getElementById('active-artist-spotify-link');
     const embedEl = document.getElementById('artist-spotify-embed-container');
+    const spotlightEl = document.getElementById('active-artist-spotlight');
 
     if (nameEl) nameEl.textContent = artist.name;
     if (genreEl) genreEl.textContent = artist.genre;
     if (bioEl) bioEl.textContent = artist.bio;
     if (linkEl) linkEl.href = artist.spotifyUrl;
+    if (spotlightEl) spotlightEl.classList.remove('hidden');
 
     if (embedEl) {
       embedEl.innerHTML = `
         <iframe style="border-radius:12px" 
-          src="https://open.spotify.com/embed/artist/${artist.spotifyId}?utm_source=generator&theme=0" 
+          title="Spotify playlist: ${artist.name}"
+          src="https://open.spotify.com/embed/playlist/${artist.playlistId}?utm_source=generator&theme=0"
           width="100%" height="352" 
           frameBorder="0" 
           allowfullscreen="" 
@@ -476,6 +497,20 @@ const MusicApp = {
         </iframe>
       `;
     }
+  },
+
+  closeArtistPlayer() {
+    const spotlightEl = document.getElementById('active-artist-spotlight');
+    const embedEl = document.getElementById('artist-spotify-embed-container');
+    if (spotlightEl) spotlightEl.classList.add('hidden');
+    if (embedEl) embedEl.replaceChildren();
+
+    document.querySelectorAll('.interactive-vinyl').forEach(el => {
+      if (el.getAttribute('data-artist') === this.activeArtistKey) el.focus();
+      el.classList.remove('active');
+      el.setAttribute('aria-pressed', 'false');
+    });
+    this.activeArtistKey = null;
   },
 
   // --------------------------------------------------------------------------

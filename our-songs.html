@@ -133,62 +133,65 @@
       <!-- Vinyl Shelf -->
       <div class="vinyl-shelf">
         <!-- Vinyl 1: Mac Miller -->
-        <div class="vinyl-item-card" onclick="MusicApp.selectArtist('mac')">
-          <div class="interactive-vinyl active" data-artist="mac" role="button" aria-pressed="true" tabindex="0">
+        <div class="vinyl-item-card">
+          <button type="button" class="interactive-vinyl" data-artist="mac" aria-label="Play Mac Miller playlist" aria-pressed="false">
             <div class="vinyl-center-label label-mac">
               <span class="label-artist-text">Mac Miller</span>
               <div class="label-spindle-hole"></div>
             </div>
-          </div>
+          </button>
           <h3 class="vinyl-caption-title">Mac Miller</h3>
           <span class="vinyl-caption-sub">Swimming &bull; Circles</span>
         </div>
 
         <!-- Vinyl 2: $uicideboy$ -->
-        <div class="vinyl-item-card" onclick="MusicApp.selectArtist('suicideboys')">
-          <div class="interactive-vinyl" data-artist="suicideboys" role="button" aria-pressed="false" tabindex="0">
+        <div class="vinyl-item-card">
+          <button type="button" class="interactive-vinyl" data-artist="suicideboys" aria-label="Play $uicideboy$ playlist" aria-pressed="false">
             <div class="vinyl-center-label label-suicide">
               <span class="label-artist-text">$B</span>
               <div class="label-spindle-hole"></div>
             </div>
-          </div>
+          </button>
           <h3 class="vinyl-caption-title">$uicideboy$</h3>
           <span class="vinyl-caption-sub">G59 &bull; New Orleans</span>
         </div>
 
         <!-- Vinyl 3: XXXTENTACION -->
-        <div class="vinyl-item-card" onclick="MusicApp.selectArtist('x')">
-          <div class="interactive-vinyl" data-artist="x" role="button" aria-pressed="false" tabindex="0">
+        <div class="vinyl-item-card">
+          <button type="button" class="interactive-vinyl" data-artist="x" aria-label="Play XXXTENTACION playlist" aria-pressed="false">
             <div class="vinyl-center-label label-x">
               <span class="label-artist-text">XXX</span>
               <div class="label-spindle-hole"></div>
             </div>
-          </div>
+          </button>
           <h3 class="vinyl-caption-title">XXXTENTACION</h3>
           <span class="vinyl-caption-sub">17 &bull; ? &bull; Revenge</span>
         </div>
       </div>
 
       <!-- Active Artist Spotlight Player Card -->
-      <div class="active-artist-spotlight">
+      <div class="active-artist-spotlight hidden" id="active-artist-spotlight" aria-live="polite">
         <div class="spotlight-header">
           <div>
             <h3 class="spotlight-artist-name" id="active-artist-name">Mac Miller</h3>
             <span class="spotlight-artist-genre" id="active-artist-genre">Hip Hop / Jazz Rap</span>
           </div>
-          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-spotify-pill" id="active-artist-spotify-link">
-            <span>Open in Spotify</span> &nearr;
-          </a>
+          <div class="spotlight-actions">
+            <a href="#" target="_blank" rel="noopener noreferrer" class="btn-spotify-pill" id="active-artist-spotify-link">
+              <span>Listen on Spotify</span> &nearr;
+            </a>
+            <button type="button" class="btn-action-outline" id="btn-close-artist-player" aria-label="Close artist playlist">Close</button>
+          </div>
         </div>
         <p class="spotlight-artist-bio" id="active-artist-bio">
           One of Dom's all-time favorites. From Swimming to Circles and Watching Movies.
         </p>
 
-        <!-- Official Spotify Artist Player Embed -->
+        <!-- Official Spotify playlist embed -->
         <div id="artist-spotify-embed-container">
           <!-- Injected by our-songs.js -->
         </div>
-        <p class="playback-note">* Spotify embeds allow song previews; click "Open in Spotify" for full uninterrupted playback.</p>
+        <p class="playback-note">Playback availability and controls are provided by Spotify. Open in Spotify for the full listening experience.</p>
       </div>
     </section>
 

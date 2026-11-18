@@ -247,12 +247,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
   text-align: center;
 }
 
 /* Realistic Vinyl Record */
 .interactive-vinyl {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
   width: 140px;
   height: 140px;
   border-radius: 50%;
@@ -273,14 +276,21 @@
 }
 
 .interactive-vinyl:hover {
-  transform: translateY(-8px) scale(1.06);
-  box-shadow: 0 14px 30px rgba(168, 29, 29, 0.2);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(139, 30, 45, 0.3);
 }
 
 .interactive-vinyl.active {
   transform: translateY(-8px) scale(1.08);
-  box-shadow: 0 14px 35px rgba(168, 29, 29, 0.35);
+  box-shadow: 0 0 0 3px rgba(139, 30, 45, 0.3), 0 14px 35px rgba(139, 30, 45, 0.4);
   animation: vinylSpin 14s linear infinite;
+}
+
+.interactive-vinyl:focus-visible,
+.btn-action-outline:focus-visible,
+.btn-spotify-pill:focus-visible {
+  outline: 3px solid #8B1E2D;
+  outline-offset: 4px;
 }
 
 @keyframes vinylSpin {
@@ -365,7 +375,15 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 1rem;
   margin-bottom: 0.8rem;
+}
+
+.spotlight-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .spotlight-artist-name {
@@ -396,6 +414,23 @@
   margin-top: 0.6rem;
   font-style: italic;
   text-align: center;
+}
+
+.artist-playlist-frame {
+  display: block;
+  animation: artistPlaylistFadeIn 0.35s ease both;
+}
+
+@keyframes artistPlaylistFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive-vinyl.active,
+  .artist-playlist-frame {
+    animation: none;
+  }
 }
 
 /* ==========================================================================
@@ -1043,6 +1078,12 @@
   .interactive-vinyl {
     width: 120px;
     height: 120px;
+  }
+  .spotlight-header {
+    flex-direction: column;
+  }
+  .active-artist-spotlight {
+    padding: 1.2rem;
   }
   .game-choices-grid {
     grid-template-columns: 1fr;
