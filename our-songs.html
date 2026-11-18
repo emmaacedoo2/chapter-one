@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="our-songs.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -56,6 +56,7 @@
         <a href="#section-remind" class="quick-jump-pill">remind me of you</a>
         <a href="#section-vinyls" class="quick-jump-pill">dom's vinyls</a>
         <a href="#section-games" class="quick-jump-pill">music games</a>
+        <a href="#section-classic-games" class="quick-jump-pill">classic games</a>
         <a href="#section-wrapped" class="quick-jump-pill">wrapped</a>
         <a href="#section-concerts" class="quick-jump-pill">concerts</a>
         <a href="our-calendar.html" class="quick-jump-pill">calendar</a>
@@ -71,6 +72,7 @@
       <a href="our-travels.html">Our Travels</a>
       <a href="little-surprises.html">Little Surprises</a>
       <a href="our-arcade.html">Our Arcade 🎮</a>
+      <a href="our-little-corner.html">Our Little Corner</a>
     </nav>
 
     <!-- Page Header -->
@@ -174,29 +176,40 @@
         <div class="spotlight-header">
           <div>
             <h3 class="spotlight-artist-name" id="active-artist-name">Mac Miller</h3>
-            <span class="spotlight-artist-genre" id="active-artist-genre">Hip Hop / Jazz Rap</span>
+            <span class="spotlight-artist-genre" id="active-artist-genre"></span>
           </div>
           <div class="spotlight-actions">
             <a href="#" target="_blank" rel="noopener noreferrer" class="btn-spotify-pill" id="active-artist-spotify-link">
-              <span>Listen on Spotify</span> &nearr;
+              <span>Open in Spotify</span> &nearr;
             </a>
             <button type="button" class="btn-action-outline" id="btn-close-artist-player" aria-label="Close artist playlist">Close</button>
           </div>
         </div>
-        <p class="spotlight-artist-bio" id="active-artist-bio">
-          One of Dom's all-time favorites. From Swimming to Circles and Watching Movies.
-        </p>
-
+        <p class="spotlight-artist-bio" id="active-artist-bio"></p>
         <!-- Official Spotify playlist embed -->
         <div id="artist-spotify-embed-container">
           <!-- Injected by our-songs.js -->
         </div>
-        <p class="playback-note">Playback availability and controls are provided by Spotify. Open in Spotify for the full listening experience.</p>
       </div>
     </section>
 
-    <!-- SECTION 4: Music Mini-Games -->
     <section id="section-games" class="music-section-card">
+      <span class="section-badge-tag">Arcade</span>
+      <h2 class="section-heading">Dom vs Emma music battle</h2>
+      <p class="section-intro-text">Take turns answering ten questions. One point per correct answer; five turns each!</p>
+      <div class="battle-score-row" aria-live="polite"><span class="battle-team-score">Dom: <strong id="dom-battle-score">0</strong></span><span class="battle-team-score">Emma: <strong id="emma-battle-score">0</strong></span></div>
+      <div id="battle-play">
+        <div class="game-status-header"><span class="section-badge-tag" id="battle-turn"></span><span class="game-score-badge" id="battle-round"></span></div>
+        <div class="game-question-box"><p class="game-clue-body" id="battle-question"></p></div>
+        <div class="game-choices-grid" id="battle-options"></div>
+        <p class="game-feedback-text" id="battle-feedback" aria-live="polite"></p>
+        <button type="button" class="btn-action-outline hidden" id="battle-next">Next turn →</button>
+      </div>
+      <div id="battle-finished" class="hidden" aria-live="polite"><h3 class="section-heading" id="battle-winner"></h3><button type="button" class="btn-action-outline" id="battle-replay">Play again</button></div>
+    </section>
+
+    <!-- SECTION 4: Music Mini-Games -->
+    <section id="section-classic-games" class="music-section-card">
       <span class="section-badge-tag">Arcade</span>
       <h2 class="section-heading">music games</h2>
       <p class="section-intro-text">
@@ -308,8 +321,8 @@
         </div>
 
         <div class="battle-score-row">
-          <span class="battle-team-score">Dom's Team: <strong id="dom-battle-score">0</strong></span>
-          <span class="battle-team-score">Emma's Team: <strong id="emma-battle-score">0</strong></span>
+          <span class="battle-team-score">Dom's Team: <strong id="classic-dom-battle-score">0</strong></span>
+          <span class="battle-team-score">Emma's Team: <strong id="classic-emma-battle-score">0</strong></span>
         </div>
 
         <div id="game-d-play-area">
@@ -410,70 +423,36 @@
       </div>
     </section>
 
-    <!-- SECTION 6: Concerts Near Us — Tampa -->
     <section id="section-concerts" class="music-section-card">
       <span class="section-badge-tag">Live Music</span>
-      <h2 class="section-heading">concerts near us &bull; tampa</h2>
-      <p class="section-intro-text">
-        upcoming shows and live events around Tampa, Florida for our favorite artists.
-      </p>
-
-      <div class="concert-filter-bar">
-        <div>
-          <label for="concert-filter-select" style="font-size:0.75rem; color:#666; margin-right:0.4rem;">Show:</label>
-          <select id="concert-filter-select" class="concert-select">
-            <option value="all">All Upcoming Shows</option>
-            <option value="favorites">Our Favorite Artists Only</option>
-          </select>
+      <h2 class="section-heading">our concerts</h2>
+      <div class="game-tabs-nav" role="tablist" aria-label="Concert sections">
+        <button type="button" class="game-tab-btn active" role="tab" id="tab-discover" aria-selected="true" aria-controls="concert-discover">Discover Concerts</button>
+        <button type="button" class="game-tab-btn" role="tab" id="tab-wishlist" aria-selected="false" aria-controls="concert-wishlist">Our Wishlist</button>
+      </div>
+      <div id="concert-discover" role="tabpanel" aria-labelledby="tab-discover">
+        <p class="section-intro-text">Find live shows around Tampa using these event searches. Check the event details before making plans.</p>
+        <div class="concerts-grid">
+          <a class="btn-spotify-pill" href="https://www.ticketmaster.com/search?q=concerts+Tampa" target="_blank" rel="noopener noreferrer">Search Tampa concerts ↗</a>
+          <a class="btn-spotify-pill" href="https://www.ticketmaster.com/search?q=Amalie+Arena" target="_blank" rel="noopener noreferrer">Search Amalie Arena ↗</a>
+          <a class="btn-spotify-pill" href="https://www.ticketmaster.com/search?q=MIDFLORIDA+Credit+Union+Amphitheatre" target="_blank" rel="noopener noreferrer">Search the amphitheatre ↗</a>
         </div>
-        <button type="button" class="btn-action-outline" id="btn-refresh-concerts">
-          Refresh List
-        </button>
       </div>
-
-      <div class="concerts-grid" id="tampa-concerts-grid">
-        <!-- Rendered by our-songs.js -->
-      </div>
-
-      <!-- Live Discovery API Note & Configuration -->
-      <div class="ticketmaster-info-box">
-        <strong>Ticketmaster Live Discovery Integration:</strong> 
-        Live official event search is pre-configured for Tampa venues (Amalie Arena, MidFlorida Amphitheatre, The Orpheum). To enable automatic live API queries, add your free Ticketmaster API key in localStorage (key: <code>ticketmaster_api_key</code>). Otherwise, all "Tickets & Info" links provide working direct searches.
+      <div id="concert-wishlist" role="tabpanel" aria-labelledby="tab-wishlist" class="hidden">
+        <p class="section-intro-text">Saved only in this browser; entries do not sync between devices.</p>
+        <form id="wishlist-form" class="bucket-add-form">
+          <label>Artist <input class="bucket-input" id="bucket-artist-input" placeholder="Artist"></label>
+          <label>Venue <input class="bucket-input" id="bucket-venue-input" placeholder="Venue"></label>
+          <label>City <input class="bucket-input" id="bucket-city-input" placeholder="City"></label>
+          <label>Date <input class="bucket-input" id="bucket-date-input" type="date"></label>
+          <label>Notes <input class="bucket-input" id="bucket-note-input" placeholder="A memory or song"></label>
+          <button type="submit" class="btn-add-bucket" id="wishlist-save">+ Add to Wishlist</button>
+          <button type="button" class="btn-action-outline hidden" id="wishlist-cancel">Cancel edit</button>
+          <p id="wishlist-message" aria-live="polite"></p>
+        </form>
+        <div class="bucket-columns-grid"><div><h3 class="bucket-subheading">Our Wishlist 📌</h3><div class="bucket-cards-stack" id="concert-wishlist-cards"></div></div><div><h3 class="bucket-subheading">Attended Memories 🎟️</h3><div class="bucket-cards-stack" id="concert-attended-cards"></div></div></div>
       </div>
     </section>
-
-    <!-- SECTION 7: Our Concert Bucket List -->
-    <section id="bucket-list-section" class="music-section-card">
-      <span class="section-badge-tag">Wishlist &amp; Memories</span>
-      <h2 class="section-heading">our concert bucket list</h2>
-      <p class="section-intro-text">
-        artists we need to see live together, plus memories of the ones we've already attended!
-      </p>
-
-      <!-- Add New Wishlist Item -->
-      <div class="bucket-add-form">
-        <input type="text" id="bucket-artist-input" class="bucket-input" placeholder="Artist name (e.g. Gigi Perez, $uicideboy$)...">
-        <input type="text" id="bucket-venue-input" class="bucket-input" placeholder="Dream venue (e.g. Amalie Arena, Tampa)...">
-        <input type="text" id="bucket-note-input" class="bucket-input" placeholder="Personal note or song we must hear...">
-        <button type="button" class="btn-add-bucket" id="btn-add-bucket-item">+ Add to Wishlist</button>
-      </div>
-
-      <!-- Two Columns: Wishlist vs Attended -->
-      <div class="bucket-columns-grid">
-        <!-- Wishlist -->
-        <div>
-          <h3 class="bucket-subheading">Our Wishlist 📌</h3>
-          <div class="bucket-cards-stack" id="concert-wishlist-cards"></div>
-        </div>
-
-        <!-- Attended Memories -->
-        <div>
-          <h3 class="bucket-subheading">Attended Memories 🎟️</h3>
-          <div class="bucket-cards-stack" id="concert-attended-cards"></div>
-        </div>
-      </div>
-    </section>
-
   </div>
 
   <!-- Modal: Edit Shared Playlist URL -->

@@ -263,8 +263,8 @@ const TravelApp = {
   },
 
   getVisitorLabel(place) {
-    if (place.sharedTrip) return 'Emma and Dom · visited together';
-    if (place.visitedBy?.length > 1) return 'Emma and Dom · visited separately';
+    if (place.sharedTrip) return 'Dom & Emma · visited together';
+    if (place.visitedBy?.length > 1) return 'Dom & Emma · visited separately';
     return place.visitedBy?.[0] === 'emma' ? 'Emma' : 'Dom';
   },
 

@@ -1,0 +1,9 @@
+{
+  "name": "Our Little Corner · Chapter One",
+  "short_name": "Our Corner",
+  "start_url": "./our-little-corner.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbfbf9",
+  "theme_color": "#821d30"
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#821d30">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Our Little Corner · Chapter One</title>
+  <link rel="manifest" href="corner.webmanifest">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="our-little-corner.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="site-background" aria-hidden="true"></div>
+  <main class="corner-page">
+    <nav class="main-site-nav" aria-label="Main navigation">
+      <a href="index.html">Our Story</a><a href="date-ideas.html">What Are We Doing Today?</a><a href="our-songs.html">Our Songs</a><a href="our-calendar.html">Our Calendar</a><a href="movie-night.html">Movie Night</a><a href="our-bucket-list.html">Our Bucket List</a><a href="our-travels.html">Our Travels</a><a href="little-surprises.html">Little Surprises</a><a href="our-arcade.html">Our Arcade 🎮</a><a href="our-little-corner.html" aria-current="page">Our Little Corner</a>
+    </nav>
+    <header class="corner-hero">
+      <div><p class="eyebrow">CHAPTER ONE / JUST THE TWO OF US</p><h1>Our Little<br><em>Corner.</em></h1><p>A little space for the big feelings, the small moments, and everything in between.</p><a class="hero-link" href="#mood-board">COME ON IN <span aria-hidden="true">↗</span></a></div>
+      <div class="hero-stamp" aria-hidden="true"><span>DOM + EMMA</span><strong>♥</strong><span>ALWAYS ON THE SAME TEAM</span></div>
+    </header>
+    <aside class="prototype"><strong>♡ A little heads-up</strong><span>Single-browser prototype: entries stay in this browser and do not sync between devices. Anyone using this browser can read them. Notifications aren’t connected yet.</span></aside>
+    <section class="identity card" aria-labelledby="identity-title"><div><p class="eyebrow">FIRST THINGS FIRST</p><h2 id="identity-title">Who’s here?</h2><p>Choose who you’re writing as.</p></div><div class="profile-select" role="group" aria-label="Choose your profile"><button type="button" data-profile="Dom"><span>D</span> Dom</button><button type="button" data-profile="Emma"><span>E</span> Emma</button></div></section>
+    <section id="mood-board" class="section-block"><div class="section-heading"><div><p class="eyebrow">THE FEELINGS DEPARTMENT / 01</p><h2>How are we feeling?</h2><p>A little snapshot of where our hearts are today.</p></div><span class="heading-doodle" aria-hidden="true">✳</span></div>
+      <div class="mood-layout"><div class="profiles" id="mood-profiles"></div><form class="card mood-form" id="mood-form"><p class="card-label">YOUR TURN <span>✦</span></p><h3>Pick your mood</h3><div class="mood-options" role="group" aria-label="Choose a mood"><button type="button" data-mood="Happy">☀️ Happy</button><button type="button" data-mood="Loved">♥ Loved</button><button type="button" data-mood="Missing you">💭 Missing you</button><button type="button" data-mood="Tired">☾ Tired</button><button type="button" data-mood="Sad">☁ Sad</button><button type="button" data-mood="Stressed">〰 Stressed</button><button type="button" data-mood="Excited">✦ Excited</button></div><label for="mood-note">A little context <span>(optional)</span></label><input id="mood-note" maxlength="200" placeholder="What’s on your mind?" ><button class="primary" type="submit">Update my mood ↗</button></form></div>
+    </section>
+    <section class="notes-section section-block" aria-labelledby="notes-title"><div class="section-heading"><div><p class="eyebrow">WORDS WORTH KEEPING / 02</p><h2 id="notes-title">Little Notes<span class="red-dot">.</span></h2><p>For the things we never want to leave unsaid.</p></div><span class="heading-doodle" aria-hidden="true">✉</span></div><div class="notes-layout"><form class="card note-compose" id="note-form"><p class="card-label">A NOTE FROM <span id="note-author">DOM</span></p><h3>Dear you,</h3><label class="sr-only" for="note-text">Your note</label><textarea id="note-text" maxlength="1000" required placeholder="Just wanted to say..."></textarea><div class="note-actions"><button class="primary" type="submit" name="action" value="quiet">Save quietly</button><button class="secondary" type="submit" name="action" value="notify">Send with notification ↗</button></div><p class="small-print">Notification delivery is not available yet. “Send” saves the note here only.</p></form><div class="card notes-inbox"><div class="inbox-heading"><div><p class="card-label">THE KEEPSAKES</p><h3>Notes to us</h3></div><span>♡</span></div><div id="notes-list" class="notes-list"></div></div></div></section>
+    <section class="bottom-grid"><div class="hug-card"><p class="eyebrow">A LITTLE CLOSER</p><h2>Some days just<br>need a hug.</h2><p>Leave a little signal when words aren’t quite enough.</p><button type="button" id="hug-button">I need a hug ♡</button><p id="hug-status" aria-live="polite"></p></div><form class="card checkin" id="checkin-form"><p class="eyebrow">OPTIONAL / ONCE A DAY, OR WHENEVER</p><h2>Little check-in<span class="red-dot">.</span></h2><p>What’s one thing you’d like the other to know today?</p><label class="sr-only" for="checkin-text">Your check-in</label><textarea id="checkin-text" maxlength="300" required placeholder="Today, I’m feeling..."></textarea><button class="secondary" type="submit">Save check-in ↗</button><div id="checkin-list"></div></form></section>
+    <p class="corner-footer">MADE FOR DOM &amp; EMMA <span>♥</span> ONE LITTLE MOMENT AT A TIME</p><p class="setup-link"><a href="corner-setup.md">Future setup guide</a></p>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </main>
+  <script src="our-little-corner.js"></script>
+</body>
+</html>

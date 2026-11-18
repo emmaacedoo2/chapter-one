@@ -6,9 +6,10 @@
   <title>little surprises 💌 • Chapter One</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="placeholder-pages.css">
+  <link rel="stylesheet" href="365-days.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="little-surprises-page">
   <div class="site-background" aria-hidden="true"></div>
@@ -43,6 +44,7 @@
         <a href="our-travels.html">Our Travels</a>
         <a href="little-surprises.html" aria-current="page">Little Surprises</a>
         <a href="our-arcade.html">Our Arcade 🎮</a>
+        <a href="our-little-corner.html">Our Little Corner</a>
       </div>
     </nav>
 
@@ -51,6 +53,41 @@
       <h1 class="placeholder-title">little surprises 💌</h1>
       <p class="placeholder-intro">just a few little things for you. some you'll have to find yourself.</p>
     </header>
+
+    <section class="memories" aria-labelledby="memories-title">
+      <div class="memories-heading">
+        <span class="memories-kicker">✦ a little love story, every day ✦</span>
+        <h2 id="memories-title">365 Days <em>of Us</em></h2>
+        <p>One year. One little memory at a time.<br>Scratch to uncover a piece of our story, Dom &amp; Emma.</p>
+        <div class="memories-progress"><span id="memory-count">0 / 365 memories revealed</span><div class="progress-track"><div id="memory-progress-bar"></div></div></div>
+      </div>
+      <div class="memory-layout">
+        <div class="memory-main">
+          <div class="memory-card-heading"><span id="memory-day">OUR STORY BEGINS</span><span>✦</span></div>
+          <p id="memory-date" class="memory-date"></p>
+          <label class="memory-picker" for="memory-select">Choose an available day <select id="memory-select"></select></label>
+          <div id="scratch-card" class="scratch-card" hidden>
+            <div id="memory-photo" class="memory-photo"></div>
+            <canvas id="scratch-canvas" aria-label="Scratch this card to reveal the memory"></canvas>
+          </div>
+          <div id="memory-locked" class="memory-locked"><span>♡</span><strong>Good things are worth the wait.</strong><p>Our first memory arrives December 8, 2026.</p></div>
+          <p id="memory-caption" class="memory-caption"></p>
+          <p id="scratch-hint" class="scratch-hint" hidden>✧ Scratch with your finger or mouse to reveal ✧</p>
+          <button id="reveal-memory" class="memory-button" type="button" hidden>Reveal this memory ♡</button>
+          <p id="memory-complete" class="memory-complete" hidden>365 days, 365 little pieces of us. Here’s to every chapter still to come. ♡</p>
+        </div>
+        <aside class="memory-sidebar">
+          <span class="sidebar-icon">🕸</span><h3>To be continued...</h3>
+          <p id="future-message"></p>
+          <div id="future-list" class="future-list"></div>
+          <span class="sidebar-signoff">with love, always ♡</span>
+        </aside>
+      </div>
+      <div class="memory-gallery-heading"><div><span class="memories-kicker">THE STORY SO FAR</span><h3>Our Unlocked Memories</h3></div><span>♡</span></div>
+      <p id="gallery-empty" class="gallery-empty">Your revealed memories will find their home here.</p>
+      <div id="memory-gallery" class="memory-gallery"></div>
+      <p class="memory-note">Photos live in <code>images/365-days/</code> as <code>day-001.jpg</code> through <code>day-365.jpg</code>; captions can be added in <code>365-days.js</code>. Public GitHub Pages files are accessible to anyone with their links, so future photos cannot be kept secret there. Private Firebase Storage with authenticated, date-aware access rules can be connected later.</p>
+    </section>
 
     <div class="placeholder-grid">
       <section class="placeholder-card featured">
@@ -85,5 +122,6 @@
       </section>
     </div>
   </main>
+  <script src="365-days.js" defer></script>
 </body>
 </html>

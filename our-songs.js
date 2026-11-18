@@ -7,11 +7,8 @@ const MusicApp = {
   // Storage keys
   STORAGE_PLAYLIST_URL: 'chapter_one_playlist_url',
   STORAGE_MEMORY_SONGS: 'chapter_one_memory_songs',
-  STORAGE_VOTES: 'chapter_one_music_votes',
-  STORAGE_BATTLE_STATS: 'chapter_one_battle_stats',
   STORAGE_BUCKET_LIST: 'chapter_one_concert_bucket_list',
   STORAGE_ATTENDED_LIST: 'chapter_one_concert_attended_list',
-  STORAGE_LAST_VISIT: 'chapter_one_concert_last_visit',
 
   // Config defaults
   previousDefaultPlaylistUrl: 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M',
@@ -52,8 +49,8 @@ const MusicApp = {
       title: 'Sailor Song',
       artist: 'Gigi Perez',
       message: 'i don\'t even know how to explain it, but this is the first song that will always remind me of you. every time i hear it, i think of you.',
-      spotifyTrackId: '2R0MyM9H0B0VovqO1o4858',
-      spotifyUrl: 'https://open.spotify.com/track/2R0MyM9H0B0VovqO1o4858'
+      spotifyTrackId: '21IYMdzTrzSe191Cy5eMap',
+      spotifyUrl: 'https://open.spotify.com/track/21IYMdzTrzSe191Cy5eMap'
     }
   ],
 
@@ -183,80 +180,23 @@ const MusicApp = {
     }
   ],
 
-  // Tampa Concerts Data (Realistic curated upcoming Tampa area events)
-  tampaConcerts: [
-    {
-      id: 'tampa-1',
-      artist: 'Gigi Perez & Friends',
-      venue: 'The Orpheum — Tampa, FL',
-      dateText: 'Coming Soon',
-      dateISO: '2027-02-14',
-      badge: 'Favorite Artist',
-      ticketUrl: 'https://www.ticketmaster.com/search?q=Gigi+Perez+Tampa',
-      isNew: true
-    },
-    {
-      id: 'tampa-2',
-      artist: '$uicideboy$ — Grey Day Tour',
-      venue: 'Amalie Arena — Tampa, FL',
-      dateText: 'Fall Tour Date',
-      dateISO: '2027-09-20',
-      badge: 'Dom\'s Favorite',
-      ticketUrl: 'https://www.ticketmaster.com/search?q=Suicideboys+Tampa',
-      isNew: true
-    },
-    {
-      id: 'tampa-3',
-      artist: 'Mac Miller Celebration of Life Tribute',
-      venue: 'Crowbar — Ybor City, Tampa, FL',
-      dateText: 'Special Night',
-      dateISO: '2027-01-19',
-      badge: 'Tribute Event',
-      ticketUrl: 'https://www.ticketmaster.com/search?q=Mac+Miller+Tribute+Tampa',
-      isNew: false
-    },
-    {
-      id: 'tampa-4',
-      artist: 'Billie Eilish — Hit Me Hard and Soft Tour',
-      venue: 'Amalie Arena — Tampa, FL',
-      dateText: 'Live in Tampa',
-      dateISO: '2026-12-15',
-      badge: 'Upcoming Major Show',
-      ticketUrl: 'https://www.ticketmaster.com/search?q=Billie+Eilish+Tampa',
-      isNew: false
-    },
-    {
-      id: 'tampa-5',
-      artist: 'Indie & Hip Hop Weekend at MidFlorida Amphitheatre',
-      venue: 'MIDFLORIDA Credit Union Amphitheatre — Tampa, FL',
-      dateText: 'Summer Season',
-      dateISO: '2027-06-12',
-      badge: 'Outdoor Venue',
-      ticketUrl: 'https://www.ticketmaster.com/midflorida-credit-union-amphitheatre-tickets-tampa/venue/106886',
-      isNew: false
-    }
-  ],
+  STORAGE_VOTES: 'chapter_one_music_votes',
+  STORAGE_BATTLE_STATS: 'chapter_one_battle_stats',
+  guessIndex: 0, guessScore: 0, finishIndex: 0, finishScore: 0,
+  thisOrThatIndex: 0, thisOrThatRankings: {}, classicBattleIndex: 0,
+  battleScoreDom: 0, battleScoreEmma: 0, wrappedSlideIndex: 0,
 
   // State
   activeArtistKey: 'mac',
-  guessIndex: 0,
-  guessScore: 0,
-  finishIndex: 0,
-  finishScore: 0,
-  thisOrThatIndex: 0,
-  thisOrThatRankings: {},
-  battleIndex: 0,
-  battleScoreDom: 0,
-  battleScoreEmma: 0,
-  wrappedSlideIndex: 0,
 
   init() {
     this.initPlaylistSection();
     this.initRemindSongs();
     this.initVinylRecords();
     this.initGames();
+    this.initClassicGames();
     this.initWrapped();
-    this.initConcerts();
+    this.initConcertTabs();
     this.initBucketList();
   },
 
@@ -399,7 +339,11 @@ const MusicApp = {
   getRemindSongs() {
     try {
       const stored = localStorage.getItem(this.STORAGE_MEMORY_SONGS);
-      if (stored) return JSON.parse(stored);
+      if (stored) return JSON.parse(stored).map(song =>
+        song.spotifyTrackId === '2R0MyM9H0B0VovqO1o4858'
+          ? { ...song, spotifyTrackId: '21IYMdzTrzSe191Cy5eMap', spotifyUrl: 'https://open.spotify.com/track/21IYMdzTrzSe191Cy5eMap' }
+          : song
+      );
     } catch (e) {
       console.error(e);
     }
@@ -420,7 +364,7 @@ const MusicApp = {
             <p class="remind-song-artist">by ${song.artist}</p>
           </div>
           <a href="${song.spotifyUrl}" target="_blank" rel="noopener noreferrer" class="btn-spotify-pill" title="Listen on Spotify">
-            <span>Spotify</span> &nearr;
+            <span>Open in Spotify (if player unavailable)</span> &nearr;
           </a>
         </div>
         <div class="remind-song-body">
@@ -428,7 +372,7 @@ const MusicApp = {
         </div>
         ${song.spotifyTrackId ? `
           <div class="remind-spotify-embed">
-            <iframe class="artist-playlist-frame" style="border-radius:12px"
+            <iframe title="Spotify track: ${song.title} by ${song.artist}" class="artist-playlist-frame" style="border-radius:12px"
               src="https://open.spotify.com/embed/track/${song.spotifyTrackId}?utm_source=generator&theme=0" 
               width="100%" height="152" 
               frameBorder="0" 
@@ -472,15 +416,13 @@ const MusicApp = {
 
     // Update player card details
     const nameEl = document.getElementById('active-artist-name');
-    const genreEl = document.getElementById('active-artist-genre');
-    const bioEl = document.getElementById('active-artist-bio');
     const linkEl = document.getElementById('active-artist-spotify-link');
     const embedEl = document.getElementById('artist-spotify-embed-container');
     const spotlightEl = document.getElementById('active-artist-spotlight');
 
     if (nameEl) nameEl.textContent = artist.name;
-    if (genreEl) genreEl.textContent = artist.genre;
-    if (bioEl) bioEl.textContent = artist.bio;
+    document.getElementById('active-artist-genre').textContent = artist.genre;
+    document.getElementById('active-artist-bio').textContent = artist.bio;
     if (linkEl) linkEl.href = artist.spotifyUrl;
     if (spotlightEl) spotlightEl.classList.remove('hidden');
 
@@ -513,12 +455,9 @@ const MusicApp = {
     this.activeArtistKey = null;
   },
 
-  // --------------------------------------------------------------------------
-  // 4. Music Mini-Games (A, B, C, D)
-  // --------------------------------------------------------------------------
-  initGames() {
+  initClassicGames() {
     // Game Tab Switcher
-    const gameTabs = document.querySelectorAll('.game-tab-btn');
+    const gameTabs = document.querySelectorAll('[data-game-target]');
     gameTabs.forEach(btn => {
       btn.addEventListener('click', () => {
         gameTabs.forEach(b => b.classList.remove('active'));
@@ -759,26 +698,26 @@ const MusicApp = {
 
   // GAME D — Dom vs Emma Music Battle
   initGameD() {
-    this.renderBattle();
+    this.renderClassicBattle();
 
     const rematchBtn = document.getElementById('btn-rematch-battle');
     if (rematchBtn) {
       rematchBtn.addEventListener('click', () => {
-        this.battleIndex = 0;
+        this.classicBattleIndex = 0;
         this.battleScoreDom = 0;
         this.battleScoreEmma = 0;
-        this.renderBattle();
+        this.renderClassicBattle();
       });
     }
   },
 
-  renderBattle() {
-    const match = this.battleRounds[this.battleIndex];
+  renderClassicBattle() {
+    const match = this.battleRounds[this.classicBattleIndex];
     const playArea = document.getElementById('game-d-play-area');
     const finishedBox = document.getElementById('game-d-finished');
 
-    const domScoreBadge = document.getElementById('dom-battle-score');
-    const emmaScoreBadge = document.getElementById('emma-battle-score');
+    const domScoreBadge = document.getElementById('classic-dom-battle-score');
+    const emmaScoreBadge = document.getElementById('classic-emma-battle-score');
 
     if (domScoreBadge) domScoreBadge.textContent = this.battleScoreDom;
     if (emmaScoreBadge) emmaScoreBadge.textContent = this.battleScoreEmma;
@@ -809,11 +748,11 @@ const MusicApp = {
     document.getElementById('battle-emma-song').textContent = match.emmaSong.title;
     document.getElementById('battle-emma-artist').textContent = match.emmaSong.artist;
 
-    document.getElementById('battle-round-badge').textContent = `Faceoff ${this.battleIndex + 1} of ${this.battleRounds.length}`;
+    document.getElementById('battle-round-badge').textContent = `Faceoff ${this.classicBattleIndex + 1} of ${this.battleRounds.length}`;
   },
 
   voteBattle(who) {
-    const match = this.battleRounds[this.battleIndex];
+    const match = this.battleRounds[this.classicBattleIndex];
     if (who === 'dom') {
       this.battleScoreDom++;
       this.recordGlobalVote(match.domSong.title, match.domSong.artist);
@@ -822,8 +761,8 @@ const MusicApp = {
       this.recordGlobalVote(match.emmaSong.title, match.emmaSong.artist);
     }
 
-    this.battleIndex++;
-    this.renderBattle();
+    this.classicBattleIndex++;
+    this.renderClassicBattle();
   },
 
   recordGlobalVote(title, artist) {
@@ -899,6 +838,7 @@ const MusicApp = {
   },
 
   changeWrappedSlide(delta) {
+    this.updateWrappedData();
     const slides = document.querySelectorAll('.wrapped-slide');
     let nextIdx = this.wrappedSlideIndex + delta;
     if (nextIdx < 0) nextIdx = 0;
@@ -924,222 +864,153 @@ const MusicApp = {
     if (counter) counter.textContent = `${index + 1} / ${slides.length}`;
   },
 
-  // --------------------------------------------------------------------------
-  // 6. Concerts Near Us — Tampa
-  // --------------------------------------------------------------------------
-  initConcerts() {
-    this.renderConcerts();
 
-    const refreshBtn = document.getElementById('btn-refresh-concerts');
-    if (refreshBtn) {
-      refreshBtn.addEventListener('click', () => {
-        refreshBtn.classList.add('spinning');
-        setTimeout(() => {
-          refreshBtn.classList.remove('spinning');
-          this.renderConcerts();
-        }, 600);
+  // Each player gets five turns, with questions and answers shuffled for each game.
+  questions: [
+    ['English pop', 'Who released the album 21?', 'Adele', 'Dua Lipa', 'Taylor Swift', 'Rihanna'],
+    ['English pop', 'Who sings “Levitating”?', 'Dua Lipa', 'Adele', 'Sia', 'Lorde'],
+    ['Spanish pop', 'Who sings “Bailando” with Descemer Bueno and Gente de Zona?', 'Enrique Iglesias', 'Ricky Martin', 'Juanes', 'Maluma'],
+    ['Spanish pop', 'Who released the album El Mal Querer?', 'ROSALÍA', 'Shakira', 'Thalía', 'Paulina Rubio'],
+    ['Reggaeton', 'Who released “Gasolina”?', 'Daddy Yankee', 'Don Omar', 'J Balvin', 'Ozuna'],
+    ['Reggaeton', 'Who joins Luis Fonsi on the original “Despacito”?', 'Daddy Yankee', 'Bad Bunny', 'Maluma', 'J Balvin'],
+    ['2000s hits', 'Who released “Crazy in Love” featuring Jay-Z?', 'Beyoncé', 'Alicia Keys', 'Ciara', 'Rihanna'],
+    ['2000s hits', 'Which group released “Hey Ya!”?', 'OutKast', 'Black Eyed Peas', 'Gorillaz', 'Coldplay'],
+    ['Rock', 'Which band released “Bohemian Rhapsody”?', 'Queen', 'Nirvana', 'Oasis', 'The Police'],
+    ['Rock', 'Who is the lead singer of Paramore?', 'Hayley Williams', 'Amy Lee', 'Stevie Nicks', 'Debbie Harry'],
+    ['Hip-hop', 'Which artist released the album To Pimp a Butterfly?', 'Kendrick Lamar', 'Drake', 'J. Cole', 'Kanye West'],
+    ['Hip-hop', 'Who released “Lose Yourself”?', 'Eminem', 'Nas', 'Drake', 'Snoop Dogg'],
+    ['Movie music', 'Who sings “My Heart Will Go On” from Titanic?', 'Celine Dion', 'Whitney Houston', 'Mariah Carey', 'Adele'],
+    ['Movie music', 'Which film features “Let It Go” performed by Idina Menzel?', 'Frozen', 'Moana', 'Encanto', 'Tangled'],
+    ['International', 'Which South Korean group released “Dynamite”?', 'BTS', 'BLACKPINK', 'TWICE', 'EXO'],
+    ['International', 'Who performed “Waka Waka (This Time for Africa)” featuring Freshlyground?', 'Shakira', 'Karol G', 'Gloria Estefan', 'Anitta']
+  ],
+  shuffle(items) {
+    const copy = [...items];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  },
+  initGames() {
+    document.getElementById('battle-next').addEventListener('click', () => { this.battleIndex++; this.renderBattle(); });
+    document.getElementById('battle-replay').addEventListener('click', () => this.startBattle());
+    this.startBattle();
+  },
+  startBattle() {
+    this.battleQuestions = this.shuffle(this.questions).slice(0, 10);
+    this.battleIndex = 0;
+    this.battleScores = [0, 0];
+    this.renderBattle();
+  },
+  renderBattle() {
+    document.getElementById('dom-battle-score').textContent = this.battleScores[0];
+    document.getElementById('emma-battle-score').textContent = this.battleScores[1];
+    const done = this.battleIndex === this.battleQuestions.length;
+    document.getElementById('battle-play').classList.toggle('hidden', done);
+    document.getElementById('battle-finished').classList.toggle('hidden', !done);
+    if (done) {
+      document.getElementById('battle-winner').textContent = this.battleScores[0] === this.battleScores[1] ? "It's a tie! ♡" : `${this.battleScores[0] > this.battleScores[1] ? 'Dom' : 'Emma'} wins! 🏆`;
+      return;
+    }
+    const [category, question, answer, ...others] = this.battleQuestions[this.battleIndex];
+    document.getElementById('battle-turn').textContent = `${this.battleIndex % 2 ? 'Emma' : 'Dom'}'s turn · ${category}`;
+    document.getElementById('battle-round').textContent = `Turn ${this.battleIndex + 1} of 10`;
+    document.getElementById('battle-question').textContent = question;
+    document.getElementById('battle-feedback').textContent = '';
+    document.getElementById('battle-next').classList.add('hidden');
+    const options = document.getElementById('battle-options');
+    options.replaceChildren();
+    this.shuffle([answer, ...others]).forEach(option => {
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = 'game-choice-btn'; button.textContent = option;
+      button.addEventListener('click', () => {
+        options.querySelectorAll('button').forEach(b => { b.disabled = true; if (b.textContent === answer) b.classList.add('correct-choice'); });
+        if (option === answer) this.battleScores[this.battleIndex % 2]++;
+        else button.classList.add('wrong-choice');
+        document.getElementById('dom-battle-score').textContent = this.battleScores[0];
+        document.getElementById('emma-battle-score').textContent = this.battleScores[1];
+        document.getElementById('battle-feedback').textContent = option === answer ? 'Correct! +1 point' : `The answer is ${answer}.`;
+        document.getElementById('battle-next').classList.remove('hidden');
       });
-    }
-
-    const filterSelect = document.getElementById('concert-filter-select');
-    if (filterSelect) {
-      filterSelect.addEventListener('change', () => this.renderConcerts());
-    }
-
-    // Save visit timestamp for new concert badge
-    const lastVisit = localStorage.getItem(this.STORAGE_LAST_VISIT);
-    if (!lastVisit) {
-      localStorage.setItem(this.STORAGE_LAST_VISIT, Date.now().toString());
-    }
+      options.appendChild(button);
+    });
   },
-
-  renderConcerts() {
-    const listEl = document.getElementById('tampa-concerts-grid');
-    const filterSelect = document.getElementById('concert-filter-select');
-    if (!listEl) return;
-
-    const filter = filterSelect ? filterSelect.value : 'all';
-
-    let filtered = this.tampaConcerts;
-    if (filter === 'favorites') {
-      filtered = this.tampaConcerts.filter(c => c.badge.includes('Favorite') || c.badge.includes('Tribute'));
-    }
-
-    listEl.innerHTML = filtered.map(c => `
-      <article class="concert-card">
-        <div class="concert-header">
-          <span class="concert-badge">${c.badge}</span>
-          ${c.isNew ? '<span class="concert-new-indicator">NEW</span>' : ''}
-        </div>
-        <h3 class="concert-artist-name">${c.artist}</h3>
-        <p class="concert-venue-text">📍 ${c.venue}</p>
-        <p class="concert-date-text">🗓️ ${c.dateText}</p>
-        <div class="concert-actions-bar">
-          <a href="${c.ticketUrl}" target="_blank" rel="noopener noreferrer" class="btn-ticket-link">
-            Tickets & Info &nearr;
-          </a>
-          <button type="button" class="btn-wishlist-add" onclick="MusicApp.addConcertToBucketList('${c.artist.replace(/'/g, "\\'")}', '${c.venue.replace(/'/g, "\\'")}', '${c.dateText}')">
-            + Wishlist
-          </button>
-        </div>
-      </article>
-    `).join('');
+  initConcertTabs() {
+    ['discover', 'wishlist'].forEach(name => document.getElementById(`tab-${name}`).addEventListener('click', () => this.showConcertTab(name)));
   },
-
-  // --------------------------------------------------------------------------
-  // 7. Concert Bucket List & Attended Memories
-  // --------------------------------------------------------------------------
-  initBucketList() {
-    this.renderBucketList();
-
-    const addBtn = document.getElementById('btn-add-bucket-item');
-    if (addBtn) {
-      addBtn.addEventListener('click', () => {
-        const artist = document.getElementById('bucket-artist-input')?.value.trim();
-        const venue = document.getElementById('bucket-venue-input')?.value.trim();
-        const note = document.getElementById('bucket-note-input')?.value.trim();
-
-        if (artist) {
-          const list = this.getBucketList();
-          list.push({
-            id: Date.now(),
-            artist,
-            venue: venue || 'Tampa, FL or anywhere together',
-            note: note || '',
-            dateAdded: new Date().toLocaleDateString()
-          });
-          localStorage.setItem(this.STORAGE_BUCKET_LIST, JSON.stringify(list));
-          this.renderBucketList();
-
-          document.getElementById('bucket-artist-input').value = '';
-          document.getElementById('bucket-venue-input').value = '';
-          document.getElementById('bucket-note-input').value = '';
-        }
-      });
-    }
+  showConcertTab(name) {
+    ['discover', 'wishlist'].forEach(tab => {
+      const active = tab === name;
+      document.getElementById(`tab-${tab}`).classList.toggle('active', active);
+      document.getElementById(`tab-${tab}`).setAttribute('aria-selected', String(active));
+      document.getElementById(`concert-${tab}`).classList.toggle('hidden', !active);
+    });
   },
-
   getBucketList() {
-    try {
-      const stored = localStorage.getItem(this.STORAGE_BUCKET_LIST);
-      if (stored) return JSON.parse(stored);
-    } catch (e) {
-      console.error(e);
-    }
-    return [
+    try { return JSON.parse(localStorage.getItem(this.STORAGE_BUCKET_LIST)) || [
       { id: 101, artist: 'Gigi Perez', venue: 'Any small acoustic venue in Florida', note: 'Must hear Sailor Song live together!', dateAdded: 'Nov 2026' },
-      { id: 102, artist: '$uicideboy$', venue: 'Amalie Arena', note: 'Dom\'s dream concert', dateAdded: 'Nov 2026' }
-    ];
+      { id: 102, artist: '$uicideboy$', venue: 'Amalie Arena', note: "Dom's dream concert", dateAdded: 'Nov 2026' }
+    ]; } catch (e) { return []; }
   },
-
   getAttendedList() {
-    try {
-      const stored = localStorage.getItem(this.STORAGE_ATTENDED_LIST);
-      if (stored) return JSON.parse(stored);
-    } catch (e) {
-      console.error(e);
-    }
-    return [];
+    try { return JSON.parse(localStorage.getItem(this.STORAGE_ATTENDED_LIST)) || []; } catch (e) { return []; }
   },
-
-  addConcertToBucketList(artist, venue, dateText) {
-    const list = this.getBucketList();
-    list.push({
-      id: Date.now(),
-      artist,
-      venue,
-      note: `Added from Tampa concerts list (${dateText})`,
-      dateAdded: new Date().toLocaleDateString()
+  initBucketList() {
+    this.editingConcert = null;
+    document.getElementById('wishlist-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const fields = ['artist', 'venue', 'city', 'date', 'note'];
+      const values = Object.fromEntries(fields.map(field => [field, document.getElementById(`bucket-${field}-input`).value.trim()]));
+      if (!Object.values(values).some(Boolean)) { document.getElementById('wishlist-message').textContent = 'Add at least one detail.'; return; }
+      const attended = this.editingConcert?.attended || false;
+      const list = attended ? this.getAttendedList() : this.getBucketList();
+      if (this.editingConcert) {
+        const index = list.findIndex(item => String(item.id) === String(this.editingConcert.id));
+        if (index !== -1) list[index] = { ...list[index], ...values };
+      } else list.push({ id: Date.now(), ...values, dateAdded: new Date().toLocaleDateString() });
+      if (this.saveConcerts(attended, list)) { this.resetConcertForm(); this.renderBucketList(); }
     });
-    localStorage.setItem(this.STORAGE_BUCKET_LIST, JSON.stringify(list));
-    this.renderBucketList();
-
-    // Scroll smoothly to bucket list
-    const el = document.getElementById('bucket-list-section');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  },
-
-  markAsAttended(id) {
-    const bucket = this.getBucketList();
-    const itemIdx = bucket.findIndex(b => b.id === id);
-    if (itemIdx === -1) return;
-
-    const item = bucket.splice(itemIdx, 1)[0];
-    localStorage.setItem(this.STORAGE_BUCKET_LIST, JSON.stringify(bucket));
-
-    const attended = this.getAttendedList();
-    attended.push({
-      ...item,
-      attendedDate: new Date().toLocaleDateString()
-    });
-    localStorage.setItem(this.STORAGE_ATTENDED_LIST, JSON.stringify(attended));
-
+    document.getElementById('wishlist-cancel').addEventListener('click', () => this.resetConcertForm());
     this.renderBucketList();
   },
-
-  removeBucketItem(id) {
-    const bucket = this.getBucketList().filter(b => b.id !== id);
-    localStorage.setItem(this.STORAGE_BUCKET_LIST, JSON.stringify(bucket));
-    this.renderBucketList();
+  saveConcerts(attended, list) {
+    try { localStorage.setItem(attended ? this.STORAGE_ATTENDED_LIST : this.STORAGE_BUCKET_LIST, JSON.stringify(list)); return true; }
+    catch (e) { document.getElementById('wishlist-message').textContent = 'Could not save in this browser. Check your storage settings.'; return false; }
   },
-
-  removeAttendedItem(id) {
-    const attended = this.getAttendedList().filter(b => b.id !== id);
-    localStorage.setItem(this.STORAGE_ATTENDED_LIST, JSON.stringify(attended));
-    this.renderBucketList();
+  resetConcertForm() {
+    document.getElementById('wishlist-form').reset(); this.editingConcert = null;
+    document.getElementById('wishlist-save').textContent = '+ Add to Wishlist';
+    document.getElementById('wishlist-cancel').classList.add('hidden');
+    document.getElementById('wishlist-message').textContent = '';
   },
-
   renderBucketList() {
-    const wishlistEl = document.getElementById('concert-wishlist-cards');
-    const attendedEl = document.getElementById('concert-attended-cards');
-
-    const wishlist = this.getBucketList();
-    const attended = this.getAttendedList();
-
-    if (wishlistEl) {
-      if (wishlist.length === 0) {
-        wishlistEl.innerHTML = '<p class="empty-note">No concerts on our wishlist yet. Add one above!</p>';
-      } else {
-        wishlistEl.innerHTML = wishlist.map(item => `
-          <div class="bucket-card">
-            <div class="bucket-card-header">
-              <h4 class="bucket-artist-title">${item.artist}</h4>
-              <button type="button" class="btn-delete-item" onclick="MusicApp.removeBucketItem(${item.id})" title="Delete">✕</button>
-            </div>
-            <p class="bucket-venue">${item.venue}</p>
-            ${item.note ? `<p class="bucket-note">"${item.note}"</p>` : ''}
-            <div class="bucket-card-footer">
-              <span class="bucket-added-date">Added: ${item.dateAdded}</span>
-              <button type="button" class="btn-mark-attended" onclick="MusicApp.markAsAttended(${item.id})">
-                Attended! ✓
-              </button>
-            </div>
-          </div>
-        `).join('');
-      }
-    }
-
-    if (attendedEl) {
-      if (attended.length === 0) {
-        attendedEl.innerHTML = '<p class="empty-note">We haven\'t checked any concerts off our list yet! When we go to one, hit "Attended! ✓" to save the memory here.</p>';
-      } else {
-        attendedEl.innerHTML = attended.map(item => `
-          <div class="bucket-card attended-memory-card">
-            <div class="bucket-card-header">
-              <h4 class="bucket-artist-title">✓ ${item.artist}</h4>
-              <button type="button" class="btn-delete-item" onclick="MusicApp.removeAttendedItem(${item.id})" title="Delete">✕</button>
-            </div>
-            <p class="bucket-venue">📍 ${item.venue}</p>
-            ${item.note ? `<p class="bucket-note">"${item.note}"</p>` : ''}
-            <div class="attended-photo-placeholder">
-              <span>Concert Photo Memory</span>
-            </div>
-            <span class="bucket-attended-date">Date seen: ${item.attendedDate}</span>
-          </div>
-        `).join('');
-      }
-    }
+    [false, true].forEach(attended => {
+      const container = document.getElementById(attended ? 'concert-attended-cards' : 'concert-wishlist-cards');
+      const list = attended ? this.getAttendedList() : this.getBucketList();
+      container.replaceChildren();
+      if (!list.length) { container.textContent = attended ? 'No concerts attended yet.' : 'No concerts on our wishlist yet.'; return; }
+      list.forEach(item => {
+        const card = document.createElement('article'); card.className = 'bucket-card';
+        const title = document.createElement('h4'); title.className = 'bucket-artist-title'; title.textContent = item.artist || 'Concert'; card.appendChild(title);
+        [item.venue, item.city, item.date, item.note, attended && item.attendedDate ? `Date seen: ${item.attendedDate}` : null].filter(Boolean).forEach(value => { const p = document.createElement('p'); p.className = 'bucket-venue'; p.textContent = value; card.appendChild(p); });
+        const action = (label, handler) => { const button = document.createElement('button'); button.type = 'button'; button.className = 'btn-action-outline'; button.textContent = label; button.addEventListener('click', handler); card.appendChild(button); };
+        action('Edit', () => {
+          this.editingConcert = { id: item.id, attended };
+          ['artist', 'venue', 'city', 'date', 'note'].forEach(field => { document.getElementById(`bucket-${field}-input`).value = item[field] || ''; });
+          document.getElementById('wishlist-save').textContent = 'Save changes'; document.getElementById('wishlist-cancel').classList.remove('hidden');
+          document.getElementById('bucket-artist-input').focus();
+        });
+        action('Remove', () => { if (this.saveConcerts(attended, list.filter(entry => entry.id !== item.id))) { this.resetConcertForm(); this.renderBucketList(); } });
+        if (!attended) action('Mark attended ✓', () => {
+          const attendedList = this.getAttendedList();
+          if (this.saveConcerts(true, [...attendedList, { ...item, attendedDate: new Date().toLocaleDateString() }]) && this.saveConcerts(false, list.filter(entry => entry.id !== item.id))) { this.resetConcertForm(); this.renderBucketList(); }
+        });
+        container.appendChild(card);
+      });
+    });
   }
+
 };
 
 document.addEventListener('DOMContentLoaded', () => {

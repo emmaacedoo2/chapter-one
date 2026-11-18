@@ -648,61 +648,6 @@
 /* ==========================================================================
    Music Wrapped Section
    ========================================================================== */
-.wrapped-carousel-box {
-  background: #FAF8F5;
-  border: 1.5px solid #8B1E2D;
-  border-radius: 14px;
-  padding: 2.5rem 2rem;
-  text-align: center;
-  position: relative;
-  min-height: 280px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-shadow: 0 8px 30px rgba(168, 29, 29, 0.05);
-}
-
-.wrapped-slide {
-  display: none;
-  animation: heroFadeIn 0.5s ease-out;
-}
-
-.wrapped-slide.active {
-  display: block;
-}
-
-.wrapped-tag {
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent-red);
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.wrapped-highlight-title {
-  font-family: var(--font-serif);
-  font-size: clamp(1.6rem, 3.5vw, 2.3rem);
-  font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: 0.8rem;
-}
-
-.wrapped-desc-text {
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  color: #555562;
-  max-width: 520px;
-  margin: 0 auto;
-}
-
-.wrapped-nav-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 1.8rem;
-}
-
 /* ==========================================================================
    Concerts Near Us — Tampa
    ========================================================================== */
@@ -1101,4 +1046,62 @@
   .bucket-columns-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.bucket-add-form label { display: grid; gap: .25rem; font-size: .85rem; }
+.bucket-card button { margin: .4rem .4rem 0 0; }
+
+.wrapped-carousel-box {
+  background: #FAF8F5;
+  border: 1.5px solid #8B1E2D;
+  border-radius: 14px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 8px 30px rgba(168, 29, 29, 0.05);
+}
+
+.wrapped-slide {
+  display: none;
+  animation: heroFadeIn 0.5s ease-out;
+}
+
+.wrapped-slide.active {
+  display: block;
+}
+
+.wrapped-tag {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-red);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.wrapped-highlight-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.8rem;
+}
+
+.wrapped-desc-text {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: #555562;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.wrapped-nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.8rem;
 }

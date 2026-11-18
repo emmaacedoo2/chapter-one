@@ -15,8 +15,9 @@
   --accent-red: #8B1E2D;
   --accent-red-soft: rgba(139, 30, 45, 0.15);
   --border-delicate: rgba(0, 0, 0, 0.08);
-  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
-  --font-sans: 'Montserrat', sans-serif;
+  --font-serif: 'Bricolage Grotesque', Arial, sans-serif;
+  --font-display: 'Space Grotesk', Arial, sans-serif;
+  --font-sans: 'DM Sans', Arial, sans-serif;
   --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.035);
   --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
@@ -119,10 +120,10 @@ body {
 
 .hero-title {
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 4.5vw, 2.85rem);
-  font-weight: 500;
+  font-size: clamp(2.7rem, 8vw, 5rem);
+  font-weight: 800;
   line-height: 1.25;
-  letter-spacing: 0.015em;
+  letter-spacing: -0.035em;
   color: var(--text-main);
   margin-bottom: 0.9rem;
 }
@@ -133,6 +134,13 @@ body {
   font-size: 0.85em;
   margin-left: 0.15rem;
   vertical-align: middle;
+}
+
+.hero-name-subtitle {
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+  letter-spacing: 0.025em;
+  color: var(--text-muted);
 }
 
 .hero-dates {
@@ -850,4 +858,17 @@ body {
     font-size: 0.64rem;
     padding: 0.38rem 0.55rem;
   }
+}
+
+/* Shared typography for navigation and page subtitles. */
+.main-site-nav a, .top-nav a, .placeholder-top-nav a,
+.hero-subtitle-top, .hero-name-subtitle,
+html body .music-subtitle, html body .calendar-subtitle,
+html body .date-intro-sub, html body .travels-intro,
+html body .placeholder-intro, .arcade-header > p {
+  font-family: var(--font-display);
+}
+
+button, input, select, textarea {
+  font-family: var(--font-sans);
 }
