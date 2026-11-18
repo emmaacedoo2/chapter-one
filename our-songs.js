@@ -14,7 +14,8 @@ const MusicApp = {
   STORAGE_LAST_VISIT: 'chapter_one_concert_last_visit',
 
   // Config defaults
-  defaultPlaylistUrl: 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M', // Default preview playlist until custom is provided
+  previousDefaultPlaylistUrl: 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M',
+  defaultPlaylistUrl: 'https://open.spotify.com/playlist/66vQZL2ulkvpdsEAyZ0QLr',
 
   // Dom's favorite artists data
   artists: {
@@ -263,7 +264,10 @@ const MusicApp = {
   // 1. Shared Playlist Section
   // --------------------------------------------------------------------------
   initPlaylistSection() {
-    const savedUrl = localStorage.getItem(this.STORAGE_PLAYLIST_URL) || this.defaultPlaylistUrl;
+    const storedUrl = localStorage.getItem(this.STORAGE_PLAYLIST_URL);
+    const savedUrl = storedUrl === this.previousDefaultPlaylistUrl
+      ? this.defaultPlaylistUrl
+      : storedUrl || this.defaultPlaylistUrl;
     this.renderPlaylistEmbed(savedUrl);
 
     const editBtn = document.getElementById('btn-edit-playlist');
@@ -272,10 +276,11 @@ const MusicApp = {
     const cancelBtn = document.getElementById('btn-cancel-playlist');
     const input = document.getElementById('playlist-url-input');
     const openSpotifyBtn = document.getElementById('btn-open-playlist-spotify');
+    const addSongSpotifyBtn = document.getElementById('btn-add-song-spotify');
 
-    if (openSpotifyBtn) {
-      openSpotifyBtn.href = savedUrl;
-    }
+    [openSpotifyBtn, addSongSpotifyBtn].forEach(button => {
+      if (button) button.href = savedUrl;
+    });
 
     if (editBtn && modal) {
       editBtn.addEventListener('click', () => {
@@ -294,7 +299,9 @@ const MusicApp = {
         if (val) {
           localStorage.setItem(this.STORAGE_PLAYLIST_URL, val);
           this.renderPlaylistEmbed(val);
-          if (openSpotifyBtn) openSpotifyBtn.href = val;
+          [openSpotifyBtn, addSongSpotifyBtn].forEach(button => {
+            if (button) button.href = val;
+          });
         }
         modal.classList.add('hidden');
       });
@@ -313,10 +320,11 @@ const MusicApp = {
     }
 
     container.innerHTML = `
-      <iframe style="border-radius:12px" 
-        src="${embedSrc}?utm_source=generator&theme=0" 
-        width="100%" height="352" 
-        frameBorder="0" 
+      <iframe class="playlist-embed-frame"
+        title="Spotify playlist: 1st🖤"
+        src="${embedSrc}?utm_source=generator&theme=1"
+        width="100%" height="352"
+        frameBorder="0"
         allowfullscreen="" 
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
         loading="lazy">
