@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>so... what are we doing today?</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="date-ideas.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Light Comic Collage Background with Soft Overlay -->
+  <div class="site-background" aria-hidden="true"></div>
+
+  <!-- Delicate Corner Spider Webs -->
+  <div class="corner-web corner-web-left" aria-hidden="true">
+    <svg viewBox="0 0 100 100" class="corner-web-svg" fill="none" stroke="#141419" stroke-width="0.75" stroke-linecap="round">
+      <line x1="0" y1="0" x2="100" y2="0" />
+      <line x1="0" y1="0" x2="0" y2="100" />
+      <line x1="0" y1="0" x2="100" y2="35" />
+      <line x1="0" y1="0" x2="85" y2="70" />
+      <line x1="0" y1="0" x2="60" y2="95" />
+      <line x1="0" y1="0" x2="25" y2="100" />
+      <path d="M 0,22 Q 16,19 22,0" />
+      <path d="M 0,42 Q 30,36 42,0" />
+      <path d="M 0,62 Q 46,55 62,0" />
+      <path d="M 0,82 Q 64,74 82,0" />
+      <path d="M 0,100 Q 82,90 100,0" />
+    </svg>
+  </div>
+  <div class="corner-web corner-web-right" aria-hidden="true">
+    <svg viewBox="0 0 100 100" class="corner-web-svg" fill="none" stroke="#141419" stroke-width="0.75" stroke-linecap="round">
+      <line x1="0" y1="0" x2="100" y2="0" />
+      <line x1="0" y1="0" x2="0" y2="100" />
+      <line x1="0" y1="0" x2="100" y2="35" />
+      <line x1="0" y1="0" x2="85" y2="70" />
+      <line x1="0" y1="0" x2="60" y2="95" />
+      <line x1="0" y1="0" x2="25" y2="100" />
+      <path d="M 0,22 Q 16,19 22,0" />
+      <path d="M 0,42 Q 30,36 42,0" />
+      <path d="M 0,62 Q 46,55 62,0" />
+      <path d="M 0,82 Q 64,74 82,0" />
+      <path d="M 0,100 Q 82,90 100,0" />
+    </svg>
+  </div>
+
+  <div class="page-container">
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+      <a href="index.html" class="back-link">&larr; back to our story</a>
+      <div class="counter-pill-summary">
+        dates completed: <strong id="completed-count-badge">0</strong>
+      </div>
+    </nav>
+
+    <!-- Header Introduction -->
+    <header class="date-header">
+      <h1 class="date-main-title">so... what are we doing today?</h1>
+      <p class="date-intro-sub">
+        since we can never decide what to do and always end up asking chatgpt, i figured i'd make us our own little thing for it.
+      </p>
+      <p class="date-intro-smaller">
+        now we have no excuse to spend 40 minutes deciding what to do.
+      </p>
+    </header>
+
+    <!-- Sub Navigation Tabs -->
+    <div class="sub-tabs-bar" role="tablist">
+      <button type="button" class="sub-tab-btn active" data-target="view-generator">
+        plan generator
+      </button>
+      <button type="button" class="sub-tab-btn" data-target="view-favorites">
+        our favorites <span class="tab-badge" id="favorites-count-badge">0</span>
+      </button>
+      <button type="button" class="sub-tab-btn" data-target="view-completed">
+        we did this!
+      </button>
+    </div>
+
+    <!-- TAB 1: Generator View -->
+    <section id="view-generator" class="tab-view-section">
+      <!-- Interactive Filter Card -->
+      <div class="generator-card">
+        <!-- Budget Filter -->
+        <div class="filter-group">
+          <label class="filter-label">Budget</label>
+          <div class="filter-pills">
+            <label class="filter-pill">
+              <input type="radio" name="filter-budget" value="free">
+              <span>free</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-budget" value="cheap">
+              <span>cheap ($1–20)</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-budget" value="medium">
+              <span>medium ($20–60)</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-budget" value="expensive">
+              <span>expensive ($60+)</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-budget" value="all" checked>
+              <span>don't care</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Where Filter -->
+        <div class="filter-group">
+          <label class="filter-label">Where</label>
+          <div class="filter-pills">
+            <label class="filter-pill">
+              <input type="radio" name="filter-location" value="home">
+              <span>at home</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-location" value="out">
+              <span>going out</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-location" value="all" checked>
+              <span>either</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- What Kind of Plan -->
+        <div class="filter-group">
+          <label class="filter-label">What kind of plan</label>
+          <div class="filter-pills">
+            <label class="filter-pill">
+              <input type="radio" name="filter-category" value="food">
+              <span>food</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-category" value="movies">
+              <span>movies & shows</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-category" value="active">
+              <span>something active</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-category" value="romantic">
+              <span>romantic</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-category" value="funny">
+              <span>something funny</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-category" value="creative">
+              <span>creative</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-category" value="outdoors">
+              <span>outdoors</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-category" value="all" checked>
+              <span>surprise me</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- How Much Time -->
+        <div class="filter-group">
+          <label class="filter-label">How much time</label>
+          <div class="filter-pills">
+            <label class="filter-pill">
+              <input type="radio" name="filter-duration" value="short">
+              <span>under 1 hour</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-duration" value="medium">
+              <span>1–3 hours</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-duration" value="long">
+              <span>all day</span>
+            </label>
+            <label class="filter-pill">
+              <input type="radio" name="filter-duration" value="all" checked>
+              <span>doesn't matter</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="generator-actions">
+          <button type="button" class="btn-main-pick" id="btn-pick-idea">
+            okay, pick for us
+          </button>
+          <button type="button" class="btn-reset-filters" id="btn-reset-filters">
+            reset filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Generated Result Card (Hidden until generated) -->
+      <div id="date-result-card" class="result-card hidden">
+        <div class="result-header-tags">
+          <span class="meta-tag" id="idea-budget">free</span>
+          <span class="meta-tag" id="idea-location">at home</span>
+          <span class="meta-tag" id="idea-duration">1–3 hours</span>
+          <span class="meta-tag" id="idea-category">food</span>
+        </div>
+        <h2 class="result-title" id="idea-title">Date Idea Title</h2>
+        <p class="result-desc" id="idea-desc">Date description goes here.</p>
+
+        <div class="result-footer-actions">
+          <button type="button" class="btn-secondary-action" id="btn-toggle-favorite">
+            <span>❤️</span> <span class="btn-label">save to favorites</span>
+          </button>
+          <button type="button" class="btn-secondary-action" id="btn-toggle-completed">
+            <span>✓</span> <span class="btn-label">we did this!</span>
+          </button>
+          <button type="button" class="btn-secondary-action btn-another-one" id="btn-another-idea">
+            nah, another one &rarr;
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State if no results match -->
+      <div id="date-empty-state" class="empty-state-card hidden">
+        <h3 class="empty-state-title">no plans match that exact combo</h3>
+        <p class="empty-state-text">try loosening up a filter, picking "either" / "doesn't matter", or hit reset filters!</p>
+      </div>
+    </section>
+
+    <!-- TAB 2: Favorites View -->
+    <section id="view-favorites" class="tab-view-section hidden">
+      <div class="saved-items-container" id="favorites-list">
+        <!-- Rendered by date-ideas.js -->
+      </div>
+    </section>
+
+    <!-- TAB 3: Completed Plans View -->
+    <section id="view-completed" class="tab-view-section hidden">
+      <div class="saved-items-container" id="completed-list">
+        <!-- Rendered by date-ideas.js -->
+      </div>
+    </section>
+
+  </div>
+
+  <script src="date-ideas.js"></script>
+</body>
+</html>

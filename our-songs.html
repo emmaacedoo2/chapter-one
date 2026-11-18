@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>our songs &bull; Chapter One</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="our-songs.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Light Comic Collage Background with Soft Overlay -->
+  <div class="site-background" aria-hidden="true"></div>
+
+  <!-- Delicate Corner Spider Webs (Clean, Transparent Black SVGs) -->
+  <div class="corner-web corner-web-left" aria-hidden="true">
+    <svg viewBox="0 0 100 100" class="corner-web-svg" fill="none" stroke="#141419" stroke-width="0.75" stroke-linecap="round">
+      <line x1="0" y1="0" x2="100" y2="0" />
+      <line x1="0" y1="0" x2="0" y2="100" />
+      <line x1="0" y1="0" x2="100" y2="35" />
+      <line x1="0" y1="0" x2="85" y2="70" />
+      <line x1="0" y1="0" x2="60" y2="95" />
+      <line x1="0" y1="0" x2="25" y2="100" />
+      <path d="M 0,22 Q 16,19 22,0" />
+      <path d="M 0,42 Q 30,36 42,0" />
+      <path d="M 0,62 Q 46,55 62,0" />
+      <path d="M 0,82 Q 64,74 82,0" />
+      <path d="M 0,100 Q 82,90 100,0" />
+    </svg>
+  </div>
+  <div class="corner-web corner-web-right" aria-hidden="true">
+    <svg viewBox="0 0 100 100" class="corner-web-svg" fill="none" stroke="#141419" stroke-width="0.75" stroke-linecap="round">
+      <line x1="0" y1="0" x2="100" y2="0" />
+      <line x1="0" y1="0" x2="0" y2="100" />
+      <line x1="0" y1="0" x2="100" y2="35" />
+      <line x1="0" y1="0" x2="85" y2="70" />
+      <line x1="0" y1="0" x2="60" y2="95" />
+      <line x1="0" y1="0" x2="25" y2="100" />
+      <path d="M 0,22 Q 16,19 22,0" />
+      <path d="M 0,42 Q 30,36 42,0" />
+      <path d="M 0,62 Q 46,55 62,0" />
+      <path d="M 0,82 Q 64,74 82,0" />
+      <path d="M 0,100 Q 82,90 100,0" />
+    </svg>
+  </div>
+
+  <div class="page-container">
+    <!-- Top Nav -->
+    <nav class="top-nav">
+      <a href="index.html" class="back-link">&larr; back to our story</a>
+      <div class="music-quick-jumps">
+        <a href="#section-playlist" class="quick-jump-pill">playlist</a>
+        <a href="#section-remind" class="quick-jump-pill">remind me of you</a>
+        <a href="#section-vinyls" class="quick-jump-pill">dom's vinyls</a>
+        <a href="#section-games" class="quick-jump-pill">music games</a>
+        <a href="#section-wrapped" class="quick-jump-pill">wrapped</a>
+        <a href="#section-concerts" class="quick-jump-pill">concerts</a>
+      </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="music-header">
+      <h1 class="music-main-title">our songs</h1>
+      <p class="music-subtitle">because obviously we needed a whole page just for our music.</p>
+    </header>
+
+    <!-- SECTION 1: Our Playlist -->
+    <section id="section-playlist" class="music-section-card">
+      <span class="section-badge-tag">Shared Beats</span>
+      <h2 class="section-heading">our playlist</h2>
+      <p class="section-intro-text">
+        obviously our playlist had to be here too. and btw, we seriously need to keep adding songs to it hahaha.
+      </p>
+
+      <div class="playlist-header-actions">
+        <button type="button" class="btn-action-outline" id="btn-edit-playlist">
+          edit playlist link
+        </button>
+        <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" class="btn-spotify-pill" id="btn-open-playlist-spotify">
+          <span>add more songs</span> &nearr;
+        </a>
+      </div>
+
+      <div id="spotify-playlist-embed-container">
+        <!-- Rendered by our-songs.js -->
+      </div>
+    </section>
+
+    <!-- SECTION 2: Songs That Remind Me Of You -->
+    <section id="section-remind" class="music-section-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+        <span class="section-badge-tag">Love Notes</span>
+        <button type="button" class="btn-action-outline" id="btn-add-remind-song">
+          + add another song
+        </button>
+      </div>
+      <h2 class="section-heading">songs that remind me of you</h2>
+      <p class="section-intro-text">
+        the soundtrack of little moments, car rides, and thoughts of you.
+      </p>
+
+      <div class="remind-songs-container" id="remind-songs-list">
+        <!-- Rendered by our-songs.js -->
+      </div>
+    </section>
+
+    <!-- SECTION 3: Dom's Favorite Artists (Interactive Vinyl Records) -->
+    <section id="section-vinyls" class="music-section-card">
+      <span class="section-badge-tag">Vinyl Collection</span>
+      <h2 class="section-heading">dom's favorite artists</h2>
+      <p class="section-intro-text">
+        flip through your favorite records. pick an artist to spin their player and listen.
+      </p>
+
+      <!-- Vinyl Shelf -->
+      <div class="vinyl-shelf">
+        <!-- Vinyl 1: Mac Miller -->
+        <div class="vinyl-item-card" onclick="MusicApp.selectArtist('mac')">
+          <div class="interactive-vinyl active" data-artist="mac" role="button" aria-pressed="true" tabindex="0">
+            <div class="vinyl-center-label label-mac">
+              <span class="label-artist-text">Mac Miller</span>
+              <div class="label-spindle-hole"></div>
+            </div>
+          </div>
+          <h3 class="vinyl-caption-title">Mac Miller</h3>
+          <span class="vinyl-caption-sub">Swimming &bull; Circles</span>
+        </div>
+
+        <!-- Vinyl 2: $uicideboy$ -->
+        <div class="vinyl-item-card" onclick="MusicApp.selectArtist('suicideboys')">
+          <div class="interactive-vinyl" data-artist="suicideboys" role="button" aria-pressed="false" tabindex="0">
+            <div class="vinyl-center-label label-suicide">
+              <span class="label-artist-text">$B</span>
+              <div class="label-spindle-hole"></div>
+            </div>
+          </div>
+          <h3 class="vinyl-caption-title">$uicideboy$</h3>
+          <span class="vinyl-caption-sub">G59 &bull; New Orleans</span>
+        </div>
+
+        <!-- Vinyl 3: XXXTENTACION -->
+        <div class="vinyl-item-card" onclick="MusicApp.selectArtist('x')">
+          <div class="interactive-vinyl" data-artist="x" role="button" aria-pressed="false" tabindex="0">
+            <div class="vinyl-center-label label-x">
+              <span class="label-artist-text">XXX</span>
+              <div class="label-spindle-hole"></div>
+            </div>
+          </div>
+          <h3 class="vinyl-caption-title">XXXTENTACION</h3>
+          <span class="vinyl-caption-sub">17 &bull; ? &bull; Revenge</span>
+        </div>
+      </div>
+
+      <!-- Active Artist Spotlight Player Card -->
+      <div class="active-artist-spotlight">
+        <div class="spotlight-header">
+          <div>
+            <h3 class="spotlight-artist-name" id="active-artist-name">Mac Miller</h3>
+            <span class="spotlight-artist-genre" id="active-artist-genre">Hip Hop / Jazz Rap</span>
+          </div>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-spotify-pill" id="active-artist-spotify-link">
+            <span>Open in Spotify</span> &nearr;
+          </a>
+        </div>
+        <p class="spotlight-artist-bio" id="active-artist-bio">
+          One of Dom's all-time favorites. From Swimming to Circles and Watching Movies.
+        </p>
+
+        <!-- Official Spotify Artist Player Embed -->
+        <div id="artist-spotify-embed-container">
+          <!-- Injected by our-songs.js -->
+        </div>
+        <p class="playback-note">* Spotify embeds allow song previews; click "Open in Spotify" for full uninterrupted playback.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Music Mini-Games -->
+    <section id="section-games" class="music-section-card">
+      <span class="section-badge-tag">Arcade</span>
+      <h2 class="section-heading">music games</h2>
+      <p class="section-intro-text">
+        four little games to test our taste, settle battles, and rank our anthems.
+      </p>
+
+      <!-- Game Tabs Navigation -->
+      <div class="game-tabs-nav" role="tablist">
+        <button type="button" class="game-tab-btn active" data-game-target="panel-game-a">
+          Game A: Guess the Song
+        </button>
+        <button type="button" class="game-tab-btn" data-game-target="panel-game-b">
+          Game B: Title Challenge
+        </button>
+        <button type="button" class="game-tab-btn" data-game-target="panel-game-c">
+          Game C: This or That
+        </button>
+        <button type="button" class="game-tab-btn" data-game-target="panel-game-d">
+          Game D: Dom vs Emma Battle
+        </button>
+      </div>
+
+      <!-- GAME A PANEL -->
+      <div id="panel-game-a" class="game-view-panel">
+        <div class="game-status-header">
+          <span class="section-badge-tag">Clue Challenge</span>
+          <span class="game-score-badge">Score: <strong id="game-a-score">0</strong> pts</span>
+        </div>
+
+        <div id="game-a-play-area">
+          <div class="game-question-box">
+            <span class="game-clue-label" id="guess-artist-name">Mac Miller</span>
+            <p class="game-clue-body" id="guess-clue-text">"Clue text goes here..."</p>
+            <span class="game-sub-clue" id="guess-album-year">Swimming (2018)</span>
+          </div>
+          <div class="game-choices-grid" id="guess-options-grid"></div>
+          <div class="game-feedback-text" id="guess-feedback"></div>
+        </div>
+
+        <div id="game-a-finished" class="hidden" style="text-align:center; padding:1.5rem 0;">
+          <h3 class="section-heading">Round Finished!</h3>
+          <p class="section-intro-text">You scored <strong id="game-a-final-score">0</strong> points!</p>
+          <button type="button" class="btn-action-outline" id="btn-restart-game-a">Play Again</button>
+        </div>
+      </div>
+
+      <!-- GAME B PANEL -->
+      <div id="panel-game-b" class="game-view-panel hidden">
+        <div class="game-status-header">
+          <span class="section-badge-tag">Title Challenge</span>
+          <span class="game-score-badge">Score: <strong id="game-b-score">0</strong> pts</span>
+        </div>
+
+        <div id="game-b-play-area">
+          <div class="game-question-box">
+            <span class="game-clue-label">Complete the title</span>
+            <p class="game-clue-body" id="finish-prompt-text">"Prompt..."</p>
+            <span class="game-sub-clue" id="finish-note-text">Note</span>
+          </div>
+          <div class="game-choices-grid" id="finish-options-grid"></div>
+          <div class="game-feedback-text" id="finish-feedback"></div>
+        </div>
+
+        <div id="game-b-finished" class="hidden" style="text-align:center; padding:1.5rem 0;">
+          <h3 class="section-heading">Nice Run!</h3>
+          <p class="section-intro-text">Final score: <strong id="game-b-final-score">0</strong> points!</p>
+          <button type="button" class="btn-action-outline" id="btn-restart-game-b">Play Again</button>
+        </div>
+      </div>
+
+      <!-- GAME C PANEL: This or That -->
+      <div id="panel-game-c" class="game-view-panel hidden">
+        <div class="game-status-header">
+          <span class="section-badge-tag">Head to Head Picks</span>
+          <span class="game-score-badge" id="round-c-counter">Round 1 of 5</span>
+        </div>
+
+        <div id="game-c-play-area">
+          <p class="section-intro-text" style="text-align:center; margin-bottom:1.2rem;">
+            Which one are you playing right now? Pick your favorite:
+          </p>
+          <div class="this-or-that-grid">
+            <div class="song-choice-card" onclick="MusicApp.voteThisOrThat('A')">
+              <h4 class="song-card-title" id="this-song-title">Song A</h4>
+              <p class="song-card-artist" id="this-song-artist">Artist A</p>
+              <button type="button" class="btn-vote-pill">Pick This &uarr;</button>
+            </div>
+            <span class="versus-badge">OR</span>
+            <div class="song-choice-card" onclick="MusicApp.voteThisOrThat('B')">
+              <h4 class="song-card-title" id="that-song-title">Song B</h4>
+              <p class="song-card-artist" id="that-song-artist">Artist B</p>
+              <button type="button" class="btn-vote-pill">Pick That &uarr;</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="game-c-finished" class="hidden" style="text-align:center; padding:1rem 0;">
+          <h3 class="section-heading">Your Top Picks Podium!</h3>
+          <div id="podium-ranking-list" style="margin: 1.2rem 0; display:flex; flex-direction:column; gap:0.5rem;"></div>
+          <button type="button" class="btn-action-outline" id="btn-restart-game-c">Another Round</button>
+        </div>
+      </div>
+
+      <!-- GAME D PANEL: Dom vs Emma Battle -->
+      <div id="panel-game-d" class="game-view-panel hidden">
+        <div class="game-status-header">
+          <span class="section-badge-tag">Dom vs Emma Tournament</span>
+          <span class="game-score-badge" id="battle-round-badge">Faceoff 1 of 5</span>
+        </div>
+
+        <div class="battle-score-row">
+          <span class="battle-team-score">Dom's Team: <strong id="dom-battle-score">0</strong></span>
+          <span class="battle-team-score">Emma's Team: <strong id="emma-battle-score">0</strong></span>
+        </div>
+
+        <div id="game-d-play-area">
+          <div class="this-or-that-grid">
+            <div class="song-choice-card" onclick="MusicApp.voteBattle('dom')">
+              <span class="section-badge-tag" style="color:#d4a373;">Dom's Pick</span>
+              <h4 class="song-card-title" id="battle-dom-song">Self Care</h4>
+              <p class="song-card-artist" id="battle-dom-artist">Mac Miller</p>
+              <button type="button" class="btn-vote-pill">Vote Dom &uarr;</button>
+            </div>
+            <span class="versus-badge">VS</span>
+            <div class="song-choice-card" onclick="MusicApp.voteBattle('emma')">
+              <span class="section-badge-tag" style="color:var(--accent-red);">Emma's Pick</span>
+              <h4 class="song-card-title" id="battle-emma-song">Sailor Song</h4>
+              <p class="song-card-artist" id="battle-emma-artist">Gigi Perez</p>
+              <button type="button" class="btn-vote-pill">Vote Emma &uarr;</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="game-d-finished" class="hidden" style="text-align:center; padding:1.2rem 0;">
+          <h3 class="section-heading" id="battle-winner-declaration">Winner!</h3>
+          <p class="section-intro-text">All votes are recorded and added to Our Music Wrapped!</p>
+          <button type="button" class="btn-action-outline" id="btn-rematch-battle">Rematch!</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: Our Music Wrapped -->
+    <section id="section-wrapped" class="music-section-card">
+      <span class="section-badge-tag">Year in Review</span>
+      <h2 class="section-heading">our music wrapped</h2>
+      <p class="section-intro-text">
+        an interactive recap of our shared taste, battle champions, and favorite anthems based on our website memories.
+      </p>
+
+      <div class="wrapped-carousel-box">
+        <!-- Slide 1 -->
+        <div class="wrapped-slide active">
+          <span class="wrapped-tag">Chapter One Music Story</span>
+          <h3 class="wrapped-highlight-title">Our 2026 Soundtrack</h3>
+          <p class="wrapped-desc-text">
+            From late night road trips listening to Gigi Perez to spinning Mac Miller and $uicideboy$ at home, music has been the heartbeat of our first year together.
+          </p>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="wrapped-slide">
+          <span class="wrapped-tag">Our #1 Top Voted Song</span>
+          <h3 class="wrapped-highlight-title" id="wrapped-top-song">Sailor Song — Gigi Perez</h3>
+          <p class="wrapped-desc-text">
+            Our most picked and cherished track across our listening sessions and battles!
+          </p>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="wrapped-slide">
+          <span class="wrapped-tag">Dom's Most Spun Artist</span>
+          <h3 class="wrapped-highlight-title">Mac Miller</h3>
+          <p class="wrapped-desc-text">
+            Swimming through life together with Swimming & Circles on heavy rotation.
+          </p>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="wrapped-slide">
+          <span class="wrapped-tag">Dom vs Emma Battle Standings</span>
+          <h3 class="wrapped-highlight-title" id="wrapped-battle-score">Dom vs Emma</h3>
+          <p class="wrapped-desc-text">
+            Every faceoff proves that together we make the ultimate aux cord duo!
+          </p>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="wrapped-slide">
+          <span class="wrapped-tag">Memory Vault</span>
+          <h3 class="wrapped-highlight-title" id="wrapped-memory-count">1 song</h3>
+          <p class="wrapped-desc-text">
+            Cherished personal tracks that remind us of each other, saved in our private collection.
+          </p>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="wrapped-slide">
+          <span class="wrapped-tag">Looking Ahead</span>
+          <h3 class="wrapped-highlight-title">Chapter Two: More Songs Ahead ❤️</h3>
+          <p class="wrapped-desc-text">
+            More road trips, more concerts, and more songs to add to our playlist. Here's to our song forever!
+          </p>
+        </div>
+
+        <!-- Controls -->
+        <div class="wrapped-nav-row">
+          <button type="button" class="btn-action-outline" id="wrapped-prev-btn">&larr; previous</button>
+          <span class="game-score-badge" id="wrapped-slide-counter">1 / 6</span>
+          <button type="button" class="btn-action-outline" id="wrapped-next-btn">next &rarr;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: Concerts Near Us — Tampa -->
+    <section id="section-concerts" class="music-section-card">
+      <span class="section-badge-tag">Live Music</span>
+      <h2 class="section-heading">concerts near us &bull; tampa</h2>
+      <p class="section-intro-text">
+        upcoming shows and live events around Tampa, Florida for our favorite artists.
+      </p>
+
+      <div class="concert-filter-bar">
+        <div>
+          <label for="concert-filter-select" style="font-size:0.75rem; color:#666; margin-right:0.4rem;">Show:</label>
+          <select id="concert-filter-select" class="concert-select">
+            <option value="all">All Upcoming Shows</option>
+            <option value="favorites">Our Favorite Artists Only</option>
+          </select>
+        </div>
+        <button type="button" class="btn-action-outline" id="btn-refresh-concerts">
+          Refresh List
+        </button>
+      </div>
+
+      <div class="concerts-grid" id="tampa-concerts-grid">
+        <!-- Rendered by our-songs.js -->
+      </div>
+
+      <!-- Live Discovery API Note & Configuration -->
+      <div class="ticketmaster-info-box">
+        <strong>Ticketmaster Live Discovery Integration:</strong> 
+        Live official event search is pre-configured for Tampa venues (Amalie Arena, MidFlorida Amphitheatre, The Orpheum). To enable automatic live API queries, add your free Ticketmaster API key in localStorage (key: <code>ticketmaster_api_key</code>). Otherwise, all "Tickets & Info" links provide working direct searches.
+      </div>
+    </section>
+
+    <!-- SECTION 7: Our Concert Bucket List -->
+    <section id="bucket-list-section" class="music-section-card">
+      <span class="section-badge-tag">Wishlist &amp; Memories</span>
+      <h2 class="section-heading">our concert bucket list</h2>
+      <p class="section-intro-text">
+        artists we need to see live together, plus memories of the ones we've already attended!
+      </p>
+
+      <!-- Add New Wishlist Item -->
+      <div class="bucket-add-form">
+        <input type="text" id="bucket-artist-input" class="bucket-input" placeholder="Artist name (e.g. Gigi Perez, $uicideboy$)...">
+        <input type="text" id="bucket-venue-input" class="bucket-input" placeholder="Dream venue (e.g. Amalie Arena, Tampa)...">
+        <input type="text" id="bucket-note-input" class="bucket-input" placeholder="Personal note or song we must hear...">
+        <button type="button" class="btn-add-bucket" id="btn-add-bucket-item">+ Add to Wishlist</button>
+      </div>
+
+      <!-- Two Columns: Wishlist vs Attended -->
+      <div class="bucket-columns-grid">
+        <!-- Wishlist -->
+        <div>
+          <h3 class="bucket-subheading">Our Wishlist 📌</h3>
+          <div class="bucket-cards-stack" id="concert-wishlist-cards"></div>
+        </div>
+
+        <!-- Attended Memories -->
+        <div>
+          <h3 class="bucket-subheading">Attended Memories 🎟️</h3>
+          <div class="bucket-cards-stack" id="concert-attended-cards"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Modal: Edit Shared Playlist URL -->
+  <div id="playlist-modal" class="modal-overlay hidden">
+    <div class="modal-content-card">
+      <h3 class="modal-title">Edit Our Spotify Playlist</h3>
+      <p class="modal-desc">Paste your shared Spotify playlist URL (or URI) below. It will immediately update the embed on this page!</p>
+      <div class="modal-form-group">
+        <label class="modal-label" for="playlist-url-input">Spotify Playlist Link</label>
+        <input type="url" id="playlist-url-input" class="modal-input" placeholder="https://open.spotify.com/playlist/...">
+      </div>
+      <div class="modal-actions-row">
+        <button type="button" class="btn-action-outline" id="btn-cancel-playlist">Cancel</button>
+        <button type="button" class="btn-add-bucket" id="btn-save-playlist">Save Playlist</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add Song That Reminds Me Of You -->
+  <div id="remind-song-modal" class="modal-overlay hidden">
+    <div class="modal-content-card">
+      <h3 class="modal-title">Add a Song Memory</h3>
+      <p class="modal-desc">Add a song that will always remind you of him, along with your personal note.</p>
+      <div class="modal-form-group">
+        <label class="modal-label" for="new-song-title">Song Title</label>
+        <input type="text" id="new-song-title" class="modal-input" placeholder="e.g. Sailor Song">
+      </div>
+      <div class="modal-form-group">
+        <label class="modal-label" for="new-song-artist">Artist</label>
+        <input type="text" id="new-song-artist" class="modal-input" placeholder="e.g. Gigi Perez">
+      </div>
+      <div class="modal-form-group">
+        <label class="modal-label" for="new-song-message">Personal Note</label>
+        <textarea id="new-song-message" class="modal-textarea" placeholder="Why this song reminds you of him..."></textarea>
+      </div>
+      <div class="modal-form-group">
+        <label class="modal-label" for="new-song-spotify">Spotify Link (Optional)</label>
+        <input type="url" id="new-song-spotify" class="modal-input" placeholder="https://open.spotify.com/track/...">
+      </div>
+      <div class="modal-actions-row">
+        <button type="button" class="btn-action-outline" id="btn-cancel-remind-song">Cancel</button>
+        <button type="button" class="btn-add-bucket" id="btn-save-remind-song">Save Song</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="our-songs.js"></script>
+</body>
+</html>

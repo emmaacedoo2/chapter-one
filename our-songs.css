@@ -1,0 +1,1044 @@
+/* ==========================================================================
+   Our Songs Page Styling
+   Vinyl records & scrapbook aesthetic matching Chapter One
+   ========================================================================== */
+
+.page-container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3.5rem 1.25rem 7rem;
+  position: relative;
+}
+
+/* Navigation & Sub-nav */
+.top-nav {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back-link {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: var(--accent-red);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid rgba(168, 29, 29, 0.2);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  transition: all 0.25s ease;
+}
+
+.back-link:hover {
+  background: #ffffff;
+  border-color: var(--accent-red);
+  transform: translateX(-2px);
+  box-shadow: 0 3px 10px rgba(168, 29, 29, 0.08);
+}
+
+.music-quick-jumps {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.quick-jump-pill {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border-delicate);
+  padding: 0.25rem 0.65rem;
+  border-radius: 14px;
+  transition: all 0.2s ease;
+}
+
+.quick-jump-pill:hover {
+  color: var(--accent-red);
+  border-color: rgba(168, 29, 29, 0.3);
+  background: #ffffff;
+}
+
+/* Header */
+.music-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.music-main-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.3rem, 5.5vw, 3.2rem);
+  font-weight: 500;
+  color: var(--text-main);
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.01em;
+}
+
+.music-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: #555564;
+  letter-spacing: 0.02em;
+}
+
+/* Common Section Card */
+.music-section-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-delicate);
+  border-radius: 14px;
+  padding: 2.2rem;
+  margin-bottom: 3rem;
+  box-shadow: var(--shadow-subtle);
+  position: relative;
+}
+
+.section-badge-tag {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-red);
+  margin-bottom: 0.5rem;
+}
+
+.section-heading {
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.6rem;
+}
+
+.section-intro-text {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: #555566;
+  margin-bottom: 1.6rem;
+}
+
+/* Buttons */
+.btn-spotify-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #1db954;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.4rem 0.95rem;
+  border-radius: 20px;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px rgba(29, 185, 84, 0.2);
+}
+
+.btn-spotify-pill:hover {
+  background: #1ed760;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(29, 185, 84, 0.3);
+}
+
+.btn-action-outline {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  padding: 0.4rem 0.95rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-action-outline:hover {
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+  background: #ffffff;
+}
+
+/* Playlist Bar */
+.playlist-header-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+/* Remind Me Of You */
+.remind-songs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.remind-song-card {
+  background: #ffffff;
+  border: 1px solid var(--border-delicate);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.remind-song-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.8rem;
+}
+
+.song-note-badge {
+  font-size: 0.7rem;
+  color: var(--accent-red);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.remind-song-title {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.remind-song-artist {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.remind-song-quote {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-style: italic;
+  line-height: 1.65;
+  color: #3b3b48;
+  padding: 0.6rem 0.9rem;
+  border-left: 2px solid var(--accent-red);
+  background: #fafafc;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 1rem;
+}
+
+/* ==========================================================================
+   Interactive Vinyl Records
+   ========================================================================== */
+.vinyl-shelf {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.2rem;
+}
+
+.vinyl-item-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Realistic Vinyl Record */
+.interactive-vinyl {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  position: relative;
+  /* Realistic vinyl groove texture */
+  background:
+    radial-gradient(circle at center, transparent 20%, rgba(255, 255, 255, 0.04) 21%, transparent 22%),
+    radial-gradient(circle at center, transparent 35%, rgba(255, 255, 255, 0.03) 36%, transparent 37%),
+    radial-gradient(circle at center, transparent 50%, rgba(255, 255, 255, 0.04) 51%, transparent 52%),
+    radial-gradient(circle at center, transparent 65%, rgba(255, 255, 255, 0.03) 66%, transparent 67%),
+    radial-gradient(circle at center, transparent 80%, rgba(255, 255, 255, 0.04) 81%, transparent 82%),
+    conic-gradient(from 45deg, #18181b 0deg, #27272a 40deg, #18181b 90deg, #27272a 140deg, #18181b 180deg, #27272a 220deg, #18181b 270deg, #27272a 320deg, #18181b 360deg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.interactive-vinyl:hover {
+  transform: translateY(-8px) scale(1.06);
+  box-shadow: 0 14px 30px rgba(168, 29, 29, 0.2);
+}
+
+.interactive-vinyl.active {
+  transform: translateY(-8px) scale(1.08);
+  box-shadow: 0 14px 35px rgba(168, 29, 29, 0.35);
+  animation: vinylSpin 14s linear infinite;
+}
+
+@keyframes vinylSpin {
+  from { transform: translateY(-8px) scale(1.08) rotate(0deg); }
+  to { transform: translateY(-8px) scale(1.08) rotate(360deg); }
+}
+
+/* Center vinyl label */
+.vinyl-center-label {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6);
+}
+
+.label-mac {
+  background: linear-gradient(135deg, #d4a373 0%, #faedcd 100%);
+  color: #3b2816;
+}
+
+.label-suicide {
+  background: linear-gradient(135deg, #9b1d1d 0%, #1f1414 100%);
+  color: #ffffff;
+}
+
+.label-x {
+  background: linear-gradient(135deg, #27272a 0%, #f4f4f5 100%);
+  color: #18181b;
+}
+
+.label-artist-text {
+  font-family: var(--font-serif);
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.label-spindle-hole {
+  width: 10px;
+  height: 10px;
+  background: #09090b;
+  border-radius: 50%;
+  margin-top: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.vinyl-caption-title {
+  margin-top: 0.8rem;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.vinyl-caption-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* Active Artist Spotlight Player */
+.active-artist-spotlight {
+  background: #ffffff;
+  border: 1px solid var(--border-delicate);
+  border-radius: 12px;
+  padding: 1.8rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.spotlight-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.8rem;
+}
+
+.spotlight-artist-name {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.spotlight-artist-genre {
+  font-size: 0.78rem;
+  color: var(--accent-red);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.spotlight-artist-bio {
+  font-size: 0.88rem;
+  color: #555562;
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
+}
+
+.playback-note {
+  font-size: 0.72rem;
+  color: #888898;
+  margin-top: 0.6rem;
+  font-style: italic;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Music Games
+   ========================================================================== */
+.game-tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.8rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding-bottom: 0.8rem;
+}
+
+.game-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 0.4rem 0.9rem;
+  border-radius: 18px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.game-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text-main);
+}
+
+.game-tab-btn.active {
+  background: #ffffff;
+  color: var(--accent-red);
+  border-color: rgba(168, 29, 29, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.game-view-panel {
+  background: #ffffff;
+  border: 1px solid var(--border-delicate);
+  border-radius: 10px;
+  padding: 1.8rem;
+}
+
+.game-status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.4rem;
+}
+
+.game-score-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-red);
+  background: rgba(168, 29, 29, 0.08);
+  padding: 0.25rem 0.7rem;
+  border-radius: 14px;
+}
+
+.game-question-box {
+  margin-bottom: 1.5rem;
+}
+
+.game-clue-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.game-clue-body {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--text-main);
+  line-height: 1.4;
+  margin-bottom: 0.4rem;
+}
+
+.game-sub-clue {
+  font-size: 0.82rem;
+  color: #727282;
+}
+
+.game-choices-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.game-choice-btn {
+  background: #f8f8fb;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--text-main);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.game-choice-btn:hover:not(:disabled) {
+  background: #ffffff;
+  border-color: var(--accent-red);
+  transform: translateY(-1px);
+}
+
+.game-choice-btn.correct-choice {
+  background: rgba(34, 197, 94, 0.15) !important;
+  border-color: #22c55e !important;
+  color: #15803d !important;
+  font-weight: 600;
+}
+
+.game-choice-btn.wrong-choice {
+  background: rgba(239, 68, 68, 0.15) !important;
+  border-color: #ef4444 !important;
+  color: #b91c1c !important;
+}
+
+.game-feedback-text {
+  min-height: 24px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.correct-text {
+  color: #16a34a;
+}
+
+.incorrect-text {
+  color: #dc2626;
+}
+
+/* This or That Matchup */
+.this-or-that-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1.2rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.versus-badge {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--accent-red);
+  font-weight: 700;
+}
+
+.song-choice-card {
+  background: #fbfbfd;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.song-choice-card:hover {
+  background: #ffffff;
+  border-color: var(--accent-red);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(168, 29, 29, 0.1);
+}
+
+.song-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+}
+
+.song-card-artist {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 0.8rem;
+}
+
+.btn-vote-pill {
+  background: #141419;
+  color: #ffffff;
+  border: none;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+/* Dom vs Emma Battle */
+.battle-score-row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1.5rem;
+  padding: 0.8rem;
+  background: #f8f8fb;
+  border-radius: 8px;
+}
+
+.battle-team-score strong {
+  font-size: 1.2rem;
+  color: var(--accent-red);
+}
+
+/* ==========================================================================
+   Music Wrapped Section
+   ========================================================================== */
+.wrapped-carousel-box {
+  background: linear-gradient(145deg, #ffffff 0%, #faf8f8 100%);
+  border: 1px solid rgba(168, 29, 29, 0.25);
+  border-radius: 14px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 8px 30px rgba(168, 29, 29, 0.05);
+}
+
+.wrapped-slide {
+  display: none;
+  animation: heroFadeIn 0.5s ease-out;
+}
+
+.wrapped-slide.active {
+  display: block;
+}
+
+.wrapped-tag {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-red);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.wrapped-highlight-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.8rem;
+}
+
+.wrapped-desc-text {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: #555562;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.wrapped-nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.8rem;
+}
+
+/* ==========================================================================
+   Concerts Near Us — Tampa
+   ========================================================================== */
+.concert-filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.concert-select {
+  padding: 0.35rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  font-size: 0.78rem;
+  background: #ffffff;
+  color: var(--text-main);
+}
+
+.concerts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.concert-card {
+  background: #ffffff;
+  border: 1px solid var(--border-delicate);
+  border-radius: 10px;
+  padding: 1.2rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.concert-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(168, 29, 29, 0.3);
+}
+
+.concert-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.concert-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--accent-red);
+  background: rgba(168, 29, 29, 0.08);
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+}
+
+.concert-new-indicator {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--accent-red);
+  padding: 0.15rem 0.45rem;
+  border-radius: 10px;
+}
+
+.concert-artist-name {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+}
+
+.concert-venue-text {
+  font-size: 0.8rem;
+  color: #666675;
+  margin-bottom: 0.2rem;
+}
+
+.concert-date-text {
+  font-size: 0.78rem;
+  color: #444452;
+  font-weight: 500;
+  margin-bottom: 0.9rem;
+}
+
+.concert-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-ticket-link {
+  font-size: 0.75rem;
+  color: var(--accent-red);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.btn-wishlist-add {
+  background: #f8f8fb;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.btn-wishlist-add:hover {
+  background: #ffffff;
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+}
+
+.ticketmaster-info-box {
+  margin-top: 1.5rem;
+  padding: 0.9rem 1.1rem;
+  background: #fafafc;
+  border: 1px dashed rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  font-size: 0.76rem;
+  color: #727282;
+  line-height: 1.6;
+}
+
+/* Bucket List & Attended */
+.bucket-add-form {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.8rem;
+}
+
+.bucket-input {
+  flex: 1;
+  min-width: 180px;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  font-size: 0.8rem;
+}
+
+.btn-add-bucket {
+  background: #141419;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-add-bucket:hover {
+  background: var(--accent-red);
+}
+
+.bucket-columns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.bucket-subheading {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.9rem;
+}
+
+.bucket-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.bucket-card {
+  background: #ffffff;
+  border: 1px solid var(--border-delicate);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.bucket-card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+
+.bucket-artist-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.btn-delete-item {
+  background: transparent;
+  border: none;
+  color: #9999a8;
+  cursor: pointer;
+  padding: 0 0.4rem;
+}
+
+.btn-delete-item:hover {
+  color: var(--accent-red);
+}
+
+.bucket-venue {
+  font-size: 0.78rem;
+  color: #666675;
+  margin-bottom: 0.3rem;
+}
+
+.bucket-note {
+  font-size: 0.78rem;
+  color: #3b3b48;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.bucket-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.bucket-added-date {
+  font-size: 0.7rem;
+  color: #888898;
+}
+
+.btn-mark-attended {
+  background: rgba(30, 130, 60, 0.1);
+  color: #1e823c;
+  border: 1px solid rgba(30, 130, 60, 0.2);
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-mark-attended:hover {
+  background: #1e823c;
+  color: #ffffff;
+}
+
+.attended-memory-card {
+  background: #fbfdfc;
+  border-color: rgba(30, 130, 60, 0.2);
+}
+
+.attended-photo-placeholder {
+  height: 90px;
+  background: #f2f5f3;
+  border: 1px dashed rgba(30, 130, 60, 0.3);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.6rem 0;
+  font-size: 0.7rem;
+  color: #607d68;
+}
+
+.bucket-attended-date {
+  font-size: 0.7rem;
+  color: #1e823c;
+  font-weight: 500;
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal-content-card {
+  background: #ffffff;
+  border: 1px solid var(--border-delicate);
+  border-radius: 14px;
+  padding: 2rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.modal-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 1.2rem;
+}
+
+.modal-form-group {
+  margin-bottom: 1rem;
+}
+
+.modal-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.modal-input, .modal-textarea {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 0.85rem;
+  font-family: var(--font-sans);
+}
+
+.modal-textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.modal-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+}
+
+/* Helpers */
+.hidden {
+  display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-container {
+    padding-top: 2.5rem;
+  }
+  .vinyl-shelf {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .interactive-vinyl {
+    width: 120px;
+    height: 120px;
+  }
+  .game-choices-grid {
+    grid-template-columns: 1fr;
+  }
+  .this-or-that-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  .versus-badge {
+    margin: 0.4rem 0;
+  }
+  .concerts-grid {
+    grid-template-columns: 1fr;
+  }
+  .bucket-columns-grid {
+    grid-template-columns: 1fr;
+  }
+}
