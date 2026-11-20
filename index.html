@@ -5,6 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy 1st Anniversary ❤️</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .christmas-grid { grid-template-columns: 1fr; max-width: 620px; margin: auto; }
+    .distance-detail { display: flex; align-items: center; gap: .8rem; margin-top: 2rem; color: #242126; font-size: 1.1rem; }
+    .distance-detail::before, .distance-detail::after { content: ''; height: 1px; flex: 1; background: repeating-linear-gradient(to right, #8b1e2d 0 5px, transparent 5px 10px); opacity: .5; }
+    .memory-collage { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .memory-collage button, .travel-photo { padding: 0; border: 0; background: transparent; cursor: zoom-in; }
+    .memory-collage img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 9px; }
+    .travel-carousel { min-width: 0; text-align: center; touch-action: pan-y; }
+    .travel-photo { display: block; width: 100%; height: 340px; border-radius: 10px; background: #eee9e4; overflow: hidden; }
+    .travel-photo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .travel-controls { display: flex; align-items: center; justify-content: center; gap: .8rem; margin-top: .7rem; }
+    .travel-controls button { border: 1px solid #242126; border-radius: 50%; background: transparent; width: 40px; height: 40px; cursor: pointer; font-size: 1.2rem; }
+    .travel-count { color: #8b1e2d; font-size: .8rem; min-width: 3em; }
+    .travel-dots { display: flex; justify-content: center; gap: .25rem; margin-top: .4rem; }
+    .travel-dots button { width: 28px; height: 28px; padding: 10px; border: 0; background: transparent; cursor: pointer; }
+    .travel-dots button::after { content: ''; display: block; width: 8px; height: 8px; border-radius: 50%; background: #c7b8b8; }
+    .travel-dots button[aria-current="true"]::after { background: #8b1e2d; }
+    .photo-viewer { position: fixed; inset: 0; max-width: none; max-height: none; width: 100%; height: 100%; margin: 0; padding: 3rem 1rem 1rem; border: 0; background: rgba(20, 20, 25, .95); }
+    .photo-viewer::backdrop { background: rgba(20, 20, 25, .8); }
+    .photo-viewer img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .photo-viewer button { position: absolute; right: 1rem; top: .5rem; color: white; background: transparent; border: 0; font-size: 2rem; cursor: pointer; }
+    @media (max-width: 768px) { .travel-photo { height: min(70vh, 420px); } }
+  </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -118,21 +141,21 @@
                 <div class="slide-body">
                   <p>It all started on December 8, 2025, when we were flying back home from Pittsburgh to Florida.</p>
                   <p>Because, believe it or not, I met your family and went to your house before we were even officially dating... but the wait was worth it.</p>
-                  <p>A day that will stay in our memories forever. ❤️</p>
+                  <p>A day that will stay in our memories forever. 🖤</p>
                 </div>
               </div>
-              <div class="slide-photos-col">
-                <div class="photo-placeholder-grid count-2">
-                  <div class="photo-box"><span class="photo-label">Photo 1</span></div>
-                  <div class="photo-box"><span class="photo-label">Photo 2</span></div>
-                </div>
+              <div class="slide-photos-col first-day-collage">
+                <img class="first-day-car" src="images/first-day-car.jpg" alt="A car selfie together">
+                <img src="images/first-day-flight.jpg" alt="The view from the airplane window">
+                <img src="images/first-day-caps.jpg" alt="Together in matching caps">
+                <img src="images/first-day-kiss.jpg" alt="Sharing a kiss outside">
               </div>
             </div>
           </article>
 
           <!-- SLIDE 2: Christmas apart -->
           <article class="story-slide" data-slide-index="1">
-            <div class="slide-content-grid">
+            <div class="slide-content-grid christmas-grid">
               <div class="slide-text-col">
                 <h2 class="slide-title">Christmas apart</h2>
                 <div class="slide-body">
@@ -141,12 +164,7 @@
                   <p>We spent those days with our families and our people, me in Madrid and you in Pittsburgh, waiting until we could finally see each other again.</p>
                 </div>
               </div>
-              <div class="slide-photos-col">
-                <div class="photo-placeholder-grid count-2">
-                  <div class="photo-box"><span class="photo-label">Photo 1</span></div>
-                  <div class="photo-box"><span class="photo-label">Photo 2</span></div>
-                </div>
-              </div>
+              <div class="distance-detail" aria-hidden="true">♥ &nbsp; ♥</div>
             </div>
           </article>
 
@@ -163,11 +181,11 @@
                   <p>And of course, you were there too, on such an important day for me.</p>
                 </div>
               </div>
-              <div class="slide-photos-col">
-                <div class="photo-placeholder-grid count-2">
-                  <div class="photo-box"><span class="photo-label">Photo 1</span></div>
-                  <div class="photo-box"><span class="photo-label">Photo 2</span></div>
-                </div>
+              <div class="slide-photos-col memory-collage">
+                <button type="button" class="enlarge-photo" aria-label="Enlarge: Smiling with red roses at a restaurant"><img src="images/IMG_3804.jpeg" alt="Smiling with red roses at a restaurant"></button>
+                <button type="button" class="enlarge-photo" aria-label="Enlarge: A daylight car selfie together"><img src="images/72966d5a-86b3-4c8a-9bbe-41132a9e1dab.jpg" alt="A daylight car selfie together"></button>
+                <button type="button" class="enlarge-photo" aria-label="Enlarge: Standing together outdoors under trees"><img src="images/IMG_1258.jpeg" alt="Standing together outdoors under trees"></button>
+                <button type="button" class="enlarge-photo" aria-label="Enlarge: Sharing a kiss in a tropical garden"><img src="images/IMG_6766.jpg" alt="Sharing a kiss in a tropical garden"></button>
               </div>
             </div>
           </article>
@@ -185,11 +203,14 @@
                   <p>I got to make one of my dreams come true, visiting Amalfi with the love of my life. ❤️</p>
                 </div>
               </div>
-              <div class="slide-photos-col">
-                <div class="photo-placeholder-grid count-2">
-                  <div class="photo-box"><span class="photo-label">Photo 1</span></div>
-                  <div class="photo-box"><span class="photo-label">Photo 2</span></div>
+              <div class="slide-photos-col travel-carousel" aria-label="Summer travel photos">
+                <button type="button" class="travel-photo enlarge-photo" aria-label="Enlarge travel photo"><img src="images/30ae34d6-92a7-4085-b7d5-d907d2cb3c30.JPG" alt="Together at El Escorial"></button>
+                <div class="travel-controls">
+                  <button type="button" class="travel-prev" aria-label="Previous photo">←</button>
+                  <span class="travel-count" aria-live="polite">1 / 8</span>
+                  <button type="button" class="travel-next" aria-label="Next photo">→</button>
                 </div>
+                <div class="travel-dots" aria-label="Choose a travel photo"></div>
               </div>
             </div>
           </article>
@@ -317,6 +338,67 @@
     </button>
   </aside>
 
+  <dialog class="photo-viewer" aria-label="Full-size photo viewer">
+    <button type="button" aria-label="Close photo viewer">×</button>
+    <img src="" alt="">
+  </dialog>
   <script src="script.js"></script>
+  <script>
+    const travelPhotos = [
+      ['30ae34d6-92a7-4085-b7d5-d907d2cb3c30.JPG', 'Together at El Escorial'],
+      ['e7e418bc-8c4c-471b-b0e5-f0f8c154105e.JPG', 'A sunset city selfie'],
+      ['IMG_1940_VSCO.JPG', 'A kiss by the Madrid cathedral'],
+      ['IMG_7943.jpeg', 'A selfie at the Pompeii ruins'],
+      ['8e13797b-0547-4709-87f3-ceb5ff4f9a17.jpg', 'A kiss in a Pompeii archway'],
+      ['IMG_2318.jpeg', 'Together by a castle in Spain'],
+      ['IMG_2193.jpeg', 'A selfie overlooking the Amalfi Coast'],
+      ['IMG_8130.jpeg', 'A black and white selfie together']
+    ];
+    const carousel = document.querySelector('.travel-carousel');
+    const travelImage = carousel.querySelector('img');
+    const count = carousel.querySelector('.travel-count');
+    const dots = carousel.querySelector('.travel-dots');
+    let photoIndex = 0;
+    function showPhoto(index) {
+      photoIndex = (index + travelPhotos.length) % travelPhotos.length;
+      travelImage.src = 'images/' + travelPhotos[photoIndex][0];
+      travelImage.alt = travelPhotos[photoIndex][1];
+      count.textContent = `${photoIndex + 1} / ${travelPhotos.length}`;
+      [...dots.children].forEach((dot, i) => dot.setAttribute('aria-current', i === photoIndex ? 'true' : 'false'));
+    }
+    travelPhotos.forEach((photo, i) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Show photo ${i + 1}: ${photo[1]}`);
+      dot.addEventListener('click', () => showPhoto(i));
+      dots.appendChild(dot);
+    });
+    carousel.querySelector('.travel-prev').addEventListener('click', () => showPhoto(photoIndex - 1));
+    carousel.querySelector('.travel-next').addEventListener('click', () => showPhoto(photoIndex + 1));
+    let touchX = 0;
+    carousel.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; e.stopPropagation(); }, { passive: true });
+    carousel.addEventListener('touchend', e => {
+      const distance = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(distance) > 40) showPhoto(photoIndex + (distance < 0 ? 1 : -1));
+      e.stopPropagation();
+    }, { passive: true });
+    carousel.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.stopPropagation(); e.preventDefault();
+        showPhoto(photoIndex + (e.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    showPhoto(0);
+    const viewer = document.querySelector('.photo-viewer');
+    document.querySelectorAll('.enlarge-photo').forEach(button => button.addEventListener('click', () => {
+      const image = button.querySelector('img');
+      viewer.querySelector('img').src = image.src;
+      viewer.querySelector('img').alt = image.alt;
+      viewer.showModal();
+    }));
+    viewer.querySelector('button').addEventListener('click', () => viewer.close());
+    viewer.addEventListener('click', e => { if (e.target === viewer) viewer.close(); });
+    viewer.addEventListener('keydown', e => e.stopPropagation());
+  </script>
 </body>
 </html>

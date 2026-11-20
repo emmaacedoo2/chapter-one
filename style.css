@@ -369,6 +369,27 @@ body {
   margin-bottom: 0;
 }
 
+/* First slide photo collage */
+.first-day-collage {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr 1fr;
+  gap: 6px;
+}
+
+.first-day-collage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.first-day-collage .first-day-car {
+  grid-column: 1 / -1;
+  aspect-ratio: 4 / 3;
+}
+
 /* Photo Placeholder Grid */
 .photo-placeholder-grid {
   display: grid;
@@ -705,6 +726,10 @@ body {
   .slide-content-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+
+  .first-day-collage {
+    order: -1;
   }
 
   .intro-letter-card {
