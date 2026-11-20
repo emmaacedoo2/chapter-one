@@ -61,6 +61,7 @@ const StorySlideshow = {
     }
 
     this.buildDots();
+    this.buildTimeline();
     this.bindEvents();
     this.goToSlide(0);
   },
@@ -82,6 +83,30 @@ const StorySlideshow = {
     });
   },
 
+  buildTimeline() {
+    const list = document.getElementById('timeline-list');
+    if (!list) return;
+    this.timeline = this.slides.map((slide, index) => {
+      const title = slide.querySelector('.slide-title, .final-completed-title').textContent.trim();
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'timeline-chapter';
+      button.textContent = String(index + 1).padStart(2, '0');
+      button.setAttribute('aria-label', `Chapter ${index + 1}: ${title}`);
+      button.title = title;
+      button.dataset.title = title;
+      button.addEventListener('click', () => this.goToSlide(index));
+      list.appendChild(button);
+      if (!slide.classList.contains('final-slide')) {
+        const label = document.createElement('p');
+        label.className = 'chapter-label';
+        label.textContent = `CHAPTER ${String(index + 1).padStart(2, '0')}`;
+        slide.querySelector('.slide-text-col').prepend(label);
+      }
+      return button;
+    });
+  },
+
   goToSlide(index) {
     if (index < 0 || index >= this.slides.length) return;
 
@@ -94,7 +119,27 @@ const StorySlideshow = {
       dot.setAttribute('aria-selected', i === index ? 'true' : 'false');
     });
 
+    const changed = this.currentIndex !== index;
     this.currentIndex = index;
+    this.timeline?.forEach((button, i) => {
+      button.classList.toggle('active', i === index);
+      button.classList.toggle('visited', i < index);
+      if (i === index) button.setAttribute('aria-current', 'step');
+      else button.removeAttribute('aria-current');
+    });
+    const currentTitle = document.querySelector('.timeline-current');
+    if (currentTitle) currentTitle.textContent = this.timeline?.[index].dataset.title || '';
+    if (changed && this.timeline?.[index]) {
+      const list = document.querySelector('.story-timeline');
+      const button = this.timeline[index];
+      list.scrollTo({ left: button.offsetLeft - list.clientWidth / 2 + button.offsetWidth / 2, behavior: 'smooth' });
+    }
+    if (changed && index === this.slides.length - 1) {
+      const final = this.slides[index];
+      final.classList.remove('celebrate');
+      void final.offsetWidth;
+      final.classList.add('celebrate');
+    }
 
     if (this.currentNumEl) {
       this.currentNumEl.textContent = index + 1;
@@ -129,8 +174,16 @@ const StorySlideshow = {
       this.nextBtn.addEventListener('click', () => this.next());
     }
 
+    document.querySelector('.hero .story-button')?.addEventListener('click', () => this.goToSlide(0));
+    document.querySelector('.restart-story')?.addEventListener('click', () => {
+      this.goToSlide(0);
+      document.getElementById('story-slideshow').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      this.nextBtn?.focus({ preventScroll: true });
+    });
+
     // Keyboard navigation (left/right arrows)
     document.addEventListener('keydown', (e) => {
+      if (e.target.closest('button, a, input, textarea, select, dialog')) return;
       if (e.key === 'ArrowRight') this.next();
       if (e.key === 'ArrowLeft') this.prev();
     });
@@ -139,10 +192,12 @@ const StorySlideshow = {
     const viewport = document.getElementById('story-slideshow');
     if (viewport) {
       viewport.addEventListener('touchstart', (e) => {
+        if (e.target.closest('.story-timeline, button, a')) { this.touchStartX = null; return; }
         this.touchStartX = e.changedTouches[0].screenX;
       }, { passive: true });
 
       viewport.addEventListener('touchend', (e) => {
+        if (this.touchStartX === null) return;
         this.touchEndX = e.changedTouches[0].screenX;
         this.handleSwipe();
       }, { passive: true });

@@ -36,21 +36,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="home-page">
   <header class="site-header">
     <a class="site-wordmark" href="index.html">CHAPTER ONE.</a>
     <button class="site-menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open navigation menu"><span></span><span></span><span></span></button>
     <nav class="site-menu" id="site-menu" aria-label="Main navigation">
-      <a href="index.html" aria-current="page">Our Story</a>
+      <a href="index.html" aria-current="page">Story</a>
       <a href="date-ideas.html">Date Ideas</a>
-      <a href="our-songs.html">Our Songs</a>
-      <a href="our-calendar.html">Our Calendar</a>
+      <a href="our-songs.html">Songs</a>
+      <a href="our-calendar.html">Calendar</a>
       <a href="movie-night.html">Movie Night</a>
-      <a href="our-bucket-list.html">Our Bucket List</a>
-      <a href="our-travels.html">Our Travels</a>
+      <a href="our-bucket-list.html">Bucket List</a>
+      <a href="our-travels.html">Travels</a>
       <a href="little-surprises.html">Little Surprises</a>
-      <a href="our-arcade.html">Our Arcade</a>
-      <a href="our-little-corner.html">Our Little Corner</a>
+      <a href="our-arcade.html">Arcade</a>
+      <a href="our-little-corner.html">Little Corner</a>
     </nav>
   </header>
   <script src="navigation.js" defer></script>
@@ -93,15 +93,15 @@
   <!-- Hero Header -->
   <header class="hero">
     <div class="hero-content">
-      <p class="hero-subtitle-top">Our Story</p>
+      <p class="hero-subtitle-top">A LOVE STORY, OUR LOVE STORY ♡</p>
       <h1 class="hero-title">CHAPTER ONE.</h1>
       <p class="hero-name-subtitle">dom &amp; emma</p>
       <p class="hero-dates">December 8, 2025 — December 8, 2026</p>
-      <div class="scroll-indicator">
-        <span>Scroll through our journey</span>
-        <div class="scroll-arrow">&darr;</div>
-      </div>
+      <a class="story-button" href="#story-slideshow">OPEN OUR STORY ♡</a>
+      <p class="hero-love-note">Every love story is beautiful, but this one is ours.</p>
     </div>
+    <figure class="hero-polaroid"><img src="images/IMG_1237.jpeg" alt="Dom and Emma standing together outdoors"><figcaption>you &amp; me ♡</figcaption></figure>
+    <div class="hero-stamp" aria-label="One year of us, December 8, 2026">ONE YEAR<br>OF US<span>DEC 08, 2026</span></div>
   </header>
 
   <!-- Interactive Scrapbook: Chapter One -->
@@ -132,6 +132,8 @@
             Slide <span id="current-slide-num">1</span> of <span id="total-slides-num">8</span>
           </div>
         </div>
+
+        <nav class="story-timeline" aria-label="Story chapters"><div class="timeline-list" id="timeline-list"></div></nav><p class="timeline-current" aria-live="polite"></p>
 
         <!-- Slides Display Area -->
         <div class="slideshow-viewport">
@@ -288,6 +290,10 @@
                   <div class="loading-progress-fill"></div>
                 </div>
               </div>
+              <p class="final-note">TO BE CONTINUED ♡</p>
+              <div class="final-stamp">ONE YEAR OF US · DEC 08, 2026</div>
+              <button type="button" class="story-button restart-story">ONE MORE TIME? ♡</button>
+              <div class="final-particles" aria-hidden="true"><span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span></div>
             </div>
           </article>
 
@@ -396,13 +402,25 @@
     const carousels = document.querySelectorAll('.travel-carousel');
     setupCarousel(carousels[0], travelPhotos);
     setupCarousel(carousels[1], yearPhotos);
+    document.querySelectorAll('.first-day-collage img').forEach(image => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'enlarge-photo first-day-photo';
+      button.setAttribute('aria-label', `Enlarge: ${image.alt}`);
+      image.replaceWith(button);
+      button.appendChild(image);
+    });
     const viewer = document.querySelector('.photo-viewer');
+    let viewerOpener = null;
     document.querySelectorAll('.enlarge-photo').forEach(button => button.addEventListener('click', () => {
+      viewerOpener = button;
       const image = button.querySelector('img');
       viewer.querySelector('img').src = image.src;
       viewer.querySelector('img').alt = image.alt;
       viewer.showModal();
+      document.body.classList.add('viewer-open');
     }));
+    viewer.addEventListener('close', () => { document.body.classList.remove('viewer-open'); if (viewerOpener) viewerOpener.focus(); });
     viewer.querySelector('button').addEventListener('click', () => viewer.close());
     viewer.addEventListener('click', e => { if (e.target === viewer) viewer.close(); });
     viewer.addEventListener('keydown', e => e.stopPropagation());

@@ -43,6 +43,15 @@
     }
   };
 
+  Object.assign(gameInfo, {
+    'jump-heart': { name: 'Jump to My Heart', instructions: 'Move with ←/→ or A/D, or hold the buttons below. Bounce as high as you can!', bestKey: 'chapterOne.arcade.jumpHeart.best' },
+    basketball: { name: 'Basketball Challenge', instructions: 'Drag the ball down and left, then release to shoot. Follow the dotted path. You have 60 seconds!', bestKey: 'chapterOne.arcade.basketball.best' },
+    runner: { name: 'Endless Runner', instructions: 'Press Space or ↑, tap the game, or use JUMP to clear obstacles.', bestKey: 'chapterOne.arcade.runner.best' }
+  });
+  const newGames = new Set(['jump-heart', 'basketball', 'runner']);
+  const startButton = document.getElementById('arcade-start');
+  const touchControls = document.getElementById('arcade-touch-controls');
+  let ready = false;
   let activeGame = null;
   let activeId = null;
   let animationId = null;
@@ -51,6 +60,11 @@
   let finished = false;
   let keysDown = new Set();
   let storageWarning = '';
+  // A touch target around the stationary ball lets the rest of the page scroll.
+  const ballTarget = document.createElement('div');
+  ballTarget.className = 'basketball-touch-target';
+  ballTarget.hidden = true;
+  canvas.parentElement.appendChild(ballTarget);
 
   function loadBest(id) {
     try {
@@ -102,7 +116,9 @@
   function paint() {
     if (!activeGame) return;
     activeGame.draw(ctx);
-    if (paused) drawOverlay('PAUSED', 'Press Resume or P to continue');
+    ballTarget.hidden = activeId !== 'basketball' || ready || paused || finished || !activeGame.canAim();
+    if (ready) drawOverlay('READY TO PLAY?', 'Press Start game to begin');
+    else if (paused) drawOverlay('PAUSED', 'Press Resume or P to continue');
     else if (finished) {
       const state = activeGame.state();
       drawOverlay(state.won ? 'NICE RUN!' : 'GAME OVER', 'Restart or return to the arcade');
@@ -113,9 +129,10 @@
     animationId = null;
     if (!activeGame || paused || finished) return;
 
-    const dt = previousFrame ? Math.min((timestamp - previousFrame) / 1000, 0.05) : 0;
+    const elapsed = previousFrame ? (timestamp - previousFrame) / 1000 : 0;
+    const dt = Math.min(elapsed, 0.05);
     previousFrame = timestamp;
-    activeGame.update(dt, keysDown);
+    activeGame.update(dt, keysDown, elapsed);
     finished = activeGame.state().ended;
     paint();
     updateHud();
@@ -728,23 +745,31 @@
   function launch(id) {
     if (!gameInfo[id]) return;
     stopLoop();
+    aimingPointer = null;
     activeId = id;
-    activeGame = id === 'snake'
+    canvas.parentElement.classList.toggle('basketball-active', id === 'basketball');
+    activeGame = newGames.has(id) ? window.createChapterArcadeGame(id, loadBest(id), score => persistBest(id, score)) : id === 'snake'
       ? createSnake(loadBest(id))
       : id === 'brick-breaker'
         ? createBrickBreaker(loadBest(id))
         : createFireWater(loadBest(id));
     paused = false;
     finished = false;
+    ready = newGames.has(id);
+    startButton.hidden = !ready;
+    pauseButton.disabled = ready;
+    touchControls.hidden = !['jump-heart', 'runner'].includes(id);
+    touchControls.querySelectorAll('[data-control]').forEach(button => { button.hidden = id === 'runner' ? button.dataset.control !== 'jump' : button.dataset.control === 'jump'; });
     keysDown.clear();
     lobby.hidden = true;
     stage.hidden = false;
+    resizeCanvas();
     title.textContent = gameInfo[id].name;
     instructionsElement.textContent = gameInfo[id].instructions;
     pauseButton.textContent = 'Pause';
     updateHud();
     paint();
-    startLoop();
+    if (!ready) startLoop();
     canvas.focus({ preventScroll: true });
   }
 
@@ -755,22 +780,30 @@
 
   function returnToArcade() {
     stopLoop();
+    aimingPointer = null;
     activeGame = null;
     activeId = null;
+    canvas.parentElement.classList.remove('basketball-active');
+    ready = false;
+    startButton.hidden = true;
+    touchControls.hidden = true;
     paused = false;
     finished = false;
     keysDown.clear();
     stage.hidden = true;
+    ballTarget.hidden = true;
     lobby.hidden = false;
     pauseButton.textContent = 'Pause';
     statusElement.textContent = 'Choose a game to play.';
   }
 
   function togglePause() {
-    if (!activeGame || finished) return;
+    if (!activeGame || finished || ready) return;
     paused = !paused;
     pauseButton.textContent = paused ? 'Resume' : 'Pause';
     if (paused) {
+      aimingPointer = null;
+      activeGame.cancelPointer?.();
       stopLoop();
       paint();
     } else {
@@ -783,18 +816,23 @@
   document.querySelectorAll('[data-launch-game]').forEach(button => {
     button.addEventListener('click', () => launch(button.dataset.launchGame));
   });
+  startButton.addEventListener('click', () => {
+    if (!ready) return;
+    ready = false; startButton.hidden = true; pauseButton.disabled = false; startLoop();
+  });
   pauseButton.addEventListener('click', togglePause);
   restartButton.addEventListener('click', restart);
   returnButton.addEventListener('click', returnToArcade);
 
   document.addEventListener('keydown', event => {
-    if (!activeGame) return;
+    if (!activeGame || event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
     if (event.code.startsWith('Arrow') || event.code === 'Space') event.preventDefault();
     if (event.repeat) return;
-    if (event.code === 'KeyP' || event.code === 'Space') {
+    if (event.code === 'KeyP' || (event.code === 'Space' && activeId !== 'runner')) {
       togglePause();
       return;
     }
+    if (ready || paused || finished) return;
     keysDown.add(event.code);
     activeGame.handleKey(event.code);
   });
@@ -808,6 +846,53 @@
     const x = (event.clientX - rect.left) * (WIDTH / rect.width);
     activeGame.setPointer(x);
   });
+
+
+  function canvasPoint(event) {
+    const rect = canvas.getBoundingClientRect();
+    return { x: (event.clientX - rect.left) * WIDTH / rect.width, y: (event.clientY - rect.top) * HEIGHT / rect.height };
+  }
+  let aimingPointer = null;
+  [canvas, ballTarget].forEach(target => target.addEventListener('pointerdown', event => {
+    if (!activeGame || ready || paused || finished) return;
+    if (activeId === 'runner') { event.preventDefault(); activeGame.jump(); }
+    if (activeId === 'basketball') {
+      const p = canvasPoint(event);
+      if (activeGame.pointerDown(p.x, p.y)) { event.preventDefault(); aimingPointer = event.pointerId; target.setPointerCapture(event.pointerId); }
+    }
+  }));
+  [canvas, ballTarget].forEach(target => target.addEventListener('pointermove', event => {
+    if (activeId === 'basketball' && aimingPointer === event.pointerId && !paused && !ready && !finished) { const p = canvasPoint(event); activeGame.pointerMove(p.x, p.y); }
+  }));
+  [canvas, ballTarget].forEach(target => target.addEventListener('pointerup', event => {
+    if (aimingPointer !== event.pointerId) return;
+    aimingPointer = null;
+    if (activeId === 'basketball' && !paused && !ready && !finished) { const p = canvasPoint(event); activeGame.pointerUp(p.x, p.y); }
+  }));
+  [canvas, ballTarget].forEach(target => target.addEventListener('pointercancel', () => { aimingPointer = null; if (activeGame?.cancelPointer) activeGame.cancelPointer(); }));
+  touchControls.querySelectorAll('button').forEach(button => {
+    const code = button.dataset.control === 'left' ? 'ArrowLeft' : 'ArrowRight';
+    button.addEventListener('pointerdown', event => {
+      if (!activeGame || ready || paused || finished) return;
+      event.preventDefault(); button.setPointerCapture(event.pointerId);
+      if (button.dataset.control === 'jump') activeGame.jump(); else keysDown.add(code);
+    });
+    const release = () => keysDown.delete(code);
+    button.addEventListener('pointerup', release);
+    button.addEventListener('pointercancel', release);
+    button.addEventListener('lostpointercapture', release);
+  });
+  // Keep the logical game dimensions while matching the display's pixel density.
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    if (!rect.width) return;
+    const ratio = window.devicePixelRatio || 1;
+    canvas.width = Math.round(rect.width * ratio);
+    canvas.height = Math.round(rect.height * ratio);
+    ctx.setTransform(canvas.width / WIDTH, 0, 0, canvas.height / HEIGHT, 0, 0);
+    paint();
+  }
+  window.addEventListener('resize', resizeCanvas);
 
   window.ArcadeApp = {
     launch,

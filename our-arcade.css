@@ -189,6 +189,7 @@
 }
 
 .arcade-canvas-frame {
+  position: relative;
   width: 100%;
   overflow: hidden;
   border: 1.5px solid #242126;
@@ -203,6 +204,16 @@
   aspect-ratio: 8 / 5;
   touch-action: none;
 }
+
+.arcade-canvas-frame.basketball-active #arcade-canvas { touch-action: pan-y; }
+
+.basketball-touch-target {
+  position: absolute;
+  left: 12%; top: 62.5%; width: 13.5%; height: 21.7%;
+  touch-action: none;
+  cursor: grab;
+}
+.basketball-touch-target[hidden] { display: none; }
 
 .arcade-live-status {
   min-height: 1.3rem;
@@ -267,3 +278,14 @@
     transition: none;
   }
 }
+
+.arcade-preview { font-size: 2rem; line-height: 1; margin-top: 0.8rem; }
+.arcade-touch-controls { display: flex; justify-content: center; gap: 1rem; margin-top: 0.8rem; }
+.arcade-touch-controls[hidden], .arcade-touch-controls button[hidden] { display: none; }
+.arcade-touch-controls button {
+  min-width: 80px; min-height: 54px; padding: 0.6rem 1.2rem;
+  border: 2px solid #242126; border-radius: 14px; background: #f4dce0;
+  box-shadow: 3px 3px 0 #8b1e2d; color: #242126; font-size: 1.1rem;
+  font-weight: 700; touch-action: none; cursor: pointer;
+}
+.arcade-touch-controls button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #8b1e2d; }
