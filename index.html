@@ -265,11 +265,14 @@
                   <p>And get ready, because this Christmas is looking REALLY GOOD!! ❤️</p>
                 </div>
               </div>
-              <div class="slide-photos-col">
-                <div class="photo-placeholder-grid count-2">
-                  <div class="photo-box"><span class="photo-label">Photo 1</span></div>
-                  <div class="photo-box"><span class="photo-label">Photo 2</span></div>
+              <div class="slide-photos-col travel-carousel" aria-label="One year later photos">
+                <button type="button" class="travel-photo enlarge-photo" aria-label="Enlarge one year later photo"><img src="images/IMG_0438.jpeg" alt="One year later, photo 1"></button>
+                <div class="travel-controls">
+                  <button type="button" class="travel-prev" aria-label="Previous photo">←</button>
+                  <span class="travel-count" aria-live="polite">1 / 7</span>
+                  <button type="button" class="travel-next" aria-label="Next photo">→</button>
                 </div>
+                <div class="travel-dots" aria-label="Choose a one year later photo"></div>
               </div>
             </div>
           </article>
@@ -350,7 +353,11 @@
       ['IMG_2193.jpeg', 'A selfie overlooking the Amalfi Coast'],
       ['IMG_8130.jpeg', 'A black and white selfie together']
     ];
-    const carousel = document.querySelector('.travel-carousel');
+    const yearPhotos = [
+      'IMG_0438.jpeg', 'IMG_0301.jpg', 'IMG_3237.jpeg', 'IMG_3339.jpeg',
+      'IMG_0774.jpeg', 'IMG_3444.jpeg', 'IMG_1019.JPG'
+    ].map((file, i) => [file, `One year later, photo ${i + 1}`]);
+    function setupCarousel(carousel, travelPhotos) {
     const travelImage = carousel.querySelector('img');
     const count = carousel.querySelector('.travel-count');
     const dots = carousel.querySelector('.travel-dots');
@@ -385,6 +392,10 @@
       }
     });
     showPhoto(0);
+    }
+    const carousels = document.querySelectorAll('.travel-carousel');
+    setupCarousel(carousels[0], travelPhotos);
+    setupCarousel(carousels[1], yearPhotos);
     const viewer = document.querySelector('.photo-viewer');
     document.querySelectorAll('.enlarge-photo').forEach(button => button.addEventListener('click', () => {
       const image = button.querySelector('img');
