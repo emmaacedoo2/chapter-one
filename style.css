@@ -24,6 +24,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
   font-family: var(--font-sans);
   background-color: var(--bg-primary);
   color: var(--text-main);
@@ -32,7 +33,7 @@ html {
 body {
   min-height: 100vh;
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip;
   position: relative;
 }
 
@@ -871,4 +872,83 @@ html body .placeholder-intro, .arcade-header > p {
 
 button, input, select, textarea {
   font-family: var(--font-sans);
+}
+
+/* Full-width navigation shared by every page. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 64px;
+  padding: 0.65rem clamp(1rem, 2vw, 2rem);
+  background: rgba(250, 248, 245, 0.97);
+  border-bottom: 1px solid rgba(139, 30, 45, 0.2);
+  box-shadow: 0 4px 18px rgba(36, 33, 38, 0.06);
+  backdrop-filter: blur(12px);
+}
+.site-wordmark {
+  flex-shrink: 0;
+  color: var(--accent-red);
+  font: 800 1rem var(--font-serif);
+  letter-spacing: -0.04em;
+  text-decoration: none;
+}
+.site-menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(0.45rem, 1vw, 1rem);
+}
+.site-menu a {
+  color: var(--text-main);
+  font: 600 0.7rem var(--font-display);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0.5rem 0;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.site-menu a:hover, .site-menu a[aria-current="page"] {
+  color: var(--accent-red);
+  border-bottom-color: var(--accent-red);
+}
+.site-menu-toggle { display: none; }
+.site-header a:focus-visible, .site-menu-toggle:focus-visible {
+  outline: 3px solid #c47782;
+  outline-offset: 3px;
+}
+@media (max-width: 1100px) {
+  .site-menu-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    border: 1px solid rgba(139, 30, 45, 0.3);
+    border-radius: 12px;
+    background: transparent;
+    cursor: pointer;
+  }
+  .site-menu-toggle span { display: block; height: 2px; width: 100%; background: var(--accent-red); }
+  .site-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 0.75rem 1.5rem 1.25rem;
+    background: #faf8f5;
+    border-bottom: 1px solid rgba(139, 30, 45, 0.2);
+    box-shadow: 0 12px 20px rgba(36, 33, 38, 0.1);
+  }
+  .site-menu-toggle[aria-expanded="true"] + .site-menu { display: grid; }
+  .site-menu a { font-size: 0.9rem; padding: 0.6rem 0; }
 }
