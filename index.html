@@ -12,6 +12,10 @@
     .memory-collage { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
     .memory-collage button, .travel-photo { padding: 0; border: 0; background: transparent; cursor: zoom-in; }
     .memory-collage img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 9px; }
+    .florida-photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; align-items: center; }
+    .florida-photos button { padding: 0; border: 0; background: transparent; cursor: zoom-in; }
+    .florida-photos img { display: block; width: 100%; height: 340px; object-fit: contain; border-radius: 9px; }
+    .challenge-grid { grid-template-columns: 1fr; max-width: 620px; margin: auto; text-align: center; }
     .travel-carousel { min-width: 0; text-align: center; touch-action: pan-y; }
     .travel-photo { display: block; width: 100%; height: 340px; border-radius: 10px; background: #eee9e4; overflow: hidden; }
     .travel-photo img { width: 100%; height: 100%; object-fit: contain; display: block; }
@@ -223,21 +227,19 @@
                 <div class="slide-body">
                   <p>Then we had to say goodbye again, but luckily not for too long.</p>
                   <p>I came back, and we got to spend a few days together before starting college.</p>
-                  <p>But then it was time to move to New College, your second home hahaha.</p>
+                  <p>But then it was time to move to New College, your second home hahaha..</p>
                 </div>
               </div>
-              <div class="slide-photos-col">
-                <div class="photo-placeholder-grid count-2">
-                  <div class="photo-box"><span class="photo-label">Photo 1</span></div>
-                  <div class="photo-box"><span class="photo-label">Photo 2</span></div>
-                </div>
+              <div class="slide-photos-col florida-photos">
+                <button type="button" class="enlarge-photo" aria-label="Enlarge: Dom at a candlelit restaurant dinner"><img src="images/IMG_0198.jpeg" alt="Dom at a candlelit restaurant dinner"></button>
+                <button type="button" class="enlarge-photo" aria-label="Enlarge: Dom playing basketball outdoors"><img src="images/IMG_9423.jpeg" alt="Dom playing basketball outdoors"></button>
               </div>
             </div>
           </article>
 
           <!-- SLIDE 6: Another unexpected challenge -->
           <article class="story-slide" data-slide-index="5">
-            <div class="slide-content-grid">
+            <div class="slide-content-grid challenge-grid">
               <div class="slide-text-col">
                 <h2 class="slide-title">Another unexpected challenge</h2>
                 <div class="slide-body">
@@ -245,12 +247,6 @@
                   <p>Another month apart, but as always, we managed to get through it.</p>
                   <p>I'll never know how to thank you enough for being there for me through everything, especially when I almost died.</p>
                   <p>You were there when I needed you the most, and I'll never forget that.</p>
-                </div>
-              </div>
-              <div class="slide-photos-col">
-                <div class="photo-placeholder-grid count-2">
-                  <div class="photo-box"><span class="photo-label">Photo 1</span></div>
-                  <div class="photo-box"><span class="photo-label">Photo 2</span></div>
                 </div>
               </div>
             </div>
