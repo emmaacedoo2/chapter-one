@@ -6,9 +6,6 @@
   <title>travels 🌍 • Chapter One</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="our-travels.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -57,6 +54,10 @@
       <p class="travels-intro">all the places we've been, separately and together. and all the places we still have to see.</p>
     </header>
 
+    <a class="pittsburgh-feature" href="pittsburgh.html">
+      <span><small>A LOVE LETTER TO THE 412</small><strong>Pittsburgh, PA 🖤💛</strong><em>Dom's City, Our Adventures ♡</em><b>Explore Pittsburgh ↗</b></span>
+    </a>
+
     <section class="travel-map-card" aria-labelledby="map-section-title">
       <div class="travel-section-heading">
         <div>
@@ -70,41 +71,28 @@
         <div class="travel-map-legend" aria-label="Map legend">
           <span><i class="legend-pin emma"></i> Emma</span>
           <span><i class="legend-pin dom"></i> Dom</span>
-          <span><i class="legend-pin together"></i> Together</span>
-          <span><i class="legend-pin separate"></i> Both, separately</span>
+          <span><i class="legend-pin together"></i> Both</span>
         </div>
         <div class="travel-map-filters" role="group" aria-label="Filter map pins">
           <button type="button" class="travel-filter active" data-map-filter="all">All</button>
           <button type="button" class="travel-filter" data-map-filter="emma">Emma</button>
           <button type="button" class="travel-filter" data-map-filter="dom">Dom</button>
-          <button type="button" class="travel-filter" data-map-filter="together">Together</button>
+          <button type="button" class="travel-filter" data-map-filter="both">Both</button>
         </div>
       </div>
 
-      <div id="travel-map" class="travel-map" role="application" aria-label="Interactive map of visited places"></div>
+      <div class="outline-map-scroll" tabindex="0" aria-label="Scrollable world map"><div id="travel-map" class="outline-map"><img src="images/mapa.jpg" alt="Outline world map"><div id="outline-pins"></div></div></div><div id="map-details" class="map-details" aria-live="polite">Choose a pin to explore the places there.</div>
       <p id="travel-map-status" class="travel-map-status" role="status">Loading the map and our starter places…</p>
-      <p class="travel-provider-note">
-        Place search uses the Photon geocoder. Broad regions use its approximate regional center.
-        Map tiles © CARTO; map data © OpenStreetMap contributors.
-      </p>
+
     </section>
 
-    <section class="travel-places-card">
-      <div class="travel-section-heading">
-        <div>
-          <span class="travel-eyebrow">Our travel journal</span>
-          <h2>visited places</h2>
-        </div>
-        <span class="travel-count" id="travel-place-count">0 places</span>
-      </div>
-      <div id="travel-place-list" class="travel-place-list"></div>
-    </section>
+    <div id="travel-place-list" hidden></div>
 
     <section class="travel-bucket-card">
       <div class="travel-section-heading">
         <div>
           <span class="travel-eyebrow">Future postcards</span>
-          <h2>where to next? ✈️</h2>
+          <h2>where to next? ♡</h2>
         </div>
         <button type="button" class="travel-primary-button" id="btn-add-destination">+ add a destination</button>
       </div>
@@ -219,8 +207,8 @@
     </form>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script src="our-travels.js"></script>
+
+  <footer class="site-signature"><p>Made with love, by Emma ♡</p><p>For Dom. Always.</p></footer>
 </body>
 </html>

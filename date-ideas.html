@@ -6,6 +6,7 @@
   <title>so... what are we doing today?</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="date-ideas.css">
+  <link rel="stylesheet" href="surprises-extra.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -83,6 +84,12 @@
         now we have no excuse to spend 40 minutes deciding what to do.
       </p>
     </header>
+
+    <section class="roulette-panel" aria-labelledby="roulette-title">
+      <div><span class="extra-kicker">LET FATE PICK THE PLAN</span><h2 id="roulette-title">Date Night Roulette 🎡</h2><p>A little spin for your next adventure together.</p></div>
+      <div class="wheel-wrap"><div class="wheel-pointer" aria-hidden="true"></div><div id="date-wheel" class="date-wheel" role="img" aria-label="Wheel with twelve date ideas"></div></div>
+      <button class="extra-button" id="spin-wheel" type="button">SPIN ✦</button><p id="wheel-result" class="wheel-result" aria-live="polite">Where will the wheel take you?</p>
+    </section>
 
     <!-- Sub Navigation Tabs -->
     <div class="sub-tabs-bar" role="tablist">
@@ -268,5 +275,8 @@
   </div>
 
   <script src="date-ideas.js"></script>
+  <script src="roulette.js" defer></script>
+
+  <footer class="site-signature"><p>Made with love, by Emma ♡</p><p>For Dom. Always.</p></footer>
 </body>
 </html>

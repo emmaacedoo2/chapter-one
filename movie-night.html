@@ -6,6 +6,7 @@
   <title>movie night 🍿 • Chapter One</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="placeholder-pages.css">
+  <link rel="stylesheet" href="movie-night.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -55,38 +56,22 @@
       <p class="placeholder-intro">because we somehow spend more time choosing a movie than actually watching it.</p>
     </header>
 
-    <div class="placeholder-grid">
-      <section class="placeholder-card featured">
-        <div class="placeholder-card-icon" aria-hidden="true">🎬</div>
-        <h2>What should we watch?</h2>
-        <p>A future home for moods, genres, recommendations, and the impossible choice.</p>
-        <div class="placeholder-empty"><span>🍿</span><p>no movies here yet... we should probably fix that.</p></div>
-      </section>
-      <section class="placeholder-card">
-        <div class="placeholder-card-icon" aria-hidden="true">🎞️</div>
-        <h2>Movie roulette</h2>
-        <p>One day, a playful random pick will make choosing much easier.</p>
-        <div class="memory-frame">roulette coming soon</div>
-      </section>
-      <section class="placeholder-card">
-        <div class="placeholder-card-icon" aria-hidden="true">📽️</div>
-        <h2>Our watchlist</h2>
-        <p>Movies we save for cozy nights, rainy afternoons, and long weekends.</p>
-        <div class="memory-frame">watchlist coming soon</div>
-      </section>
-      <section class="placeholder-card">
-        <div class="placeholder-card-icon" aria-hidden="true">🕸️</div>
-        <h2>Movies we've watched together</h2>
-        <p>A scrapbook of shared endings, favorite scenes, and tiny rewatches.</p>
-        <div class="memory-frame">our movie memories</div>
-      </section>
-      <section class="placeholder-card">
-        <div class="placeholder-card-icon" aria-hidden="true">★</div>
-        <h2>Our ratings</h2>
-        <p>His, hers, and the final score for every movie that stays with us.</p>
-        <div class="memory-frame">ratings coming soon</div>
-      </section>
-    </div>
+    <section class="movie-controls" aria-label="Find a movie">
+      <h2>Find your next favorite ♡</h2><div class="movie-filters">
+      <label>Search <input id="movie-search" type="search" placeholder="Movie title"></label>
+      <label>Genre <select id="movie-genre"><option value="">All genres</option></select></label>
+      <label>Streaming <select id="movie-service"><option value="">All</option><option>Netflix</option><option>Disney+</option><option>YouTube Free</option></select></label>
+      <label class="movie-check"><input id="movie-saved" type="checkbox"> Watchlist only</label>
+      <button id="movie-reset" type="button">Reset Filters</button></div>
+      <p>Streaming availability is not verified for the US. Check the service before making plans; YouTube Free excludes rentals and purchases.</p>
+      <p>Your watchlist and ratings are saved on this browser and device; they do not automatically sync between Dom and Emma. <span id="movie-storage" role="status"></span></p>
+      <button id="movie-pick" type="button">Pick a Movie for Us 🍿</button><div id="movie-pick-result" aria-live="polite"></div>
+    </section>
+    <p id="movie-count" aria-live="polite"></p><div id="movie-list" class="movie-list"></div>
+
   </main>
+  <script src="movie-night.js"></script>
+
+  <footer class="site-signature"><p>Made with love, by Emma ♡</p><p>For Dom. Always.</p></footer>
 </body>
 </html>

@@ -45,7 +45,7 @@ const TravelApp = {
     this.initMap();
     this.bindEvents();
     this.renderAll();
-    if (!this.dataLoadError) void this.geocodeSeedPlaces();
+
   },
 
   makeId(prefix) {
@@ -141,23 +141,8 @@ const TravelApp = {
   },
 
   initMap() {
-    const mapElement = document.getElementById('travel-map');
-    if (!mapElement || typeof L === 'undefined') {
-      this.setStatus('The map library did not load. The visited-place list is still available.', true);
-      return;
-    }
-
-    this.map = L.map(mapElement, { scrollWheelZoom: false, minZoom: 2 }).setView([25, 4], 2);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19
-    }).addTo(this.map);
-
-    this.markerLayer = typeof L.markerClusterGroup === 'function'
-      ? L.markerClusterGroup({ showCoverageOnHover: false, spiderfyOnMaxZoom: true, maxClusterRadius: 42 })
-      : L.layerGroup();
-    this.markerLayer.addTo(this.map);
+    // The image is a custom projection; these positions are manually placed on it.
+    this.map = document.getElementById('travel-map');
   },
 
   async geocode(query) {
@@ -276,32 +261,55 @@ const TravelApp = {
 
   passesFilter(place) {
     if (this.mapFilter === 'all') return true;
-    if (this.mapFilter === 'together') return place.sharedTrip === true;
-    return place.visitedBy?.includes(this.mapFilter);
+    if (this.mapFilter === 'both') return place.visitedBy?.includes('emma') && place.visitedBy?.includes('dom');
+    return place.visitedBy?.length === 1 && place.visitedBy.includes(this.mapFilter);
   },
 
   renderAll() {
     this.renderMap();
-    this.renderPlaceList();
     this.renderDestinations();
   },
 
   renderMap() {
-    if (!this.map || !this.markerLayer) return;
-    this.markerLayer.clearLayers();
-    for (const place of this.places) {
-      if (!this.hasCoordinates(place) || !this.passesFilter(place)) continue;
-      const icon = L.divIcon({
-        className: 'travel-marker-icon',
-        html: `<span class="travel-pin ${this.getMarkerKind(place)}" aria-hidden="true"></span>`,
-        iconSize: [24, 28],
-        iconAnchor: [12, 26],
-        popupAnchor: [0, -23]
-      });
-      const marker = L.marker([place.latitude, place.longitude], { icon });
-      marker.bindPopup(this.getPopupHtml(place));
-      this.markerLayer.addLayer(marker);
+    const pins = document.getElementById('outline-pins');
+    if (!pins) return;
+    // Nearby cities share a pin; the accessible list below the map separates them.
+    const positions = {
+      'Madrid':[42.8,39.4], 'Galicia':[42,37.8], 'Asturias':[42.5,37.5], 'La Rioja':[43.3,37.7],
+      'Zaragoza':[43.8,38.5], 'Alicante':[43.8,40], 'Castellón':[44,39.1], 'Valencia':[44,39.5],
+      'Murcia':[43.6,40.3], 'Tarragona':[44.4,38.4], 'Barcelona':[44.6,38],
+      'Gran Canaria':[39.8,45], 'Tenerife':[39.4,44.8], 'Portugal':[41.7,40],
+      'London':[43.3,32.6], 'Venice':[48.3,36], 'Rome':[48.5,38.2], 'Milan':[47.5,35.8],
+      'Naples':[49.2,39.1], 'Florida':[19.2,44.1], 'Alabama':[17.2,40.8],
+      'Nashville':[17.5,38.8], 'Pittsburgh':[21.4,35.6], 'Saint Petersburg':[53.3,27.8]
+    };
+    const groups = new Map();
+    const missing = [];
+    for (const place of this.places.filter(p => this.passesFilter(p))) {
+      const pos = positions[place.place];
+      if (!pos || !place.isSeed) { missing.push(place); continue; }
+      // Broad clusters prevent neighboring pins from obscuring one another.
+      const group = pos[0] > 41 && pos[0] < 45 && pos[1] > 37 ? 'spain' :
+        pos[0] > 47 && pos[0] < 50 ? 'italy' : pos[0] > 16 && pos[0] < 20 && pos[1] > 38 ? 'southeast-us' :
+        pos[0] < 40 && pos[1] > 44 ? 'canaries' : place.place;
+      if (!groups.has(group)) groups.set(group, {pos, places:[]});
+      groups.get(group).places.push(place);
     }
+    pins.innerHTML = '';
+    groups.forEach(({pos, places}) => {
+      const kinds = new Set(places.flatMap(p => p.visitedBy || []));
+      const kind = kinds.size > 1 ? 'both' : kinds.has('dom') ? 'dom' : 'emma';
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = `outline-pin ${kind}`;
+      button.style.left = `${pos[0]}%`; button.style.top = `${pos[1]}%`;
+      button.setAttribute('aria-label', `${places.length} location${places.length === 1 ? '' : 's'}: ${places.map(p=>p.place).join(', ')}`);
+      button.addEventListener('click', () => {
+        const details = document.getElementById('map-details');
+        details.innerHTML = places.map(p => `<div><strong>${this.escapeHtml(p.place)}, ${this.escapeHtml(p.country)}</strong> · ${this.escapeHtml(this.getVisitorLabel(p))} <button type="button" data-travel-edit="${this.escapeHtml(p.id)}">edit</button></div>`).join('');
+      });
+      pins.append(button);
+    });
+    this.setStatus(missing.length ? `${missing.length} saved place(s) need a position on this custom map; their data is preserved.` : 'Select a pin to see its places and who visited.');
   },
 
   getPopupHtml(place) {
@@ -542,12 +550,13 @@ const TravelApp = {
   renderDestinations() {
     const list = document.getElementById('destination-list');
     if (!list) return;
-    if (!this.destinations.length) {
+    const future = this.destinations.filter(destination => destination.status !== 'visited');
+    if (!future.length) {
       list.innerHTML = '<p class="travel-empty-state">The list is waiting for its first destination.</p>';
       return;
     }
     const labels = { dreaming: 'Dreaming of', planning: 'Planning', visited: "We've been!" };
-    list.innerHTML = this.destinations.map(destination => `
+    list.innerHTML = future.map(destination => `
       <article class="destination-item">
         <div class="destination-item-heading">
           <div>

@@ -1105,3 +1105,34 @@ button, input, select, textarea {
 @media (prefers-reduced-motion: reduce) {
   .home-page .story-slide.active .slide-text-col, .home-page .story-slide.active .slide-photos-col { animation: none; }
 }
+
+/* Shared finishing touches: keep each page's own layout and character. */
+.site-signature {
+  position: relative;
+  padding: 2.5rem 1.25rem 3rem;
+  color: #8b1e2d;
+  text-align: center;
+  font: 500 .78rem/1.7 'DM Sans', sans-serif;
+  letter-spacing: .025em;
+}
+.site-signature::before { content: ''; display: block; width: 42px; height: 1px; margin: 0 auto 1.2rem; background: #d6b4b8; }
+.site-signature p { margin: 0; }
+.site-signature p + p { color: #77686a; font-size: .72rem; }
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid #bd6977;
+  outline-offset: 3px;
+}
+:where(button, a) { -webkit-tap-highlight-color: rgba(139, 30, 45, .15); }
+.site-menu-toggle { transition: background-color .2s, border-color .2s; }
+.site-menu-toggle:hover { background: #f7e9e9; border-color: #8b1e2d; }
+@media (max-width: 1100px) {
+  .site-menu a { display: flex; align-items: center; min-height: 44px; padding: .65rem .25rem; }
+  .site-menu { overscroll-behavior: contain; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  body > main:not(.scrapbook-section), .home-page > .hero { animation: chapter-entrance .35s ease-out both; }
+  @keyframes chapter-entrance { from { opacity: 0; } to { opacity: 1; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
