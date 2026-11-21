@@ -509,3 +509,11 @@
     justify-content: center;
   }
 }
+
+/* Keep the wheel labels inside the wheel as it scales down. */
+.date-wheel { --wheel-label-radius: min(108px, 28vw); }
+.wheel-label { width: min(76px, 20vw); overflow-wrap: anywhere; }
+.wheel-pool-note { font-size: 0.8rem; color: var(--text-muted); margin: 0 0 0.75rem; }
+@media (max-width: 600px) {
+  #btn-surprise { width: 100%; text-align: center; }
+}

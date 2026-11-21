@@ -88,7 +88,8 @@
     <section class="roulette-panel" aria-labelledby="roulette-title">
       <div><span class="extra-kicker">LET FATE PICK THE PLAN</span><h2 id="roulette-title">Date Night Roulette 🎡</h2><p>A little spin for your next adventure together.</p></div>
       <div class="wheel-wrap"><div class="wheel-pointer" aria-hidden="true"></div><div id="date-wheel" class="date-wheel" role="img" aria-label="Wheel with twelve date ideas"></div></div>
-      <button class="extra-button" id="spin-wheel" type="button">SPIN ✦</button><p id="wheel-result" class="wheel-result" aria-live="polite">Where will the wheel take you?</p>
+      <p class="wheel-pool-note">150+ date ideas waiting for us ♡</p>
+      <button class="extra-button" id="spin-wheel" type="button">SPIN ✦</button> <button class="extra-button" id="shuffle-wheel" type="button">Shuffle Ideas</button><p id="wheel-result" class="wheel-result" aria-live="polite">Where will the wheel take you?</p>
     </section>
 
     <!-- Sub Navigation Tabs -->
@@ -221,6 +222,7 @@
           <button type="button" class="btn-main-pick" id="btn-pick-idea">
             okay, pick for us
           </button>
+          <button type="button" class="btn-reset-filters" id="btn-surprise">Surprise Me! ♡</button>
           <button type="button" class="btn-reset-filters" id="btn-reset-filters">
             reset filters
           </button>
@@ -230,6 +232,7 @@
       <!-- Generated Result Card (Hidden until generated) -->
       <div id="date-result-card" class="result-card hidden">
         <div class="result-header-tags">
+          <span class="meta-tag hidden" id="idea-surprise">surprise selection ♡</span>
           <span class="meta-tag" id="idea-budget">free</span>
           <span class="meta-tag" id="idea-location">at home</span>
           <span class="meta-tag" id="idea-duration">1–3 hours</span>
