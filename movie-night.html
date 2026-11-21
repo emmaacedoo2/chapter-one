@@ -53,23 +53,51 @@
     <header class="placeholder-header">
       <span class="placeholder-overline">Chapter One</span>
       <h1 class="placeholder-title">movie night 🍿</h1>
-      <p class="placeholder-intro">because we somehow spend more time choosing a movie than actually watching it.</p>
+      <h2 class="movie-dedication">For My Favorite Movie Lover ♡</h2>
+      <p class="placeholder-intro">I know how much you love watching movies, so I made this little corner just for you. That way, whenever you don't know what to watch, you'll always have somewhere to find your next favorite. ♡</p>
     </header>
 
+    <section class="hero-universe" aria-labelledby="universe-title">
+      <p class="movie-eyebrow">A little extra movie magic</p>
+      <h2 id="universe-title">THE SUPERHERO UNIVERSE 🦸</h2>
+      <p>I know how much you love Marvel, DC, and superhero movies, so I made you a special corner to keep up with your favorite heroes, discover movies, and never miss what's coming next. ♡</p>
+      <div id="hero-preview" class="movie-list hero-preview"></div>
+      <button id="hero-toggle" type="button" aria-expanded="false" aria-controls="hero-collection">View All Superhero Movies ♡</button>
+      <div id="hero-collection" hidden>
+      <div class="universe-tabs" role="group" aria-label="Choose superhero collection">
+        <button type="button" data-universe="Marvel" aria-pressed="true">Marvel</button>
+        <button type="button" data-universe="DC" aria-pressed="false">DC</button>
+        <button type="button" data-universe="Coming Soon" aria-pressed="false">Coming Soon</button>
+      </div>
+      <div id="hero-movies"><h3 id="hero-heading">MARVEL MOVIES</h3>
+        <div class="hero-controls"><label>Search <input id="hero-search" type="search" placeholder="Movie title"></label> <label>Genre <select id="hero-genre"><option value="">All genres</option></select></label> <label><input id="hero-saved" type="checkbox"> Watchlist only</label> <button id="hero-pick" type="button">Surprise Me</button> <button id="hero-highest" type="button">Highest Rated</button></div>
+        <div id="hero-pick-result" aria-live="polite"></div><div id="hero-list" class="movie-list"></div></div>
+      <div id="hero-releases" hidden><h3>COMING SOON</h3><p>US theatrical dates · Manually maintained · Last checked November 21, 2026. Dates can change; check the official links.</p><div id="movie-releases" class="release-grid"></div></div>
+      </div>
+    </section>
+    <section class="general-library" aria-labelledby="general-title">
+      <h2 id="general-title">WHAT SHOULD WE WATCH TONIGHT? 🍿</h2>
+      <p>And for all those nights when we have no idea what to watch, here's a little collection of movies for every mood. Pick a genre, find something new, and let movie night begin. ♡</p>
     <section class="movie-controls" aria-label="Find a movie">
       <h2>Find your next favorite ♡</h2><div class="movie-filters">
       <label>Search <input id="movie-search" type="search" placeholder="Movie title"></label>
+      <label>Streaming <select id="movie-streaming"><option value="">All availability</option><option value="Netflix">Netflix</option><option value="Disney+">Disney+</option><option value="Free YouTube">Free YouTube</option><option value="unverified">Streaming availability not verified</option></select></label>
       <label>Genre <select id="movie-genre"><option value="">All genres</option></select></label>
-      <label>Streaming <select id="movie-service"><option value="">All</option><option>Netflix</option><option>Disney+</option><option>YouTube Free</option></select></label>
+      <label>Decade <select id="movie-decade"><option value="">All decades</option></select></label>
+      <label>Watched <select id="movie-watched"><option value="">All movies</option><option value="yes">Watched</option><option value="no">Not watched</option></select></label>
+      <label>Personal rating <select id="movie-personal"><option value="">Any rating</option><option value="1">1 star</option><option value="2">2 stars</option><option value="3">3 stars</option><option value="4">4 stars</option><option value="5">5 stars</option></select></label>
       <label class="movie-check"><input id="movie-saved" type="checkbox"> Watchlist only</label>
       <button id="movie-reset" type="button">Reset Filters</button></div>
       <p>Streaming availability is not verified for the US. Check the service before making plans; YouTube Free excludes rentals and purchases.</p>
       <p>Your watchlist and ratings are saved on this browser and device; they do not automatically sync between Dom and Emma. <span id="movie-storage" role="status"></span></p>
-      <button id="movie-pick" type="button">Pick a Movie for Us 🍿</button><div id="movie-pick-result" aria-live="polite"></div>
+      <button id="movie-pick" type="button">Pick a Movie for Us ♡</button> <button id="movie-surprise" type="button">Surprise Me</button> <button id="movie-highest" type="button">Highest Rated</button> <button id="movie-watchlist" type="button">My Watchlist</button><div id="movie-pick-result" aria-live="polite"></div>
     </section>
-    <p id="movie-count" aria-live="polite"></p><div id="movie-list" class="movie-list"></div>
-
+      <p id="movie-count" aria-live="polite"></p><div id="movie-list" class="movie-list"></div>
+      <button id="movie-more" type="button">Load More</button>
+    </section>
   </main>
+  <script src="movie-data.js"></script>
+  <script src="movie-releases.js"></script>
   <script src="movie-night.js"></script>
 
   <footer class="site-signature"><p>Made with love, by Emma ♡</p><p>For Dom. Always.</p></footer>
