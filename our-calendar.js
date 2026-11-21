@@ -681,48 +681,45 @@ const CalendarApp = {
   // --------------------------------------------------------------------------
   initCountdown() {
     this.updateCountdown();
-    setInterval(() => this.updateCountdown(), 60000); // update every minute
+    clearInterval(this.countdownTimer);
+    this.countdownTimer = setInterval(() => this.updateCountdown(), 1000);
   },
 
   updateCountdown() {
     const now = new Date();
-    const currentYear = now.getFullYear();
-    const todayStr = this.formatDate(now);
-    const thisYearAnniversary = `${currentYear}-12-08`;
-    const countdownValues = document.querySelector('.countdown-values');
-    const countdownLabel = document.querySelector('.countdown-label');
-    const anniLabel = document.getElementById('countdown-anni-label');
-    const daysEl = document.getElementById('countdown-days');
-    const hoursEl = document.getElementById('countdown-hours');
+    // December 8 is always in Eastern Standard Time (UTC−5).
+    const newYorkDate = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York', year: 'numeric', month: 'numeric', day: 'numeric'
+    }).formatToParts(now);
+    const part = (type) => Number(newYorkDate.find((item) => item.type === type).value);
+    const year = part('year');
+    const month = part('month');
+    const day = part('day');
+    const celebrating = year >= 2026 && month === 12 && day === 8;
+    const targetYear = Math.max(2026, month === 12 && day > 8 ? year + 1 : year);
+    const target = Date.UTC(targetYear, 11, 8, 5);
+    let remaining = Math.max(0, Math.floor((target - now.getTime()) / 1000));
+    const days = Math.floor(remaining / 86400);
+    remaining %= 86400;
+    const hours = Math.floor(remaining / 3600);
+    remaining %= 3600;
+    const minutes = Math.floor(remaining / 60);
+    const seconds = remaining % 60;
+    const values = document.querySelector('.countdown-values');
+    const copy = document.querySelector('.countdown-copy');
+    const celebration = document.querySelector('.anniversary-celebration');
 
-    if (todayStr === thisYearAnniversary && currentYear > 2025) {
-      const anniversaryNumber = currentYear - 2025;
-      if (countdownLabel) countdownLabel.textContent = 'Our anniversary';
-      if (anniLabel) {
-        anniLabel.textContent = anniversaryNumber === 1
-          ? 'Happy 1st Anniversary! ❤️ We made it!'
-          : `Happy ${this.getOrdinal(anniversaryNumber)} Anniversary! ❤️`;
-      }
-      if (countdownValues) countdownValues.hidden = true;
-      return;
+    if (values) values.hidden = celebrating;
+    if (copy) copy.hidden = celebrating;
+    if (celebration) celebration.hidden = !celebrating;
+    const label = document.getElementById('countdown-anni-label');
+    if (label && !celebrating) {
+      label.textContent = `Countdown to our ${this.getOrdinal(targetYear - 2025)} anniversary ❤️`;
     }
-
-    const targetYear = Math.max(2026, todayStr < thisYearAnniversary ? currentYear : currentYear + 1);
-    const anniversaryNumber = targetYear - 2025;
-    const target = new Date(targetYear, 11, 8, 0, 0, 0);
-    const daysRemaining = Math.ceil((
-      Date.UTC(targetYear, 11, 8) -
-      Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
-    ) / 86400000);
-    const hoursRemaining = Math.floor(Math.max(0, target - now) % 86400000 / 3600000);
-
-    if (countdownLabel) countdownLabel.textContent = 'Counting down';
-    if (anniLabel) {
-      anniLabel.textContent = `Countdown to our ${this.getOrdinal(anniversaryNumber)} anniversary ❤️`;
+    for (const [unit, value] of Object.entries({ days, hours, minutes, seconds })) {
+      const element = document.getElementById(`countdown-${unit}`);
+      if (element) element.textContent = unit === 'days' ? value : String(value).padStart(2, '0');
     }
-    if (countdownValues) countdownValues.hidden = false;
-    if (daysEl) daysEl.textContent = daysRemaining;
-    if (hoursEl) hoursEl.textContent = hoursRemaining;
   },
 
   // --------------------------------------------------------------------------
