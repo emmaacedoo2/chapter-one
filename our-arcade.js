@@ -117,11 +117,11 @@
     if (!activeGame) return;
     activeGame.draw(ctx);
     ballTarget.hidden = activeId !== 'basketball' || ready || paused || finished || !activeGame.canAim();
-    if (ready) drawOverlay('READY TO PLAY?', 'Press Start game to begin');
+    if (ready) drawOverlay(gameInfo[activeId].name.toUpperCase(), 'PRESS SPACE TO START  ·  TAP TO START');
     else if (paused) drawOverlay('PAUSED', 'Press Resume or P to continue');
     else if (finished) {
       const state = activeGame.state();
-      drawOverlay(state.won ? 'NICE RUN!' : 'GAME OVER', 'Restart or return to the arcade');
+      drawOverlay(state.won ? 'NICE RUN!' : 'GAME OVER', 'PRESS SPACE TO PLAY AGAIN  ·  TAP TO PLAY AGAIN');
     }
   }
 
@@ -755,7 +755,7 @@
         : createFireWater(loadBest(id));
     paused = false;
     finished = false;
-    ready = newGames.has(id);
+    ready = true;
     startButton.hidden = !ready;
     pauseButton.disabled = ready;
     touchControls.hidden = !['jump-heart', 'runner'].includes(id);
@@ -769,7 +769,7 @@
     pauseButton.textContent = 'Pause';
     updateHud();
     paint();
-    if (!ready) startLoop();
+
     canvas.focus({ preventScroll: true });
   }
 
@@ -816,18 +816,24 @@
   document.querySelectorAll('[data-launch-game]').forEach(button => {
     button.addEventListener('click', () => launch(button.dataset.launchGame));
   });
-  startButton.addEventListener('click', () => {
+  function startGame() {
     if (!ready) return;
     ready = false; startButton.hidden = true; pauseButton.disabled = false; startLoop();
-  });
+  }
+  startButton.addEventListener('click', startGame);
   pauseButton.addEventListener('click', togglePause);
   restartButton.addEventListener('click', restart);
   returnButton.addEventListener('click', returnToArcade);
 
   document.addEventListener('keydown', event => {
-    if (!activeGame || event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if (!activeGame || event.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
     if (event.code.startsWith('Arrow') || event.code === 'Space') event.preventDefault();
     if (event.repeat) return;
+    if (event.code === 'Space' && (ready || finished)) {
+      if (finished) restart();
+      startGame();
+      return;
+    }
     if (event.code === 'KeyP' || (event.code === 'Space' && activeId !== 'runner')) {
       togglePause();
       return;
@@ -854,7 +860,9 @@
   }
   let aimingPointer = null;
   [canvas, ballTarget].forEach(target => target.addEventListener('pointerdown', event => {
-    if (!activeGame || ready || paused || finished) return;
+    if (!activeGame) return;
+    if (ready || finished) { event.preventDefault(); if (finished) restart(); startGame(); return; }
+    if (paused) return;
     if (activeId === 'runner') { event.preventDefault(); activeGame.jump(); }
     if (activeId === 'basketball') {
       const p = canvasPoint(event);

@@ -37,8 +37,9 @@
 
 .arcade-game-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
+  grid-auto-rows: 1fr;
 }
 
 .arcade-game-card {
@@ -224,16 +225,6 @@
   text-align: center;
 }
 
-@media (max-width: 850px) {
-  .arcade-game-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .arcade-game-card {
-    min-height: 225px;
-  }
-}
-
 @media (max-width: 600px) {
   .arcade-page-container {
     padding: 1rem 0.75rem 3.5rem;
@@ -289,3 +280,64 @@
   font-weight: 700; touch-action: none; cursor: pointer;
 }
 .arcade-touch-controls button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #8b1e2d; }
+
+.love-stage[hidden] { display: none; }
+.love-stage canvas { touch-action: none; user-select: none; -webkit-user-select: none; }
+.love-controls { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .5rem; padding: .8rem max(.5rem, env(safe-area-inset-right)) max(.8rem, env(safe-area-inset-bottom)) max(.5rem, env(safe-area-inset-left)); user-select: none; -webkit-user-select: none; }
+.love-controls button, .love-joystick { min-height: 52px; min-width: 62px; border: 2px solid #242126; border-radius: 14px; background: #f4dce0; color: #242126; font-weight: 700; padding: .6rem; touch-action: none; }
+.love-joystick { width: 110px; height: 110px; border-radius: 50%; display: grid; place-items: center; background: #e8bdc8; }
+
+/* A matching cabinet for every game. */
+.arcade-game-card, .arcade-game-card:nth-child(odd) {
+  position: relative; min-width: 0; min-height: 340px; padding: 1rem;
+  border: 1.5px solid #8b1e2d; background: #fcf7f0;
+  box-shadow: 4px 4px 0 #e8c8cc; transition: transform .2s ease, box-shadow .2s ease;
+}
+.arcade-game-card:hover, .arcade-game-card:focus-within { transform: translateY(-4px); box-shadow: 5px 8px 0 #e8c8cc; }
+.arcade-game-card h2 { min-height: 2.5em; font-size: 1.2rem; line-height: 1.25; }
+.arcade-game-card p { margin: 0 0 .6rem; }
+.arcade-play-button { margin-top: auto; }
+.arcade-play-button::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.arcade-play-button:focus-visible, .arcade-control-button:focus-visible { outline: 3px solid #b94358; outline-offset: 3px; }
+.arcade-canvas-frame.basketball-active #arcade-canvas { touch-action: none; }
+@media (max-width: 850px) { .arcade-game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 380px) { .arcade-game-grid { gap: .65rem; } .arcade-game-card { padding: .75rem; } .arcade-game-card h2 { font-size: 1.05rem; } }
+@media (prefers-reduced-motion: reduce) { .arcade-game-card { transition: none; } .arcade-game-card:hover, .arcade-game-card:focus-within { transform: none; } }
+
+.love-controls button { cursor: pointer; }
+@media (max-width: 600px) { .love-controls { gap: .4rem; } .love-controls button { min-height: 50px; } .love-joystick { width: 100px; height: 100px; } }
+.arcade-preview {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-top: .65rem;
+  overflow: hidden;
+  border-radius: 9px;
+  background: #242126;
+}
+.arcade-preview img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.arcade-game-card, .arcade-game-card:nth-child(odd) { min-height: 0; }
+.arcade-game-card h2 { margin: .75rem 0 .4rem; }
+.arcade-game-card > .arcade-play-button,
+.arcade-game-card > .arcade-game-status {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  margin-top: auto;
+  font-size: .875rem;
+}
+.arcade-game-status {
+  display: grid;
+  place-items: center;
+  padding: .35rem;
+  border: 1px solid #e8c8cc;
+  border-radius: 20px;
+  background: #f4dce0;
+  color: #741a2a;
+  text-align: center;
+}
+.love-missions { padding: .8rem; background: #fff7ef; border-radius: 12px; }
+.love-missions h3 { margin: 0 0 .5rem; }
+.love-missions div { display: flex; align-items: center; gap: .5rem; padding: .3rem 0; }
+.love-missions span { flex: 1; }
+.love-missions button { min-height: 44px; min-width: 60px; cursor: pointer; }
+.love-missions strong { font-size: .7rem; }

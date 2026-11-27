@@ -34,48 +34,63 @@
     <header class="arcade-header">
       <span class="arcade-kicker">CHAPTER ONE · PLAYER SELECT</span>
       <h1>arcade</h1>
-      <p>Six games. One tiny arcade. Pick a cabinet and play.</p>
+      <p>Eight games for our December 8 anniversary ♡</p>
     </header>
 
     <section class="arcade-game-grid" id="arcade-lobby" aria-label="Choose a game">
       <article class="arcade-game-card">
-        <span class="arcade-game-number">01 / CO-OP PUZZLE</span>
+        <span class="arcade-game-number">CO-OP PUZZLE</span>
+        <span class="arcade-preview" aria-hidden="true"><img src="images/arcade/fire-water.svg" alt=""></span>
         <h2>Fire &amp; Water</h2>
         <p>Work together, flip switches, and guide both explorers to their exits.</p>
         <p class="arcade-game-controls">WASD + arrow keys · 2 players</p>
-        <button class="arcade-play-button" type="button" data-launch-game="fire-water">Play Fire &amp; Water <span aria-hidden="true">→</span></button>
+        <button class="arcade-play-button" type="button" data-launch-game="fire-water" aria-label="Play Fire &amp; Water">Play</button>
       </article>
       <article class="arcade-game-card">
-        <span class="arcade-game-number">02 / CLASSIC</span>
+        <span class="arcade-game-number">CLASSIC</span>
+        <span class="arcade-preview" aria-hidden="true"><img src="images/arcade/snake.svg" alt=""></span>
         <h2>Snake</h2>
         <p>Collect glowing data dots, grow your tail, and beat your best run.</p>
         <p class="arcade-game-controls">Arrow keys or WASD</p>
-        <button class="arcade-play-button" type="button" data-launch-game="snake">Play Snake <span aria-hidden="true">→</span></button>
+        <button class="arcade-play-button" type="button" data-launch-game="snake" aria-label="Play Snake">Play</button>
       </article>
       <article class="arcade-game-card">
-        <span class="arcade-game-number">03 / BRICK BREAKER</span>
+        <span class="arcade-game-number">BRICK BREAKER</span>
+        <span class="arcade-preview" aria-hidden="true"><img src="images/arcade/brick-breaker.svg" alt=""></span>
         <h2>Brick Breaker</h2>
         <p>Keep the ball in play, clear every row, and make it through each level.</p>
         <p class="arcade-game-controls">Left/right arrows or A/D · move paddle</p>
-        <button class="arcade-play-button" type="button" data-launch-game="brick-breaker">Play Brick Breaker <span aria-hidden="true">→</span></button>
+        <button class="arcade-play-button" type="button" data-launch-game="brick-breaker" aria-label="Play Brick Breaker">Play</button>
       </article>
       <article class="arcade-game-card">
-        <span class="arcade-game-number">04 / ARCADE</span>
-        <span class="arcade-preview" aria-hidden="true">💗</span>
+        <span class="arcade-game-number">ARCADE</span>
+        <span class="arcade-preview" aria-hidden="true"><img src="images/arcade/jump-heart.svg" alt=""></span>
         <h2>Jump to My Heart</h2><p>Bounce higher together on floating platforms.</p>
-        <button class="arcade-play-button" type="button" data-launch-game="jump-heart">Play Jump to My Heart <span aria-hidden="true">→</span></button>
+        <button class="arcade-play-button" type="button" data-launch-game="jump-heart" aria-label="Play Jump to My Heart">Play</button>
       </article>
       <article class="arcade-game-card">
-        <span class="arcade-game-number">05 / ARCADE</span>
-        <span class="arcade-preview" aria-hidden="true">🏀</span>
+        <span class="arcade-game-number">ARCADE</span>
+        <span class="arcade-preview" aria-hidden="true"><img src="images/arcade/basketball.svg" alt=""></span>
         <h2>Basketball Challenge</h2><p>Aim, shoot, and see how many baskets you can make in a minute.</p>
-        <button class="arcade-play-button" type="button" data-launch-game="basketball">Play Basketball Challenge <span aria-hidden="true">→</span></button>
+        <button class="arcade-play-button" type="button" data-launch-game="basketball" aria-label="Play Basketball Challenge">Play</button>
       </article>
       <article class="arcade-game-card">
-        <span class="arcade-game-number">06 / ARCADE</span>
-        <span class="arcade-preview" aria-hidden="true">🏃</span>
+        <span class="arcade-game-number">ARCADE</span>
+        <span class="arcade-preview" aria-hidden="true"><img src="images/arcade/endless-runner.svg" alt=""></span>
         <h2>Endless Runner</h2><p>Jump over obstacles and keep your run going.</p>
-        <button class="arcade-play-button" type="button" data-launch-game="runner">Play Endless Runner <span aria-hidden="true">→</span></button>
+        <button class="arcade-play-button" type="button" data-launch-game="runner" aria-label="Play Endless Runner">Play</button>
+      </article>
+      <article class="arcade-game-card">
+        <span class="arcade-game-number">ENDLESS RUNNER</span>
+        <span class="arcade-preview" aria-hidden="true"><img src="images/arcade/love-surfers.svg" alt=""></span>
+        <h2>Love Surfers</h2><p>Run, dodge, and collect every heart.</p>
+        <span class="arcade-game-status" data-love-game="surfers">In development</span>
+      </article>
+      <article class="arcade-game-card">
+        <span class="arcade-game-number">OPEN WORLD</span>
+        <span class="arcade-preview" aria-hidden="true"><img src="images/arcade/love-city.svg" alt=""></span>
+        <h2>Love City: Open World</h2><p>Your city. Your rules. Our little adventure.</p>
+        <span class="arcade-game-status" data-love-game="city">In development</span>
       </article>
     </section>
 
@@ -108,9 +123,17 @@
       </div>
       <p class="arcade-live-status" id="arcade-status" role="status" aria-live="polite"></p>
     </section>
+    <section class="arcade-stage love-stage" id="love-stage" hidden inert aria-label="Game stage">
+      <div class="arcade-stage-heading"><div><span class="arcade-game-number">NOW PLAYING</span><h2 id="love-title"></h2></div>
+        <div class="arcade-stage-actions"><button class="arcade-control-button" id="love-play">Play</button><button class="arcade-control-button" id="love-pause">Pause</button><button class="arcade-control-button" id="love-restart">Restart</button><button class="arcade-control-button" id="love-back">Back to Arcade</button></div></div>
+      <p id="love-guide" class="arcade-instructions"></p><p id="love-hud" class="arcade-instructions" aria-live="polite"></p>
+      <div class="arcade-canvas-frame"><canvas id="love-canvas" width="960" height="600" tabindex="0" aria-label="Game play area"></canvas></div>
+      <div class="love-controls" id="love-controls"></div><p id="love-message" role="status"></p>
+    </section>
   </main>
   <script src="our-arcade-new-games.js"></script>
   <script src="our-arcade.js"></script>
+  <!-- The development cards and hidden stage are integration points for love-games.js. -->
 
   <footer class="site-signature"><p>Made with love, by Emma ♡</p><p>For Dom. Always.</p></footer>
 </body>
