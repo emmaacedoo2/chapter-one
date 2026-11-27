@@ -6,6 +6,7 @@
   <title>arcade • Chapter One</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="our-arcade.css">
+  <link rel="stylesheet" href="love-surfers.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -84,7 +85,7 @@
         <span class="arcade-game-number">ENDLESS RUNNER</span>
         <span class="arcade-preview" aria-hidden="true"><img src="images/arcade/love-surfers.svg" alt=""></span>
         <h2>Love Surfers</h2><p>Run, dodge, and collect every heart.</p>
-        <span class="arcade-game-status" data-love-game="surfers">In development</span>
+        <button class="arcade-play-button" type="button" id="surfers-launch" aria-label="Play Love Surfers">Play</button>
       </article>
       <article class="arcade-game-card">
         <span class="arcade-game-number">OPEN WORLD</span>
@@ -123,6 +124,39 @@
       </div>
       <p class="arcade-live-status" id="arcade-status" role="status" aria-live="polite"></p>
     </section>
+    <section class="surfers" id="surfers-stage" hidden aria-labelledby="surfers-title">
+      <header class="surfers-heading">
+        <div>
+          <span class="arcade-kicker">CHAPTER ONE ARCADE</span>
+          <h2 id="surfers-title">Love Surfers</h2>
+        </div>
+        <button class="arcade-control-button" type="button" data-surf="pause" hidden>Pause</button>
+      </header>
+      <div class="surfers-hud" id="surfers-hud" aria-label="Run stats"></div>
+      <div class="surfers-view">
+        <canvas id="surfers-canvas" tabindex="0" aria-label="Love Surfers track. Use arrow keys or swipe to move."></canvas>
+        <div class="surfers-overlay" id="surfers-overlay">
+          <div class="surfers-panel">
+            <h3 id="surfers-screen"></h3>
+            <p id="surfers-summary"></p>
+            <div class="surfers-actions">
+              <button type="button" data-surf="play">Play</button>
+              <button type="button" data-surf="restart">Restart</button>
+              <button type="button" data-surf="sound" aria-pressed="false">Sound off</button>
+              <button type="button" data-surf="exit">Exit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="surfers-coaching" id="surfers-coaching"></p>
+      <div class="surfers-controls" id="surfers-controls">
+        <button type="button" data-surf="left" aria-label="Move left">←</button>
+        <button type="button" data-surf="right" aria-label="Move right">→</button>
+        <button type="button" data-surf="jump">Jump</button>
+        <button type="button" data-surf="slide">Slide</button>
+      </div>
+      <p id="surfers-records"></p>
+    </section>
     <section class="arcade-stage love-stage" id="love-stage" hidden inert aria-label="Game stage">
       <div class="arcade-stage-heading"><div><span class="arcade-game-number">NOW PLAYING</span><h2 id="love-title"></h2></div>
         <div class="arcade-stage-actions"><button class="arcade-control-button" id="love-play">Play</button><button class="arcade-control-button" id="love-pause">Pause</button><button class="arcade-control-button" id="love-restart">Restart</button><button class="arcade-control-button" id="love-back">Back to Arcade</button></div></div>
@@ -133,7 +167,8 @@
   </main>
   <script src="our-arcade-new-games.js"></script>
   <script src="our-arcade.js"></script>
-  <!-- The development cards and hidden stage are integration points for love-games.js. -->
+  <script type="module" src="love-surfers.js"></script>
+  <!-- The Love City card and hidden stage are integration points for love-games.js. -->
 
   <footer class="site-signature"><p>Made with love, by Emma ♡</p><p>For Dom. Always.</p></footer>
 </body>
