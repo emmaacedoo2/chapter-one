@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="our-arcade.css">
   <link rel="stylesheet" href="love-surfers.css">
+  <link rel="stylesheet" href="love-city.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -91,7 +92,7 @@
         <span class="arcade-game-number">OPEN WORLD</span>
         <span class="arcade-preview" aria-hidden="true"><img src="images/arcade/love-city.svg" alt=""></span>
         <h2>Love City: Open World</h2><p>Your city. Your rules. Our little adventure.</p>
-        <span class="arcade-game-status" data-love-game="city">In development</span>
+        <button class="arcade-play-button" type="button" id="city-launch" aria-label="Play Love City">Play</button>
       </article>
     </section>
 
@@ -157,18 +158,51 @@
       </div>
       <p id="surfers-records"></p>
     </section>
-    <section class="arcade-stage love-stage" id="love-stage" hidden inert aria-label="Game stage">
-      <div class="arcade-stage-heading"><div><span class="arcade-game-number">NOW PLAYING</span><h2 id="love-title"></h2></div>
-        <div class="arcade-stage-actions"><button class="arcade-control-button" id="love-play">Play</button><button class="arcade-control-button" id="love-pause">Pause</button><button class="arcade-control-button" id="love-restart">Restart</button><button class="arcade-control-button" id="love-back">Back to Arcade</button></div></div>
-      <p id="love-guide" class="arcade-instructions"></p><p id="love-hud" class="arcade-instructions" aria-live="polite"></p>
-      <div class="arcade-canvas-frame"><canvas id="love-canvas" width="960" height="600" tabindex="0" aria-label="Game play area"></canvas></div>
-      <div class="love-controls" id="love-controls"></div><p id="love-message" role="status"></p>
+    <section class="city" id="city-stage" hidden aria-labelledby="city-heading">
+      <header class="city-header">
+        <div><span class="arcade-kicker">CHAPTER ONE ARCADE</span><h2 id="city-heading">Love City</h2></div>
+        <nav id="city-tools" aria-label="Love City tools" hidden>
+          <button type="button" data-city="missions">Missions</button>
+          <button type="button" data-city="map">Map</button>
+          <button type="button" data-city="garage">Garage</button>
+          <button type="button" data-city="pause">Pause</button>
+        </nav>
+      </header>
+      <div id="city-hud" class="city-hud" aria-label="City status" hidden></div>
+      <div class="city-view">
+        <canvas id="city-canvas" tabindex="0" aria-label="Love City game area"></canvas>
+        <button class="city-minimap" type="button" data-city="map" aria-label="Open city map" hidden>
+          <canvas id="city-minimap" width="260" height="260"></canvas>
+        </button>
+        <div class="city-overlay" id="city-overlay">
+          <section class="city-panel" aria-labelledby="city-panel-title">
+            <h3 id="city-panel-title"></h3>
+            <div id="city-panel-content"></div>
+            <div class="city-actions" id="city-panel-actions"></div>
+          </section>
+        </div>
+      </div>
+      <div class="city-objective" id="city-objective" hidden></div>
+      <div class="city-controls" id="city-controls" hidden>
+        <div id="city-joystick" class="city-joystick" aria-label="Touch joystick"><span></span></div>
+        <div class="city-pedals">
+          <button type="button" data-city="interact" class="city-interact">Enter car</button>
+          <button type="button" data-city-hold="sprint">Sprint</button>
+          <button type="button" data-city-hold="brake" hidden>Brake / reverse</button>
+          <button type="button" data-city-hold="accelerate" hidden>Accelerate</button>
+        </div>
+      </div>
+      <div class="city-footer" id="city-footer" hidden>
+        <p id="city-notice" role="status"></p>
+        <button type="button" data-city="skip">Skip tutorial</button>
+        <button type="button" data-city="reset">Reset position</button>
+      </div>
     </section>
   </main>
   <script src="our-arcade-new-games.js"></script>
   <script src="our-arcade.js"></script>
   <script type="module" src="love-surfers.js"></script>
-  <!-- The Love City card and hidden stage are integration points for love-games.js. -->
+  <script type="module" src="love-city.js"></script>
 
   <footer class="site-signature"><p>Made with love, by Emma ♡</p><p>For Dom. Always.</p></footer>
 </body>
