@@ -1,5 +1,5 @@
 import {
-  blocked, GARAGE, HEARTS, HOME, route, TRAFFIC_LOOPS, TUTORIAL_STOP, VEHICLES
+  blocked, GARAGE, HEARTS, HOME, recoverySpots, route, TRAFFIC_LOOPS, TUTORIAL_STOP, VEHICLES
 } from './love-city-world.js';
 
 export const STEP = 1/120;
@@ -10,7 +10,7 @@ export const angleDelta = (a,b) => Math.atan2(Math.sin(a-b),Math.cos(a-b));
 const toward = (from,to,step) => from + clamp(to-from,-step,step);
 
 export function makeCar(type, x, y, angle = 0) {
-  return { type,x,y,angle,speed:0 };
+  return { type,x,y,angle,speed:0,steering:0,braking:false };
 }
 export function createCity(progress) {
   const s = {
@@ -46,7 +46,10 @@ export function nearestCar(s, radius = 108) {
   let nearest = null, distance = radius;
   for (const car of s.cars) {
     const d = gap(s.player,car);
-    if (d < distance) { nearest = car; distance = d; }
+    if (d >= distance) continue;
+    const dx=car.x-s.player.x,dy=car.y-s.player.y;
+    const visible=[.2,.4,.6,.8].every(t=>!blocked(s.player.x+dx*t,s.player.y+dy*t,10));
+    if (visible) { nearest = car; distance = d; }
   }
   return nearest;
 }
@@ -105,34 +108,55 @@ function walk(s,input) {
   p.stride+=Math.hypot(p.vx,p.vy)*STEP*.083;
 }
 
+function clearCar(s,car,x,y,angle) {
+  const spec=VEHICLES[car.type], r=spec.width/2, axis=spec.length/2-r;
+  const dx=Math.cos(angle),dy=Math.sin(angle);
+  for (const offset of [-axis,0,axis]) {
+    const px=x+offset*dx,py=y+offset*dy;
+    if (blocked(px,py,r) || overlapsVehicle(s,px,py,r,car)) return false;
+  }
+  return true;
+}
+
 function drive(s,input) {
   const c=s.car, spec=VEHICLES[c.type];
-  if (input.handbrake) c.speed=toward(c.speed,0,540*STEP);
-  else if (input.brake) c.speed=toward(c.speed,-spec.max*.28,(c.speed>0?570:spec.accel*.6)*STEP);
-  else if (input.accelerate) c.speed=toward(c.speed,spec.max,spec.accel*STEP);
-  else c.speed=toward(c.speed,0,(57+Math.abs(c.speed)*.09)*STEP);
-  const steer=clamp(input.x ?? 0,-1,1);
-  const turn=steer*spec.steer*clamp(Math.abs(c.speed)/72,0,1)*
-    (1-.4*Math.abs(c.speed)/spec.max)*Math.sign(c.speed)*STEP;
-  const a=c.angle+turn, dx=Math.cos(a), dy=Math.sin(a);
-  const x=c.x+dx*c.speed*STEP, y=c.y+dy*c.speed*STEP;
-  const r=spec.width/2, axis=spec.length/2-r;
-  let clear=true;
-  for (const offset of [-axis,0,axis]) {
-    const px=x+offset*dx, py=y+offset*dy;
-    if (blocked(px,py,r) || overlapsVehicle(s,px,py,r,c)) { clear=false; break; }
-  }
+  c.braking=Boolean(input.brake||input.handbrake);
+  if (input.handbrake) c.speed=toward(c.speed,0,565*STEP);
+  else if (input.brake) c.speed=toward(c.speed,-spec.max*.30,(c.speed>0?585:spec.accel*.68)*STEP);
+  else if (input.accelerate) c.speed=toward(c.speed,spec.max,(c.speed<0?470:spec.accel)*STEP);
+  else c.speed=toward(c.speed,0,(52+Math.abs(c.speed)*.12)*STEP);
+  const steer=clamp(input.x??0,-1,1);
+  c.steering=toward(c.steering,steer,14*STEP);
+  const turn=c.steering*spec.steer*clamp(Math.abs(c.speed)/53,0,1)*
+    (1-.49*Math.abs(c.speed)/spec.max)*(input.handbrake?1.16:1)*Math.sign(c.speed)*STEP;
+  const a=c.angle+turn,dx=Math.cos(a),dy=Math.sin(a);
+  const x=c.x+dx*c.speed*STEP,y=c.y+dy*c.speed*STEP;
+  const clear=clearCar(s,c,x,y,a);
   if (clear) Object.assign(c,{x,y,angle:a});
   else {
-    if (Math.abs(c.speed)>50 && s.bump===0) s.bump=.32;
-    c.speed *= -.16;
+    if (Math.abs(c.speed)>40 && s.bump===0) s.bump=.32;
+    // A blocked translation should still allow the nose to turn out of a corner.
+    if (clearCar(s,c,c.x,c.y,a)) c.angle=a;
+    c.speed=0;
   }
 
   if (s.tutorial===1 && input.accelerate && c.speed>55) s.tutorial=2;
   else if (s.tutorial===2 && clear) {
     s.turnTravel+=Math.abs(turn);
-    if (s.turnTravel>.30) s.tutorial=3;
+    if (s.turnTravel>.27) s.tutorial=3;
   } else if (s.tutorial===3 && toPoint(c,TUTORIAL_STOP)<75) s.tutorial=4;
+}
+
+export function recoverVehicle(s) {
+  const car=s.car;
+  if (!car) return false;
+  const spots=recoverySpots(car.x,car.y);
+  const spot=spots.find(p=>gap(car,p)>78 && clearCar(s,car,p.x,p.y,p.angle));
+  if (!spot) { notify(s,'No clear road space. Return to the garage from the pause menu.'); return false; }
+  Object.assign(car,spot,{speed:0,steering:0,braking:false});
+  s.routeClock=0;
+  notify(s,'Vehicle recovered to a clear lane.');
+  return true;
 }
 
 function advanceTraffic(s) {

@@ -28,29 +28,46 @@
   const gameInfo = {
     snake: {
       name: 'Snake',
-      instructions: 'Use the arrow keys or WASD to steer. Eat the glowing dots, avoid the walls and your tail. Press P or Space to pause.',
+      instructions: 'Use the arrow keys, WASD, swipes, or the direction buttons to steer. Eat the glowing dots, avoid the walls and your tail. Press P or Space to pause.',
       bestKey: 'chapterOneArcadeSnakeBest'
     },
     'brick-breaker': {
       name: 'Brick Breaker',
-      instructions: 'Move the paddle with the left/right arrows or A/D. You can also move it with your pointer. Clear three levels; P or Space pauses.',
+      instructions: 'Move the paddle with the left/right arrows or A/D. Drag horizontally to move the paddle. Tap the court or press Space to serve. P or Esc pauses.',
       bestKey: 'chapterOneArcadeBrickBreakerBest'
     },
     'fire-water': {
       name: 'Fire & Water',
-      instructions: 'Fire: A/D to move, W to jump. Water: ←/→ to move, ↑ to jump. Stand on each switch to open the gate. Fire can cross lava, Water can cross water; both avoid the dark pools. Both explorers must reach their matching doors.',
+      instructions: 'Fire: A/D to move, W to jump. Water: ←/→ to move, ↑ to jump. Stand on each switch to open the gate. Fire can cross lava, Water can cross water; both avoid the dark pools. Both explorers must reach their matching doors. On touch, each character has a separate control group.',
       bestKey: 'chapterOneArcadeFireWaterBest'
     }
   };
 
   Object.assign(gameInfo, {
-    'jump-heart': { name: 'Jump to My Heart', instructions: 'Move with ←/→ or A/D, or hold the buttons below. Bounce as high as you can!', bestKey: 'chapterOne.arcade.jumpHeart.best' },
+    'jump-heart': { name: 'Jump to My Heart', instructions: 'Move with ←/→ or A/D, or hold the buttons below. Bounce automatically. Press Space, ↑, or Jump just before landing for a boost.', bestKey: 'chapterOne.arcade.jumpHeart.best' },
     basketball: { name: 'Basketball Challenge', instructions: 'Drag the ball down and left, then release to shoot. Follow the dotted path. You have 60 seconds!', bestKey: 'chapterOne.arcade.basketball.best' },
     runner: { name: 'Endless Runner', instructions: 'Press Space or ↑, tap the game, or use JUMP to clear obstacles.', bestKey: 'chapterOne.arcade.runner.best' }
   });
   const newGames = new Set(['jump-heart', 'basketball', 'runner']);
   const startButton = document.getElementById('arcade-start');
   const touchControls = document.getElementById('arcade-touch-controls');
+  const touchKeys = new Map();
+  const frameKeys = { has(code) {
+    if (keysDown.has(code)) return true;
+    for (const held of touchKeys.values()) if (held === code) return true;
+    return false;
+  } };
+  const touchGames = new Set(['fire-water', 'snake', 'jump-heart', 'runner']);
+  let aimingPointer = null;
+  let paddlePointer = null;
+  let swipe = null;
+
+  function clearInput() {
+    keysDown.clear();
+    touchKeys.clear();
+    aimingPointer = paddlePointer = swipe = null;
+    activeGame?.cancelPointer?.();
+  }
   let ready = false;
   let activeGame = null;
   let activeId = null;
@@ -132,7 +149,7 @@
     const elapsed = previousFrame ? (timestamp - previousFrame) / 1000 : 0;
     const dt = Math.min(elapsed, 0.05);
     previousFrame = timestamp;
-    activeGame.update(dt, keysDown, elapsed);
+    activeGame.update(dt, frameKeys, elapsed);
     finished = activeGame.state().ended;
     paint();
     updateHud();
@@ -338,7 +355,9 @@
       }
     }
 
+    let serving;
     function resetBall() {
+      serving = true;
       paddle = { x: WIDTH / 2 - 66, y: HEIGHT - 44, w: 132, h: 14 };
       ball = { x: WIDTH / 2, y: HEIGHT - 72, r: 10, vx: 230, vy: -330 };
     }
@@ -354,9 +373,18 @@
       resetBall();
     }
 
+    function serve() {
+      if (!serving || ended) return false;
+      serving = false;
+      ball.x = paddle.x + paddle.w / 2;
+      status = 'Keep the ball above the paddle.';
+      return true;
+    }
+
     reset();
     return {
       reset,
+      serve,
       handleKey() {},
       update(dt, keys) {
         if (ended) return;
@@ -365,6 +393,10 @@
         if (keys.has('ArrowRight') || keys.has('KeyD')) paddle.x += paddleSpeed * dt;
         paddle.x = Math.max(8, Math.min(WIDTH - paddle.w - 8, paddle.x));
 
+        if (serving) {
+          ball.x = paddle.x + paddle.w / 2;
+          return;
+        }
         const speedScale = 1 + (level - 1) * 0.1;
         const oldX = ball.x;
         const oldY = ball.y;
@@ -472,7 +504,7 @@
         context.fill();
       },
       state: () => ({ ended, won }),
-      stats: () => ({ score, best, extra: Math.min(level, 3) + ' / 3 · ' + lives + ' lives', status })
+      stats: () => ({ score, best, extra: Math.min(level, 3) + ' / 3 · ' + lives + ' lives', status: serving ? 'Tap the court or press Space to serve.' : status })
     };
   }
 
@@ -646,6 +678,7 @@
     reset();
     return {
       reset,
+      cancelPointer() { jumpQueued.fire = jumpQueued.water = false; },
       handleKey(code) {
         if (code === 'KeyW') jumpQueued.fire = true;
         if (code === 'ArrowUp') jumpQueued.water = true;
@@ -745,7 +778,7 @@
   function launch(id) {
     if (!gameInfo[id]) return;
     stopLoop();
-    aimingPointer = null;
+    clearInput();
     activeId = id;
     canvas.parentElement.classList.toggle('basketball-active', id === 'basketball');
     activeGame = newGames.has(id) ? window.createChapterArcadeGame(id, loadBest(id), score => persistBest(id, score)) : id === 'snake'
@@ -758,9 +791,9 @@
     ready = true;
     startButton.hidden = !ready;
     pauseButton.disabled = ready;
-    touchControls.hidden = !['jump-heart', 'runner'].includes(id);
-    touchControls.querySelectorAll('[data-control]').forEach(button => { button.hidden = id === 'runner' ? button.dataset.control !== 'jump' : button.dataset.control === 'jump'; });
-    keysDown.clear();
+    touchControls.hidden = true;
+    touchControls.dataset.game = id;
+    touchControls.querySelectorAll('[data-touch-game]').forEach(group => { group.hidden = group.dataset.touchGame !== id; });
     lobby.hidden = true;
     stage.hidden = false;
     resizeCanvas();
@@ -780,7 +813,8 @@
 
   function returnToArcade() {
     stopLoop();
-    aimingPointer = null;
+    clearInput();
+    const returningId = activeId;
     activeGame = null;
     activeId = null;
     canvas.parentElement.classList.remove('basketball-active');
@@ -795,6 +829,7 @@
     lobby.hidden = false;
     pauseButton.textContent = 'Pause';
     statusElement.textContent = 'Choose a game to play.';
+    document.querySelector('[data-launch-game="' + returningId + '"]')?.focus();
   }
 
   function togglePause() {
@@ -802,8 +837,7 @@
     paused = !paused;
     pauseButton.textContent = paused ? 'Resume' : 'Pause';
     if (paused) {
-      aimingPointer = null;
-      activeGame.cancelPointer?.();
+      clearInput();
       stopLoop();
       paint();
     } else {
@@ -818,7 +852,13 @@
   });
   function startGame() {
     if (!ready) return;
-    ready = false; startButton.hidden = true; pauseButton.disabled = false; startLoop();
+    ready = false;
+    startButton.hidden = true;
+    pauseButton.disabled = false;
+    touchControls.hidden = !touchGames.has(activeId);
+    canvas.focus({ preventScroll: true });
+    resizeCanvas();
+    startLoop();
   }
   startButton.addEventListener('click', startGame);
   pauseButton.addEventListener('click', togglePause);
@@ -827,6 +867,7 @@
 
   document.addEventListener('keydown', event => {
     if (!activeGame || event.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
+    if (event.code === 'Space' && event.target.closest('button') && event.target !== startButton) return;
     if (event.code.startsWith('Arrow') || event.code === 'Space') event.preventDefault();
     if (event.repeat) return;
     if (event.code === 'Space' && (ready || finished)) {
@@ -834,7 +875,9 @@
       startGame();
       return;
     }
-    if (event.code === 'KeyP' || (event.code === 'Space' && activeId !== 'runner')) {
+    if (event.code === 'Space' && !paused && activeId === 'brick-breaker' && activeGame.serve()) return;
+    if (event.code === 'KeyP' || event.code === 'Escape' ||
+        (event.code === 'Space' && !['runner', 'jump-heart'].includes(activeId))) {
       togglePause();
       return;
     }
@@ -845,62 +888,117 @@
   document.addEventListener('keyup', event => {
     keysDown.delete(event.code);
   });
-  window.addEventListener('blur', () => keysDown.clear());
-  canvas.addEventListener('pointermove', event => {
-    if (!activeGame || activeId !== 'brick-breaker' || paused || finished) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = (event.clientX - rect.left) * (WIDTH / rect.width);
-    activeGame.setPointer(x);
-  });
+  function suspend() {
+    clearInput();
+    if (activeGame && !paused) togglePause();
+  }
+  window.addEventListener('blur', suspend);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); });
 
-
+  const playing = () => activeGame && !paused && !ready && !finished;
   function canvasPoint(event) {
     const rect = canvas.getBoundingClientRect();
     return { x: (event.clientX - rect.left) * WIDTH / rect.width, y: (event.clientY - rect.top) * HEIGHT / rect.height };
   }
-  let aimingPointer = null;
-  [canvas, ballTarget].forEach(target => target.addEventListener('pointerdown', event => {
-    if (!activeGame) return;
-    if (ready || finished) { event.preventDefault(); if (finished) restart(); startGame(); return; }
-    if (paused) return;
-    if (activeId === 'runner') { event.preventDefault(); activeGame.jump(); }
-    if (activeId === 'basketball') {
-      const p = canvasPoint(event);
-      if (activeGame.pointerDown(p.x, p.y)) { event.preventDefault(); aimingPointer = event.pointerId; target.setPointerCapture(event.pointerId); }
-    }
-  }));
-  [canvas, ballTarget].forEach(target => target.addEventListener('pointermove', event => {
-    if (activeId === 'basketball' && aimingPointer === event.pointerId && !paused && !ready && !finished) { const p = canvasPoint(event); activeGame.pointerMove(p.x, p.y); }
-  }));
-  [canvas, ballTarget].forEach(target => target.addEventListener('pointerup', event => {
-    if (aimingPointer !== event.pointerId) return;
-    aimingPointer = null;
-    if (activeId === 'basketball' && !paused && !ready && !finished) { const p = canvasPoint(event); activeGame.pointerUp(p.x, p.y); }
-  }));
-  [canvas, ballTarget].forEach(target => target.addEventListener('pointercancel', () => { aimingPointer = null; if (activeGame?.cancelPointer) activeGame.cancelPointer(); }));
-  touchControls.querySelectorAll('button').forEach(button => {
-    const code = button.dataset.control === 'left' ? 'ArrowLeft' : 'ArrowRight';
-    button.addEventListener('pointerdown', event => {
-      if (!activeGame || ready || paused || finished) return;
-      event.preventDefault(); button.setPointerCapture(event.pointerId);
-      if (button.dataset.control === 'jump') activeGame.jump(); else keysDown.add(code);
+  function moveSwipe(event) {
+    if (event.pointerId !== swipe?.id || swipe.used) return;
+    const x = event.clientX - swipe.x, y = event.clientY - swipe.y;
+    if (Math.max(Math.abs(x), Math.abs(y)) < 15) return;
+    swipe.used = true;
+    activeGame.handleKey(Math.abs(x) > Math.abs(y)
+      ? (x > 0 ? 'ArrowRight' : 'ArrowLeft')
+      : (y > 0 ? 'ArrowDown' : 'ArrowUp'));
+  }
+
+  for (const target of [canvas, ballTarget]) {
+    target.addEventListener('pointerdown', event => {
+      if (!activeGame || event.button !== 0) return;
+      if (ready || finished) {
+        event.preventDefault();
+        if (finished) restart();
+        startGame();
+        return;
+      }
+      if (!playing()) return;
+      if (activeId === 'runner') {
+        event.preventDefault();
+        activeGame.jump();
+      } else if (activeId === 'snake' && !swipe) {
+        swipe = { id: event.pointerId, x: event.clientX, y: event.clientY, used: false };
+        target.setPointerCapture(event.pointerId);
+      } else if (activeId === 'brick-breaker' && paddlePointer === null) {
+        paddlePointer = event.pointerId;
+        target.setPointerCapture(event.pointerId);
+        activeGame.setPointer(canvasPoint(event).x);
+        activeGame.serve();
+      } else if (activeId === 'basketball' && aimingPointer === null) {
+        const { x, y } = canvasPoint(event);
+        if (activeGame.pointerDown(x, y)) {
+          event.preventDefault();
+          aimingPointer = event.pointerId;
+          target.setPointerCapture(event.pointerId);
+        }
+      }
     });
-    const release = () => keysDown.delete(code);
-    button.addEventListener('pointerup', release);
-    button.addEventListener('pointercancel', release);
-    button.addEventListener('lostpointercapture', release);
+    target.addEventListener('pointermove', event => {
+      if (!playing()) return;
+      if (activeId === 'snake') moveSwipe(event);
+      if (activeId === 'brick-breaker' &&
+          (paddlePointer === event.pointerId || (paddlePointer === null && event.pointerType === 'mouse'))) {
+        activeGame.setPointer(canvasPoint(event).x);
+      }
+      if (aimingPointer === event.pointerId) {
+        const { x, y } = canvasPoint(event);
+        activeGame.pointerMove(x, y);
+      }
+    });
+    function release(event) {
+      if (event.pointerId === paddlePointer) paddlePointer = null;
+      if (event.pointerId === swipe?.id) {
+        if (playing() && event.type === 'pointerup') moveSwipe(event);
+        swipe = null;
+      }
+      if (event.pointerId !== aimingPointer) return;
+      aimingPointer = null;
+      if (playing() && event.type === 'pointerup') {
+        const { x, y } = canvasPoint(event);
+        activeGame.pointerUp(x, y);
+      } else activeGame?.cancelPointer?.();
+    }
+    for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) target.addEventListener(name, release);
+  }
+  touchControls.querySelectorAll('button').forEach(button => {
+    const code = button.dataset.control;
+    function press() {
+      if (code === 'jump') activeGame.jump();
+      else activeGame.handleKey(code);
+    }
+    button.addEventListener('pointerdown', event => {
+      if (!playing() || event.button !== 0) return;
+      event.preventDefault();
+      button.setPointerCapture(event.pointerId);
+      touchKeys.set(event.pointerId, code);
+      press();
+    });
+    button.addEventListener('click', event => {
+      if (event.detail === 0 && playing()) press();
+    });
+    for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+      button.addEventListener(name, event => touchKeys.delete(event.pointerId));
+    }
   });
   // Keep the logical game dimensions while matching the display's pixel density.
   function resizeCanvas() {
     const rect = canvas.getBoundingClientRect();
     if (!rect.width) return;
-    const ratio = window.devicePixelRatio || 1;
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(rect.width * ratio);
     canvas.height = Math.round(rect.height * ratio);
     ctx.setTransform(canvas.width / WIDTH, 0, 0, canvas.height / HEIGHT, 0, 0);
     paint();
   }
   window.addEventListener('resize', resizeCanvas);
+  if ('ResizeObserver' in window) new ResizeObserver(resizeCanvas).observe(canvas);
 
   window.ArcadeApp = {
     launch,

@@ -77,6 +77,17 @@ export function failMission(s,reason) {
   notify(s,spec.name+' failed. '+reason+' Use Missions to try again.');
 }
 
+export function cancelMission(s) {
+  if (!s.mission) return false;
+  const {spec}=s.mission;
+  delete s.missionStates[spec.id];
+  s.mission=null;
+  s.route=[];
+  s.routeClock=0;
+  notify(s,spec.name+' canceled. Start it again from Missions.');
+  return true;
+}
+
 function complete(s) {
   const {spec,elapsed}=s.mission;
   const p=s.progress;

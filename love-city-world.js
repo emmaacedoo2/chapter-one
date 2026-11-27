@@ -100,13 +100,12 @@ for (let i = 0; i < NODES.length; i++) {
 const distance = (a,b) => Math.hypot(a[0]-b[0], a[1]-b[1]);
 
 function roadAccess(point) {
-  let best, fallback, cost = Infinity, fallbackCost = Infinity;
+  let best, cost = Infinity;
   for (const [a,b] of segments) {
     const p = [Math.max(a[0],Math.min(b[0],point[0])), Math.max(a[1],Math.min(b[1],point[1]))];
     const d = distance(point,p);
-    if (d < fallbackCost) { fallback = {p,a,b}; fallbackCost = d; }
     if (d >= cost) continue;
-    const steps = Math.ceil(d/26);
+    const steps = Math.ceil(d/12);
     let clear = true;
     for (let i = 1; i <= steps; i++) {
       const t = i/steps;
@@ -114,12 +113,13 @@ function roadAccess(point) {
     }
     if (clear) { best={p,a,b}; cost=d; }
   }
-  return best ?? fallback;
+  return best;
 }
 
 // Weighted grid routing includes projections onto the closest actual road segments.
 export function route(start, goal) {
   const from = roadAccess(start), to = roadAccess(goal);
+  if (!from || !to) return [];
   if (from.a === to.a && from.b === to.b) return [start, from.p, to.p, goal];
   const costs = NODES.map(() => Infinity), previous = NODES.map(() => -1);
   const visited = new Set();
@@ -165,3 +165,34 @@ for (const y of ROWS) {
 for (let y = 240; y < 3720; y += 155) props.push({x:3610,y,kind:'palm'});
 for (let x = 220; x < 3710; x += 164) props.push({x,y:3650+x%49,kind:'palm'});
 for (let i = 0; i < 24; i++) props.push({x:1190+i%6*91,y:2050+Math.floor(i/6)*146,kind:'tree'});
+
+// Lane-aligned candidates keep a recovered vehicle out of crossing traffic.
+export function recoverySpots(x,y) {
+  const spots=[];
+  for (const row of ROWS) for (const shift of [0,-96,96,-192,192]) {
+    const along=Math.max(228,Math.min(SHORE-235,x+shift));
+    for (const side of [-1,1]) spots.push({ x:along,y:row+side*32,angle:side===1?0:Math.PI });
+  }
+  for (const col of COLS) for (const shift of [0,-96,96,-192,192]) {
+    const along=Math.max(228,Math.min(SHORE-235,y+shift));
+    for (const side of [-1,1]) spots.push({ x:col+side*32,y:along,angle:side===1?-Math.PI/2:Math.PI/2 });
+  }
+  return spots.sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y));
+}
+
+export function nextTurn(path, point) {
+  if (path.length<2) return null;
+  let prior=path[0], heading=null;
+  for (const p of path.slice(1)) {
+    const dx=p[0]-prior[0],dy=p[1]-prior[1];
+    if (Math.hypot(dx,dy)<52) continue;
+    const direction=Math.atan2(dy,dx);
+    if (heading!==null) {
+      const turn=Math.atan2(Math.sin(direction-heading),Math.cos(direction-heading));
+      if (Math.abs(turn)>.52) return { point:prior, distance:distance(prior,point), side:turn>0?'right':'left' };
+    }
+    heading=direction;
+    prior=p;
+  }
+  return null;
+}

@@ -1,0 +1,164 @@
+.arcade-game-grid[hidden],
+#arcade-stage [hidden] { display: none; }
+
+:is(#arcade-stage, #surfers-stage, #city-stage) [data-expand-game] {
+  min-height: 44px;
+}
+
+.arcade-stage-actions button,
+.arcade-touch-controls button,
+.surfers-controls button {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.arcade-touch-controls,
+.arcade-touch-controls fieldset,
+.arcade-touch-controls fieldset div {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .38rem;
+}
+
+.arcade-touch-controls {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.arcade-touch-controls fieldset {
+  min-width: 0;
+  padding: .35rem .45rem .45rem;
+  border: 1px solid #d7a5b3;
+  border-radius: .65rem;
+}
+
+.arcade-touch-controls legend {
+  padding-inline: .3rem;
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.arcade-touch-controls button {
+  padding: .38rem .45rem;
+  margin: 0;
+  touch-action: none;
+}
+
+:is(#arcade-canvas, #surfers-canvas, #city-canvas) {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@media (max-width: 500px) {
+  #arcade-stage .arcade-stage-heading { flex-wrap: wrap; gap: .35rem; }
+  #arcade-stage .arcade-stage-actions { justify-content: flex-start; }
+  #arcade-stage .arcade-scoreboard { gap: .3rem; }
+  #arcade-stage { padding-inline: .6rem; }
+  #arcade-stage .arcade-touch-controls[data-game="fire-water"] fieldset {
+    flex: 1 1 0;
+    padding-inline: .2rem;
+  }
+}
+
+@media (max-width: 350px) {
+  #arcade-stage .arcade-touch-controls[data-game="fire-water"] fieldset { flex-basis: 100%; }
+}
+
+/* CSS expansion remains available on Safari even when canvas fullscreen is unavailable. */
+body.arcade-scroll-locked {
+  position: fixed;
+  inset: var(--arcade-scroll-top, 0) 0 auto;
+  width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+:is(#arcade-stage, #surfers-stage, #city-stage).arcade-expanded {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  margin: 0;
+  padding: max(.42rem, env(safe-area-inset-top)) max(.5rem, env(safe-area-inset-right))
+    max(.42rem, env(safe-area-inset-bottom)) max(.5rem, env(safe-area-inset-left));
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+
+.arcade-expanded > * { flex-shrink: 0; }
+
+.arcade-expanded .arcade-canvas-frame,
+.arcade-expanded .surfers-view,
+.arcade-expanded .city-view {
+  flex: 1 1 0;
+  min-height: 120px;
+  width: 100%;
+  max-width: none;
+  display: grid;
+  place-items: center;
+  container-type: size;
+}
+
+.arcade-expanded #arcade-canvas {
+  width: min(100cqw, 160cqh);
+  height: auto;
+}
+
+.arcade-expanded .basketball-touch-target {
+  /* The full canvas captures the drag in expanded mode. */
+  display: none;
+}
+
+.arcade-expanded :is(#surfers-canvas, #city-canvas) { height: 100cqh; }
+
+.arcade-expanded :is(.arcade-instructions, .arcade-live-status, .surfers-coaching, #surfers-records, .city-hud, .city-objective, .city-footer) {
+  margin-block: 0;
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  #arcade-stage.arcade-expanded:has(.arcade-touch-controls:not([hidden])),
+  #surfers-stage.arcade-expanded:has(.surfers-controls:not([hidden])),
+  #city-stage.arcade-expanded:has(.city-controls:not([hidden])) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(94px, 26%);
+    grid-template-rows: auto auto minmax(115px, 1fr) auto auto;
+  }
+  .arcade-expanded > * { grid-column: 1 / -1; }
+  .arcade-expanded :is(.arcade-canvas-frame, .surfers-view, .city-view) {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .arcade-expanded :is(.arcade-touch-controls, .surfers-controls, .city-controls) {
+    grid-column: 2;
+    grid-row: 3;
+    align-content: center;
+    justify-content: center;
+    margin: 0;
+  }
+  .arcade-expanded :is(.arcade-instructions, .city-footer p, #surfers-records) { font-size: .72rem; }
+}
+
+.surfers-controls button {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.city-controls .city-interact {
+  flex-basis: 100%;
+  min-height: 48px;
+  text-transform: uppercase;
+}
+
+.city-joystick {
+  user-select: none;
+  -webkit-user-select: none;
+}

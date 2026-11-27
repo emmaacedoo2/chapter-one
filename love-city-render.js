@@ -110,6 +110,16 @@ function building(ctx,b) {
       round(ctx,row%2?'#72879e':'#fbe1b0',wx+(x-rx)*t,ry+h+height*t-3,11,height>45?6:9,2);
     }
   }
+  if(kind==='tower'){
+    for(const offset of [.19,.34,.51]) line(ctx,'#f8e6d782',2,[rx+w-4,ry+h*offset],[rx+w+height*.24,ry+h*offset+height]);
+  }
+  if(kind==='garage'){
+    for(let i=0;i<3;i++)round(ctx,'#6d5c6c',x+26+i*80,y+h-11,54,13,3);
+  }
+  if(kind==='gas'){
+    round(ctx,'#799aa0',x-28,y+h+16,w+50,28,7);
+    for(let i=0;i<3;i++)round(ctx,'#f6d3b3',x-10+i*52,y+h+36,15,9,3);
+  }
   const sign={garage:'ROSE MOTOR CLUB',gas:'SUNSET FUEL',marina:'MARINA CLUB'}[kind];
   if(sign){
     round(ctx,'#5c3b57',rx+8,ry+h-26,w-16,21,4);
@@ -144,7 +154,12 @@ function carArt(ctx,car,driven) {
   const l=spec.length/2,w=spec.width/2, wide=type==='suv', classic=type==='muscle';
   const nose=wide?.79:classic?.83:.67;
   oval(ctx,'#28233747',3,5,l+5,w+3);
-  for(const t of [-1,1]) for(const u of [-1,1]) round(ctx,'#30283b',t*l*.62-6,u*w-4,13,8,2.5);
+  for(const t of [-1,1]) for(const u of [-1,1]) {
+    ctx.save();ctx.translate(t*l*.62,u*w);
+    if(t===1)ctx.rotate((car.steering??0)*.31);
+    round(ctx,'#30283b',-6,-4,13,8,2.5);
+    ctx.restore();
+  }
   shape(ctx,'#43384d',[-l,-w*.67],[-l*.83,-w],[l*.72,-w],[l,-w*nose],[l,w*nose],[l*.72,w],[-l*.83,w],[-l,w*.67]);
   shape(ctx,car.pursuit?'#856bb7':spec.color,[-l+2,-w*.64],[-l*.8,-w+2],[l*.72,-w+2],[l-2,-w*nose],[l-2,w*nose],[l*.72,w-2],[-l*.8,w-2],[-l+2,w*.64]);
   const cabin=wide?.52:.38;
@@ -154,7 +169,7 @@ function carArt(ctx,car,driven) {
   line(ctx,'#ffffff55',1.5,[l*.53,-w*.62],[l*.83,-w*.52]);
   for(const v of [-1,1]){
     round(ctx,'#fff1b9',l-6,v*w*.66-2,5,5,1.5);
-    round(ctx,'#ff778a',-l+2,v*w*.58-2,4,5,1.5);
+    round(ctx,car.braking?'#ffb0b4':'#ff778a',-l+2,v*w*.58-2,car.braking?7:4,5,1.5);
   }
   if(driven||car.pursuit)shape(ctx,'#ffe9ab24',[l,0],[l+36,-w*1.45],[l+36,w*1.45]);
   if(car.pursuit){round(ctx,'#fabcaa',-5,-8,10,7,2);round(ctx,'#b7e3ed',-5,1,10,7,2);}
@@ -216,9 +231,11 @@ export function createCityRenderer(ctx) {
   function reset() { cameraX=cameraY=null; }
   function draw(s,dt=0) {
     const a=actor(s);
-    const follow=Math.min(1,dt*7);
-    cameraX=cameraX===null?a.x:cameraX+(a.x-cameraX)*follow;
-    cameraY=cameraY===null?a.y:cameraY+(a.y-cameraY)*follow;
+    const follow=1-Math.exp(-dt*7.5);
+    const lead=s.car?Math.max(-32,Math.min(98,s.car.speed*.25)):0;
+    const focusX=a.x+Math.cos(a.angle)*lead,focusY=a.y+Math.sin(a.angle)*lead;
+    cameraX=cameraX===null?focusX:cameraX+(focusX-cameraX)*follow;
+    cameraY=cameraY===null?focusY:cameraY+(focusY-cameraY)*follow;
     vehicleScale+=( (s.car ? .92 : 1)-vehicleScale)*(dt ? follow : 1);
     const scale=Math.min(1.1,width/710)*zoom*vehicleScale;
     const [left,top,right,bottom]=[cameraX-width/(2*scale),cameraY-height/(2*scale),cameraX+width/(2*scale),cameraY+height/(2*scale)];
@@ -299,7 +316,10 @@ export function createCityRenderer(ctx) {
     if(waypoint&&visible(...waypoint)){
       const [x,y]=waypoint;
       oval(ctx,'#ffe6a15c',x,y,36+Math.sin(s.time*4)*5,28);
+      ctx.strokeStyle='#ffc878';ctx.lineWidth=4;
+      ctx.beginPath();ctx.ellipse(x,y,38,29,0,0,Math.PI*2);ctx.stroke();
       pin(ctx,x,y-18,s.time);
+      if(s.mission)label(ctx,(s.mission.index+1)+' / '+s.mission.spec.stages.length,x,y+6,16,'#553b52');
     }
     ctx.restore();
 

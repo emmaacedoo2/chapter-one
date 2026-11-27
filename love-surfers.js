@@ -192,7 +192,14 @@ function open() {
   });
 
   for (const direction of ['left', 'right', 'jump', 'slide']) {
-    listen(buttons[direction], 'click', () => act(run, direction));
+    listen(buttons[direction], 'pointerdown', event => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      act(run, direction);
+    });
+    listen(buttons[direction], 'click', event => {
+      if (event.detail === 0) act(run, direction);
+    });
   }
   listen(overlay, 'click', event => {
     if (run.mode !== 'title' || event.target.closest('button')) return;
@@ -238,6 +245,11 @@ function open() {
   listen(canvas, 'pointercancel', cancelSwipe);
   listen(canvas, 'lostpointercapture', cancelSwipe);
   listen(window, 'resize', resize);
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(resize);
+    observer.observe(canvas);
+    scope.signal.addEventListener('abort', () => observer.disconnect(), { once: true });
+  }
   listen(window, 'blur', hold);
   listen(window, 'pagehide', event => {
     hold();

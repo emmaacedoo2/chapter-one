@@ -1,12 +1,12 @@
 import {
   actor, advanceCity, chooseVehicle, createCity, finishTutorial, garageNearby, interactCar,
-  nearestCar, notify, pauseCity, playCity, resetPosition, spawnVehicle, toPoint
+  nearestCar, notify, pauseCity, playCity, recoverVehicle, resetPosition, spawnVehicle, toPoint
 } from './love-city-engine.js';
 import { bindCityInput } from './love-city-input.js';
-import { EMMA_MESSAGE, MISSIONS, failMission, missionStatus, objective, startMission, updateMission } from './love-city-missions.js';
+import { EMMA_MESSAGE, MISSIONS, cancelMission, failMission, missionStatus, objective, startMission, updateMission } from './love-city-missions.js';
 import { createCityRenderer, drawCityMap } from './love-city-render.js';
 import { loadCity, saveCity } from './love-city-save.js';
-import { district, GARAGE, TUTORIAL_STOP, VEHICLES } from './love-city-world.js';
+import { district, GARAGE, nextTurn, TUTORIAL_STOP, VEHICLES } from './love-city-world.js';
 
 const get=id=>document.getElementById(id);
 const launch=get('city-launch'), stage=get('city-stage'), lobby=get('arcade-lobby'), canvas=get('city-canvas');
@@ -16,6 +16,7 @@ const positionReset=get('city-footer').querySelector('[data-city="reset"]');
 const skip=stage.querySelector('[data-city="skip"]'), interact=stage.querySelector('[data-city="interact"]');
 const mapButton=minimap.parentElement;
 const holdButtons=stage.querySelectorAll('[data-city-hold]');
+const recovery=stage.querySelector('[data-city="recover"]');
 const storage=()=>window.localStorage;
 if(context) launch.addEventListener('click',openCity);
 else { launch.disabled=true; launch.textContent='Canvas unavailable'; }
@@ -47,7 +48,12 @@ function openCity() {
   function markerNearby() {return !sim.mission&&sim.tutorial>=4&&MISSIONS.find(m=>toPoint(sim.player,m.marker)<78);}
   function useContext() {
     if(panel!==null)return;
-    if(sim.car||nearestCar(sim)){interactCar(sim);refreshHud();return;}
+    if(sim.car||nearestCar(sim)){
+      interactCar(sim);
+      refreshHud();
+      canvas.focus({preventScroll:true});
+      return;
+    }
     const marker=markerNearby();
     if(marker){startMission(sim,marker.id);renderer.draw(sim);refreshHud();}
     else if(garageNearby(sim))showMenu('garage');
@@ -60,13 +66,15 @@ function openCity() {
     text(get('city-hud'),stats.join(' · '));
     const nearby=!car&&nearestCar(sim), marker=!car&&!nearby&&markerNearby();
     let prompt='';
-    if(car)prompt=Math.abs(car.speed)>40 ? 'Brake to exit' : 'Exit car';
+    if(car)prompt='Exit car';
     else if(nearby)prompt='Enter car';
     else if(marker)prompt='Start '+marker.name;
     else if(garageNearby(sim))prompt='Open garage';
     interact.hidden=!prompt;
     interact.disabled=car!==null&&Math.abs(car.speed)>40;
     text(interact,prompt);
+    recovery.hidden=!car;
+    recovery.disabled=Boolean(car&&Math.abs(car.speed)>48);
     for(const button of holdButtons){
       button.hidden=button.dataset.cityHold==='sprint'?Boolean(car):!car;
     }
@@ -81,10 +89,14 @@ function openCity() {
       'Step 5 of 5 · You arrived! Continue exploring or open Missions.'
     ];
     const chase=m?.pursuers.length&&m.elapsed<10?' · Stay ahead '+Math.ceil(10-m.elapsed)+'s':'';
+    const turn=p&&nextTurn(sim.route,[a.x,a.y]);
+    const navigation=turn?' · '+(turn.side==='left'?'Left':'Right')+' in '+Math.round(turn.distance)+' m':'';
+    const contextPrompt=car&&Math.abs(car.speed)>40?'Brake to exit':nearby?'Press E to enter car or tap Enter car':prompt?prompt+' · E or tap':'';
     const remaining=m?.remaining!=null?' · '+Math.ceil(m.remaining)+'s':'';
     const detail=m?m.spec.name+' · Objective '+(m.index+1)+'/'+m.spec.stages.length+remaining+chase+'\n'+
-      m.spec.stages[m.index].text:guide[sim.tutorial]??(prompt?prompt+' · E or tap':'Free roam · Explore the city or open Missions.');
-    text(get('city-objective'),detail+(p?' · '+Math.round(toPoint(a,p))+' m':''));
+      m.spec.stages[m.index].text:guide[sim.tutorial]??(contextPrompt||'Free roam · Explore the city or open Missions.');
+    text(get('city-objective'),detail+(p?' · '+Math.round(toPoint(a,p))+' m'+navigation:'')+
+      (m&&contextPrompt?'\n'+contextPrompt:''));
     text(get('city-notice'),sim.notice);
     if(sim.revision!==lastRevision) {
       lastRevision=sim.revision;
@@ -202,6 +214,14 @@ function openCity() {
     return row;
   }
   function missionsPanel() {
+    if(sim.mission){
+      paragraph('Active objective · '+sim.mission.spec.stages[sim.mission.index].text);
+      button('Cancel active mission',()=>{
+        cancelMission(sim);
+        refreshHud();
+        drawPanel();
+      });
+    }
     for(const spec of MISSIONS){
       const status=missionStatus(sim,spec);
       const race=spec.id==='race'&&progress.bestRace?' · Best '+progress.bestRace.toFixed(1)+'s':'';
@@ -270,6 +290,15 @@ function openCity() {
     else (panelBody.querySelector('button:not(:disabled)')??resume).focus({preventScroll:true});
     if(panel==='pause'){
       button('Restart city',restart);
+      if(sim.car)button('Recover vehicle',()=>{
+        if(recoverVehicle(sim)){renderer.reset();play();}
+      });
+      else button('Return to garage',()=>{
+        if(sim.mission)failMission(sim,'You returned to the garage.');
+        resetPosition(sim);
+        renderer.reset();
+        play();
+      });
       button('Controls',actions.controls);
       const toggle=button(progress.sound?'Sound on':'Sound off',()=>{
         progress.sound=!progress.sound;toggle.setAttribute('aria-pressed',String(progress.sound));
@@ -282,12 +311,19 @@ function openCity() {
 
   listen(stage,'click',event=>{
     const value=event.target.closest('[data-city]')?.dataset.city;
-    if(value==='reset'){if(sim.mission)failMission(sim,'You reset your position.');resetPosition(sim);renderer.reset();refreshHud();}
+    if(value==='recover'){
+      if(recoverVehicle(sim)){renderer.reset();refreshHud();canvas.focus({preventScroll:true});}
+    }else if(value==='reset'){if(sim.mission)failMission(sim,'You reset your position.');resetPosition(sim);renderer.reset();refreshHud();}
     else if(value==='skip'){finishTutorial(sim);sim.routeClock=0;refreshHud();}
     else actions[value]?.();
   });
   listen(overlay,'click',event=>{if(panel==='title'&&!event.target.closest('button'))play();});
   listen(window,'resize',resize);
+  if ('ResizeObserver' in window) {
+    const observer=new ResizeObserver(resize);
+    observer.observe(canvas);
+    scope.signal.addEventListener('abort',()=>observer.disconnect(),{once:true});
+  }
   listen(window,'blur',()=>{if(panel===null)showMenu('pause');});
   listen(window,'pagehide',()=>{if(panel===null)showMenu('pause');save();});
   listen(document,'visibilitychange',()=>{if(document.hidden&&panel===null)showMenu('pause');});

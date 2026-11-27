@@ -373,3 +373,55 @@ test('controller event wiring captures two touch pointers and consumes Space wit
     else globalThis.document=before;
   }
 });
+
+import { recoverVehicle } from '../love-city-engine.js';
+import { cancelMission } from '../love-city-missions.js';
+import { nextTurn } from '../love-city-world.js';
+
+test('recover a blocked vehicle into a free lane without awarding mission progress',()=>{
+  const s=city();
+  interactCar(s);
+  const house=solids[0];
+  place(s.car,[house.x-43,house.y+house.h/2]);
+  s.car.angle=0;
+  tick(s,.8,{accelerate:true});
+  assert.ok(s.car.x<house.x-25);
+  assert.equal(s.car.speed,0);
+  const position=[s.car.x,s.car.y];
+  startMission(s,'race');
+  assert.equal(recoverVehicle(s),true);
+  assert.ok(Math.hypot(s.car.x-position[0],s.car.y-position[1])>78);
+  assert.equal(blocked(s.car.x,s.car.y,27),false);
+  assert.equal(s.mission.index,0);
+  assert.equal(s.progress.coins,0);
+});
+
+test('mission cancellation clears GPS and pays no reward; an existing completion remains',()=>{
+  const s=city(), delivery=MISSIONS[0];
+  s.progress.completed.push(delivery.name);
+  startMission(s,delivery.id);
+  assert.ok(s.route.length);
+  assert.equal(cancelMission(s),true);
+  assert.equal(cancelMission(s),false);
+  assert.equal(objective(s),null);
+  assert.equal(s.route.length,0);
+  assert.equal(s.progress.coins,0);
+  assert.equal(missionStatus(s,delivery),'COMPLETED');
+  assert.equal(startMission(s,delivery.id),true);
+});
+
+test('GPS directions use road legs and cannot fall back through a building',()=>{
+  assert.deepEqual(nextTurn([[0,0],[100,0],[100,120]],[0,0]),{point:[100,0],distance:100,side:'right'});
+  const b=solids[0];
+  assert.deepEqual(route([b.x+b.w/2,b.y+b.h/2],HOME),[]);
+  const path=route(HOME,MISSIONS[3].stages.at(-1).point);
+  assert.ok(path.length>2);
+  for(let i=1;i<path.length;i++){
+    const [x,y]=path[i-1],[tx,ty]=path[i];
+    const count=Math.ceil(Math.hypot(tx-x,ty-y)/10);
+    for(let j=0;j<=count;j++){
+      const t=count?j/count:0;
+      assert.equal(blocked(x+(tx-x)*t,y+(ty-y)*t,12),false);
+    }
+  }
+});

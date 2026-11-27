@@ -10,7 +10,10 @@ export function createCityInput() {
     clear() { keys.clear(); held.clear(); x=y=0; },
     sample(driving) {
       const down=(...codes)=>codes.some(code=>keys.has(code));
-      const touch=action=>[...held.values()].includes(action);
+      const touch=action=>{
+        for(const value of held.values()) if(value===action)return true;
+        return false;
+      };
       const left=down('KeyA','ArrowLeft') || touch('left');
       const right=down('KeyD','ArrowRight') || touch('right');
       const up=down('KeyW','ArrowUp'), reverse=down('KeyS','ArrowDown');
@@ -28,14 +31,19 @@ export function bindCityInput({ listen, stage, joystick, state, actions }) {
   const input=createCityInput();
   let pointer=null;
   const knob=joystick.firstElementChild;
+  const pedalPointers=new Map();
+  const releaseCapture=(element,id)=>{
+    if(element.hasPointerCapture?.(id))element.releasePointerCapture(id);
+  };
   function position(event) {
     const rect=joystick.getBoundingClientRect(), half=rect.width/2;
     let x=(event.clientX-rect.left-half)/(half*.76);
     let y=(event.clientY-rect.top-rect.height/2)/(half*.76);
-    const n=Math.max(1,Math.hypot(x,y));
-    x/=n; y/=n;
-    const live=Math.hypot(x,y)>.09;
-    input.stick(live?x:0,live?y:0);
+    const amount=Math.hypot(x,y);
+    const strength=Math.max(0,(Math.min(1,amount)-.11)/.89);
+    const factor=amount ? strength/amount : 0;
+    x*=factor; y*=factor;
+    input.stick(x,y);
     knob.style.transform='translate('+x*half*.52+'px,'+y*half*.52+'px)';
   }
   const release=event=>{
@@ -46,7 +54,7 @@ export function bindCityInput({ listen, stage, joystick, state, actions }) {
   };
 
   listen(joystick,'pointerdown',event=>{
-    if (!state().controlling || pointer!==null) return;
+    if (!state().controlling || pointer!==null || (event.button??0)!==0) return;
     event.preventDefault();
     pointer=event.pointerId;
     joystick.setPointerCapture(pointer);
@@ -57,13 +65,17 @@ export function bindCityInput({ listen, stage, joystick, state, actions }) {
 
   for (const button of stage.querySelectorAll('[data-city-hold]')) {
     listen(button,'pointerdown',event=>{
-      if (!state().controlling) return;
+      if (!state().controlling || (event.button??0)!==0) return;
       event.preventDefault();
       button.setPointerCapture(event.pointerId);
       input.held.set(event.pointerId,button.dataset.cityHold);
+      pedalPointers.set(event.pointerId,button);
     });
     for (const name of ['pointerup','pointercancel','lostpointercapture']) {
-      listen(button,name,event=>input.held.delete(event.pointerId));
+      listen(button,name,event=>{
+        input.held.delete(event.pointerId);
+        pedalPointers.delete(event.pointerId);
+      });
     }
   }
 
@@ -94,6 +106,13 @@ export function bindCityInput({ listen, stage, joystick, state, actions }) {
 
   return {
     sample:input.sample,
-    reset() { pointer=null; input.clear(); knob.style.transform=''; }
+    reset() {
+      if(pointer!==null)releaseCapture(joystick,pointer);
+      for(const [id,button] of pedalPointers)releaseCapture(button,id);
+      pedalPointers.clear();
+      pointer=null;
+      input.clear();
+      knob.style.transform='';
+    }
   };
 }

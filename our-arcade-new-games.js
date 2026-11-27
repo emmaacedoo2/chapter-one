@@ -1,10 +1,12 @@
 /* The three cabinets share the arcade's canvas and animation loop. */
 window.createChapterArcadeGame = (id, best, saveBest) => {
   const W = 960, H = 600;
-  let score, ended, player, platforms, camera, maxHeight, obstacles, distance, timer, ball, aim, shot, scored, resetDelay;
+  let score, ended, player, platforms, camera, maxHeight, obstacles, distance, timer, ball, aim, shot, scored, resetDelay, jumpBuffer;
   const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
   function record() { if (score > best) { best = score; saveBest(best); } }
   function resetBall() { ball = { x: 180, y: 440, vx: 0, vy: 0, r: 20 }; shot = false; scored = false; resetDelay = 0; aim = null; }
+  const GRAVITY = 700;
+  const flightY = (vy, t) => vy * t + GRAVITY * t * t / 2;
   function launchVelocity(x, y) {
     const dx = ball.x - x, dy = ball.y - y, length = Math.hypot(dx, dy);
     if (length < 8) return null;
@@ -15,6 +17,7 @@ window.createChapterArcadeGame = (id, best, saveBest) => {
     score = 0; ended = false;
     if (id === 'jump-heart') {
       player = { x: 480, y: 480, vy: -690, r: 20 };
+      jumpBuffer = 0;
       platforms = [{ x: 410, y: 520, w: 140 }];
       camera = 0; maxHeight = 0;
       while (platforms[platforms.length - 1].y > -300) addPlatform();
@@ -30,7 +33,11 @@ window.createChapterArcadeGame = (id, best, saveBest) => {
     const width = Math.max(100, 145 - maxHeight / 150);
     platforms.push({ x: clamp(last.x + (Math.random() - 0.5) * 240, 20, W - width - 20), y: last.y - gap, w: width });
   }
-  function jump() { if (id === 'runner' && player.y >= 500 && !ended) player.vy = -720; }
+  function jump() {
+    if (ended) return;
+    if (id === 'runner' && player.y >= 500) player.vy = -720;
+    if (id === 'jump-heart') jumpBuffer = .2;
+  }
   function update(dt, keys, elapsed = dt) {
     if (ended) return;
     if (id === 'jump-heart') {
@@ -39,8 +46,13 @@ window.createChapterArcadeGame = (id, best, saveBest) => {
       player.vy += 1200 * dt; player.y += player.vy * dt;
       if (player.vy > 0) {
         const landing = platforms.find(p => oldBottom <= p.y && player.y + player.r >= p.y && player.x + player.r > p.x && player.x - player.r < p.x + p.w);
-        if (landing) { player.y = landing.y - player.r; player.vy = -690; }
+        if (landing) {
+          player.y = landing.y - player.r;
+          player.vy = jumpBuffer > 0 ? -715 : -690;
+          jumpBuffer = 0;
+        }
       }
+      jumpBuffer = Math.max(0, jumpBuffer - dt);
       camera = Math.min(camera, player.y - 240);
       maxHeight = Math.max(maxHeight, 480 - player.y); score = Math.floor(maxHeight / 10); record();
       while (platforms[platforms.length - 1].y > camera - 150) addPlatform();
@@ -61,7 +73,9 @@ window.createChapterArcadeGame = (id, best, saveBest) => {
       if (shot) {
         const oldY = ball.y, oldX = ball.x;
         resetDelay += dt;
-        ball.vy += 700 * dt; ball.x += ball.vx * dt; ball.y += ball.vy * dt;
+        ball.x += ball.vx * dt;
+        ball.y += flightY(ball.vy, dt);
+        ball.vy += GRAVITY * dt;
         // Score only when the ball crosses the rim downwards between its posts.
         if (!scored && ball.vy > 0 && oldY < 300 && ball.y >= 300) {
           const crossingX = oldX + (ball.x - oldX) * (300 - oldY) / (ball.y - oldY);
@@ -102,7 +116,7 @@ window.createChapterArcadeGame = (id, best, saveBest) => {
         if (velocity) {
           c.fillStyle = '#8b1e2d';
           for (let t = 0.1; t <= 1.5; t += 0.1) {
-            const x = ball.x + velocity.x * t, y = ball.y + velocity.y * t + 350 * t * t;
+            const x = ball.x + velocity.x * t, y = ball.y + flightY(velocity.y, t);
             if (x > W || y > H) break;
             c.beginPath(); c.arc(x, y, 4, 0, Math.PI * 2); c.fill();
           }
@@ -117,7 +131,7 @@ window.createChapterArcadeGame = (id, best, saveBest) => {
     pointerDown(x, y) { if (id === 'basketball' && !shot && Math.hypot(x - ball.x, y - ball.y) < 65) { aim = { x: ball.x, y: ball.y, startX: x, startY: y }; return true; } return false; },
     pointerMove(x, y) { if (aim) { aim.x = ball.x + x - aim.startX; aim.y = ball.y + y - aim.startY; } },
     pointerUp(x, y) { if (!aim) return; const velocity = launchVelocity(ball.x + x - aim.startX, ball.y + y - aim.startY); if (velocity) { ball.vx = velocity.x; ball.vy = velocity.y; shot = true; } aim = null; },
-    cancelPointer() { aim = null; },
+    cancelPointer() { aim = null; jumpBuffer = 0; },
     canAim() { return id === 'basketball' && !shot && !ended; },
     state: () => ({ ended, won: false }),
     stats: () => ({ score, best, extra: id === 'basketball' ? Math.ceil(timer) + ' sec' : '♥', status: id === 'basketball' ? 'Drag back from the ball and release to shoot. Each basket is worth 2 points.' : id === 'runner' ? 'Jump over the obstacles!' : 'Keep climbing!' })

@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="our-arcade.css">
   <link rel="stylesheet" href="love-surfers.css">
   <link rel="stylesheet" href="love-city.css">
+  <link rel="stylesheet" href="arcade-mobile.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -103,6 +104,7 @@
           <h2 id="arcade-current-title">Snake</h2>
         </div>
         <div class="arcade-stage-actions">
+          <button type="button" class="arcade-control-button" data-expand-game aria-expanded="false">Expand Game</button>
           <button type="button" id="arcade-start" class="arcade-control-button" hidden>Start game</button>
           <button type="button" id="arcade-pause" class="arcade-control-button">Pause</button>
           <button type="button" id="arcade-restart" class="arcade-control-button">Restart</button>
@@ -119,9 +121,30 @@
         <canvas id="arcade-canvas" width="960" height="600" tabindex="0" aria-label="Game play area"></canvas>
       </div>
       <div class="arcade-touch-controls" id="arcade-touch-controls" hidden>
-        <button type="button" data-control="left" aria-label="Move left">←</button>
-        <button type="button" data-control="right" aria-label="Move right">→</button>
-        <button type="button" data-control="jump">JUMP ↑</button>
+        <fieldset data-touch-game="fire-water" hidden><legend>Fire</legend><div>
+          <button type="button" data-control="KeyA" aria-label="Move Fire left">←</button>
+          <button type="button" data-control="KeyW" aria-label="Jump Fire">↑</button>
+          <button type="button" data-control="KeyD" aria-label="Move Fire right">→</button>
+        </div></fieldset>
+        <fieldset data-touch-game="fire-water" hidden><legend>Water</legend><div>
+          <button type="button" data-control="ArrowLeft" aria-label="Move Water left">←</button>
+          <button type="button" data-control="ArrowUp" aria-label="Jump Water">↑</button>
+          <button type="button" data-control="ArrowRight" aria-label="Move Water right">→</button>
+        </div></fieldset>
+        <fieldset data-touch-game="snake" hidden><legend>Snake directions</legend><div>
+          <button type="button" data-control="ArrowLeft" aria-label="Turn left">←</button>
+          <button type="button" data-control="ArrowUp" aria-label="Turn up">↑</button>
+          <button type="button" data-control="ArrowDown" aria-label="Turn down">↓</button>
+          <button type="button" data-control="ArrowRight" aria-label="Turn right">→</button>
+        </div></fieldset>
+        <fieldset data-touch-game="jump-heart" hidden><legend>Jump controls</legend><div>
+          <button type="button" data-control="ArrowLeft" aria-label="Move left">←</button>
+          <button type="button" data-control="jump" aria-label="Jump">Jump</button>
+          <button type="button" data-control="ArrowRight" aria-label="Move right">→</button>
+        </div></fieldset>
+        <fieldset data-touch-game="runner" hidden><legend>Runner controls</legend><div>
+          <button type="button" data-control="jump" aria-label="Jump">Jump</button>
+        </div></fieldset>
       </div>
       <p class="arcade-live-status" id="arcade-status" role="status" aria-live="polite"></p>
     </section>
@@ -131,7 +154,8 @@
           <span class="arcade-kicker">CHAPTER ONE ARCADE</span>
           <h2 id="surfers-title">Love Surfers</h2>
         </div>
-        <button class="arcade-control-button" type="button" data-surf="pause" hidden>Pause</button>
+        <div class="surfers-actions"><button type="button" class="arcade-control-button" data-expand-game aria-expanded="false">Expand Game</button>
+          <button class="arcade-control-button" type="button" data-surf="pause" hidden>Pause</button></div>
       </header>
       <div class="surfers-hud" id="surfers-hud" aria-label="Run stats"></div>
       <div class="surfers-view">
@@ -161,6 +185,7 @@
     <section class="city" id="city-stage" hidden aria-labelledby="city-heading">
       <header class="city-header">
         <div><span class="arcade-kicker">CHAPTER ONE ARCADE</span><h2 id="city-heading">Love City</h2></div>
+        <button type="button" class="arcade-control-button" data-expand-game aria-expanded="false">Expand Game</button>
         <nav id="city-tools" aria-label="Love City tools" hidden>
           <button type="button" data-city="missions">Missions</button>
           <button type="button" data-city="map">Map</button>
@@ -195,10 +220,12 @@
       <div class="city-footer" id="city-footer" hidden>
         <p id="city-notice" role="status"></p>
         <button type="button" data-city="skip">Skip tutorial</button>
+        <button type="button" data-city="recover" hidden>Recover vehicle</button>
         <button type="button" data-city="reset">Reset position</button>
       </div>
     </section>
   </main>
+  <script src="arcade-mobile.js"></script>
   <script src="our-arcade-new-games.js"></script>
   <script src="our-arcade.js"></script>
   <script type="module" src="love-surfers.js"></script>
