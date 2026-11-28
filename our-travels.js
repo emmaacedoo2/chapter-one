@@ -273,29 +273,38 @@ const TravelApp = {
   renderMap() {
     const pins = document.getElementById('outline-pins');
     if (!pins) return;
-    // Nearby cities share a pin; the accessible list below the map separates them.
+    // The original illustration uses hand-placed, proportional anchors.
     const positions = {
-      'Madrid':[42.8,39.4], 'Galicia':[42,37.8], 'Asturias':[42.5,37.5], 'La Rioja':[43.3,37.7],
-      'Zaragoza':[43.8,38.5], 'Alicante':[43.8,40], 'Castellón':[44,39.1], 'Valencia':[44,39.5],
-      'Murcia':[43.6,40.3], 'Tarragona':[44.4,38.4], 'Barcelona':[44.6,38],
-      'Gran Canaria':[39.8,45], 'Tenerife':[39.4,44.8], 'Portugal':[41.7,40],
-      'London':[43.3,32.6], 'Venice':[48.3,36], 'Rome':[48.5,38.2], 'Milan':[47.5,35.8],
-      'Naples':[49.2,39.1], 'Florida':[19.2,44.1], 'Alabama':[17.2,40.8],
-      'Nashville':[17.5,38.8], 'Pittsburgh':[21.4,35.6], 'Saint Petersburg':[53.3,27.8]
+      Madrid: [308, 201, 'iberia'], Galicia: [300, 194, 'iberia'], Asturias: [306, 192, 'iberia'],
+      'La Rioja': [315, 194, 'iberia'], Zaragoza: [319, 196, 'iberia'],
+      Alicante: [316, 204, 'iberia'], Castellón: [319, 200, 'iberia'], Valencia: [318, 202, 'iberia'],
+      Murcia: [315, 205, 'iberia'], Tarragona: [322, 197, 'iberia'], Barcelona: [325, 196, 'iberia'],
+      'Gran Canaria': [276, 236, 'canaries'], Tenerife: [272, 235, 'canaries'],
+      Portugal: [301, 203, 'iberia'], London: [319, 174], Venice: [354, 193, 'italy'],
+      Rome: [358, 200, 'italy'], Milan: [350, 192, 'italy'], Naples: [361, 204, 'italy'],
+      Florida: [117, 224, 'southeast'], Alabama: [105, 208, 'southeast'],
+      Nashville: [112, 199, 'southeast'], Pittsburgh: [145, 184], 'Saint Petersburg': [385, 149]
     };
+    const anchors = { iberia: [308, 201], italy: [355, 198], southeast: [112, 214], canaries: [274, 236] };
     const groups = new Map();
     const missing = [];
-    for (const place of this.places.filter(p => this.passesFilter(p))) {
-      const pos = positions[place.place];
-      if (!pos || !place.isSeed) { missing.push(place); continue; }
-      // Broad clusters prevent neighboring pins from obscuring one another.
-      const group = pos[0] > 41 && pos[0] < 45 && pos[1] > 37 ? 'spain' :
-        pos[0] > 47 && pos[0] < 50 ? 'italy' : pos[0] > 16 && pos[0] < 20 && pos[1] > 38 ? 'southeast-us' :
-        pos[0] < 40 && pos[1] > 44 ? 'canaries' : place.place;
-      if (!groups.has(group)) groups.set(group, {pos, places:[]});
+    const filtered = this.places.filter(place => this.passesFilter(place));
+    for (const place of filtered) {
+      const position = Object.hasOwn(positions, place.place) ? positions[place.place] : null;
+      const original = this.seedPlaces.find(seed => seed.place === place.place && seed.country === place.country);
+      if (!position || !original) { missing.push(place); continue; }
+      const [x, y, cluster] = position;
+      const group = cluster || place.place;
+      const [anchorX, anchorY] = anchors[cluster] || [x, y];
+      if (!groups.has(group)) groups.set(group, { pos: [anchorX / 735 * 100, anchorY / 551 * 100], places: [] });
       groups.get(group).places.push(place);
     }
-    pins.innerHTML = '';
+    pins.replaceChildren();
+    const picker = document.getElementById('map-place-picker');
+    picker.replaceChildren(new Option('Choose a place', ''), ...filtered.map(place =>
+      new Option(place.place + ', ' + place.country + ' · ' + this.getVisitorLabel(place), place.id)));
+    picker.disabled = !filtered.length;
+    this.showMapDetails([]);
     groups.forEach(({pos, places}) => {
       const kinds = new Set(places.flatMap(p => p.visitedBy || []));
       const kind = kinds.size > 1 ? 'both' : kinds.has('dom') ? 'dom' : 'emma';
@@ -304,12 +313,25 @@ const TravelApp = {
       button.style.left = `${pos[0]}%`; button.style.top = `${pos[1]}%`;
       button.setAttribute('aria-label', `${places.length} location${places.length === 1 ? '' : 's'}: ${places.map(p=>p.place).join(', ')}`);
       button.addEventListener('click', () => {
-        const details = document.getElementById('map-details');
-        details.innerHTML = places.map(p => `<div><strong>${this.escapeHtml(p.place)}, ${this.escapeHtml(p.country)}</strong> · ${this.escapeHtml(this.getVisitorLabel(p))} <button type="button" data-travel-edit="${this.escapeHtml(p.id)}">edit</button></div>`).join('');
+        picker.value = places.length === 1 ? places[0].id : '';
+        pins.querySelectorAll('button').forEach(pin => pin.setAttribute('aria-pressed', String(pin === button)));
+        this.showMapDetails(places);
       });
+      button.setAttribute('aria-pressed', 'false');
+      if (places.length > 1) button.textContent = String(places.length);
       pins.append(button);
     });
-    this.setStatus(missing.length ? `${missing.length} saved place(s) need a position on this custom map; their data is preserved.` : 'Select a pin to see its places and who visited.');
+    if (!this.dataLoadError) {
+      this.setStatus(missing.length
+        ? `${missing.length} saved place(s) are available in the selector without a map marker.`
+        : `${filtered.length} visited places · nearby markers are grouped.`);
+    }
+  },
+
+  showMapDetails(places) {
+    const details = document.getElementById('map-details');
+    details.innerHTML = places.length ? places.map(place => this.getPopupHtml(place)).join('') :
+      'Choose a map marker or a visited place.';
   },
 
   getPopupHtml(place) {
@@ -328,7 +350,8 @@ const TravelApp = {
       <p><strong>Who:</strong> ${visitorText}</p>
       <p><strong>Shared trip:</strong> ${togetherText}</p>
       ${dateText}${notesText}${photo}
-      <button type="button" data-travel-edit="${id}">edit this place</button>
+      <button type="button" data-travel-edit="${id}">Edit place</button>
+      <button type="button" data-travel-delete="${id}">Delete place</button>
     </div>`;
   },
 
@@ -340,42 +363,6 @@ const TravelApp = {
     } catch {
       return '';
     }
-  },
-
-  renderPlaceList() {
-    const list = document.getElementById('travel-place-list');
-    const count = document.getElementById('travel-place-count');
-    if (!list) return;
-    if (count) count.textContent = `${this.places.length} ${this.places.length === 1 ? 'place' : 'places'}`;
-    if (!this.places.length) {
-      list.innerHTML = '<p class="travel-empty-state">No places yet. Add the first pin to our map.</p>';
-      return;
-    }
-
-    list.innerHTML = this.places.map(place => {
-      const kind = this.getMarkerKind(place);
-      const visitorLabel = this.escapeHtml(this.getVisitorLabel(place));
-      const regional = place.isRegional ? '<span class="regional-tag">Regional area · approximate</span>' : '';
-      const photoUrl = this.safePhotoUrl(place.photoUrl);
-      const photo = photoUrl ? `<img class="travel-place-photo" src="${this.escapeHtml(photoUrl)}" alt="Photo from ${this.escapeHtml(place.place)}" loading="lazy">` : '';
-      const locationStatus = this.hasCoordinates(place) ? '' : '<p class="travel-place-note">Map position not found yet. Edit and search to place this pin.</p>';
-      return `<article class="travel-place-item">
-        <div class="travel-place-title">${this.escapeHtml(place.place)}</div>
-        <div class="travel-place-country">${this.escapeHtml(place.country)}</div>
-        <div class="travel-place-tags">
-          <span class="traveler-tag ${kind}">${visitorLabel}</span>
-          ${regional}
-          ${place.sharedTrip ? '<span class="traveler-tag together">Shared trip</span>' : ''}
-        </div>
-        ${place.date ? `<p class="travel-place-note">${this.escapeHtml(place.date)}</p>` : ''}
-        ${place.notes ? `<p class="travel-place-note">${this.escapeHtml(place.notes)}</p>` : ''}
-        ${photo}${locationStatus}
-        <div class="travel-card-actions">
-          <button type="button" data-place-edit="${this.escapeHtml(place.id)}">edit</button>
-          <button type="button" data-place-delete="${this.escapeHtml(place.id)}">delete</button>
-        </div>
-      </article>`;
-    }).join('');
   },
 
   openPlaceModal(placeId = '', prefillQuery = '') {
@@ -544,6 +531,7 @@ const TravelApp = {
     this.destinations.push(destination);
     if (!this.saveData()) return;
     document.getElementById('destination-form').reset();
+    document.getElementById('destination-form').hidden = true;
     if (status === 'visited') this.offerMapAdd(destination);
   },
 
@@ -551,12 +539,9 @@ const TravelApp = {
     const list = document.getElementById('destination-list');
     if (!list) return;
     const future = this.destinations.filter(destination => destination.status !== 'visited');
-    if (!future.length) {
-      list.innerHTML = '<p class="travel-empty-state">The list is waiting for its first destination.</p>';
-      return;
-    }
+    const visited = this.destinations.filter(destination => destination.status === 'visited');
     const labels = { dreaming: 'Dreaming of', planning: 'Planning', visited: "We've been!" };
-    list.innerHTML = future.map(destination => `
+    const card = destination => `
       <article class="destination-item">
         <div class="destination-item-heading">
           <div>
@@ -576,7 +561,9 @@ const TravelApp = {
           <button type="button" data-destination-delete="${this.escapeHtml(destination.id)}">delete</button>
         </div>
       </article>
-    `).join('');
+    `;
+    list.innerHTML = future.map(card).join('') || '<p class="travel-empty-state">No future destinations saved yet.</p>';
+    if (visited.length) list.innerHTML += `<details class="travel-visited-wishlist"><summary>Previously on the wishlist (${visited.length})</summary><div class="destination-list">${visited.map(card).join('')}</div></details>`;
   },
 
   changeDestinationStatus(destinationId, status) {
@@ -659,6 +646,7 @@ const TravelApp = {
     document.getElementById('destination-form').addEventListener('submit', event => this.addDestination(event));
     document.getElementById('destination-edit-form').addEventListener('submit', event => this.saveDestinationEdit(event));
     document.getElementById('btn-add-destination').addEventListener('click', () => {
+      document.getElementById('destination-form').hidden = false;
       document.getElementById('destination-name').focus();
     });
 
@@ -674,7 +662,10 @@ const TravelApp = {
     document.querySelectorAll('[data-map-filter]').forEach(button => {
       button.addEventListener('click', () => {
         this.mapFilter = button.dataset.mapFilter;
-        document.querySelectorAll('[data-map-filter]').forEach(filter => filter.classList.toggle('active', filter === button));
+        document.querySelectorAll('[data-map-filter]').forEach(filter => {
+          filter.classList.toggle('active', filter === button);
+          filter.setAttribute('aria-pressed', String(filter === button));
+        });
         this.renderMap();
       });
     });
@@ -684,11 +675,9 @@ const TravelApp = {
       if (button) this.chooseGeocodeResult(Number(button.dataset.geocodeResult));
     });
 
-    document.getElementById('travel-place-list').addEventListener('click', event => {
-      const edit = event.target.closest('[data-place-edit]');
-      const remove = event.target.closest('[data-place-delete]');
-      if (edit) this.openPlaceModal(edit.dataset.placeEdit);
-      if (remove) this.deletePlace(remove.dataset.placeDelete);
+    document.getElementById('map-place-picker').addEventListener('change', event => {
+      document.querySelectorAll('.outline-pin').forEach(pin => pin.setAttribute('aria-pressed', 'false'));
+      this.showMapDetails(this.places.filter(place => place.id === event.target.value));
     });
 
     document.getElementById('destination-list').addEventListener('click', event => {
@@ -711,6 +700,8 @@ const TravelApp = {
     document.addEventListener('click', event => {
       const edit = event.target.closest('[data-travel-edit]');
       if (edit) this.openPlaceModal(edit.dataset.travelEdit);
+      const remove = event.target.closest('[data-travel-delete]');
+      if (remove) this.deletePlace(remove.dataset.travelDelete);
     });
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape') {

@@ -51,12 +51,8 @@
     <header class="travels-header">
       <span class="travels-overline">Postcards from our story</span>
       <h1 class="travels-title">travels 🌍</h1>
-      <p class="travels-intro">all the places we've been, separately and together. and all the places we still have to see.</p>
+      <p class="travels-intro">A journal of the places we’ve explored, separately and together, and the places we still want to see.</p>
     </header>
-
-    <a class="pittsburgh-feature" href="pittsburgh.html">
-      <span><small>A LOVE LETTER TO THE 412</small><strong>Pittsburgh, PA 🖤💛</strong><em>Dom's City, Our Adventures ♡</em><b>Explore Pittsburgh ↗</b></span>
-    </a>
 
     <section class="travel-map-card" aria-labelledby="map-section-title">
       <div class="travel-section-heading">
@@ -74,19 +70,35 @@
           <span><i class="legend-pin together"></i> Both</span>
         </div>
         <div class="travel-map-filters" role="group" aria-label="Filter map pins">
-          <button type="button" class="travel-filter active" data-map-filter="all">All</button>
-          <button type="button" class="travel-filter" data-map-filter="emma">Emma</button>
-          <button type="button" class="travel-filter" data-map-filter="dom">Dom</button>
-          <button type="button" class="travel-filter" data-map-filter="both">Both</button>
+          <button type="button" class="travel-filter active" data-map-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="travel-filter" data-map-filter="emma" aria-pressed="false">Emma</button>
+          <button type="button" class="travel-filter" data-map-filter="dom" aria-pressed="false">Dom</button>
+          <button type="button" class="travel-filter" data-map-filter="both" aria-pressed="false">Both</button>
         </div>
       </div>
 
-      <div class="outline-map-scroll" tabindex="0" aria-label="Scrollable world map"><div id="travel-map" class="outline-map"><img src="images/mapa.jpg" alt="Outline world map"><div id="outline-pins"></div></div></div><div id="map-details" class="map-details" aria-live="polite">Choose a pin to explore the places there.</div>
+      <div class="outline-map-scroll" tabindex="0" aria-label="Scrollable world map"><div id="travel-map" class="outline-map"><img src="images/mapa.jpg" alt="Outline world map" width="735" height="551"><div id="outline-pins"></div></div></div>
+      <label class="map-place-picker">Find a visited place <select id="map-place-picker"><option value="">Choose a place</option></select></label>
+      <div id="map-details" class="map-details" aria-live="polite">Choose a pin to explore the places there.</div>
       <p id="travel-map-status" class="travel-map-status" role="status">Loading the map and our starter places…</p>
 
     </section>
 
-    <div id="travel-place-list" hidden></div>
+    <section class="connected-places" aria-labelledby="connected-title">
+      <h2 id="connected-title">The Places That Connect Us</h2>
+      <p>Two different places, two different worlds, and somehow we found each other.</p>
+      <div class="connected-grid">
+        <a class="connected-card" href="pittsburgh.html">
+          <img src="images/pittsburgh/01.jpg" alt="" width="1280" height="312" loading="lazy">
+          <span><small>THE 412 · PENNSYLVANIA</small><strong>Pittsburgh</strong><em>A little piece of your world.</em><b>Explore Pittsburgh →</b></span>
+        </a>
+        <a class="connected-card connected-spain" href="spain.html">
+          <img src="images/spain/cibeles.webp" alt="" width="840" height="556" loading="lazy">
+          <span><small>ESPAÑA · EUROPE</small><strong>Spain</strong><em>A little piece of my world.</em><b>Explore Spain →</b></span>
+        </a>
+      </div>
+      <p class="travel-local-note">Photo credits are included in each guide.</p>
+    </section>
 
     <section class="travel-bucket-card">
       <div class="travel-section-heading">
@@ -96,7 +108,7 @@
         </div>
         <button type="button" class="travel-primary-button" id="btn-add-destination">+ add a destination</button>
       </div>
-      <form id="destination-form" class="destination-form">
+      <form id="destination-form" class="destination-form" hidden>
         <label>
           <span>Destination</span>
           <input type="text" id="destination-name" maxlength="120" placeholder="somewhere we want to go…" required>

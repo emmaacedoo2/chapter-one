@@ -1,0 +1,85 @@
+.spain-guide {
+  --spain-red: #7b2636;
+  --spain-blue: #203550;
+  --spain-gold: #edc478;
+  --spain-paper: #fff9ed;
+  --spain-line: #d9bca7;
+  color: #332521;
+  width: min(71rem, 100% - 1.5rem);
+  margin-inline: auto;
+  padding-block: .75rem 2rem;
+  position: relative;
+  overflow-wrap: anywhere;
+}
+
+.spain-guide :is(h1,h2,h3) { font-family: var(--font-serif); line-height: 1.12; }
+.spain-guide h2 { font-size: clamp(1.6rem,4vw,2.55rem); margin: .15rem 0 .6rem; }
+.spain-guide p { margin: .35rem 0; line-height: 1.55; }
+.spain-guide a { color: var(--spain-red); text-underline-offset: .15em; }
+.spain-guide :focus-visible { outline: 3px solid #957150; outline-offset: 3px; }
+.guide-back { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
+.spain-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-items: end;
+  min-height: clamp(16rem,42vw,30rem);
+  overflow: hidden;
+  border: 1px solid #a1544e;
+  border-radius: 1rem;
+  background: var(--spain-red);
+  color: white;
+}
+.spain-hero img,.spain-hero::after { position: absolute; inset: 0; width: 100%; height: 100%; }
+.spain-hero img { object-fit: cover; object-position: center 55%; z-index: -2; }
+.spain-hero::after { content:""; background: linear-gradient(10deg,#270d23e8,transparent 85%); z-index: -1; }
+.spain-hero > div { padding: clamp(1.1rem,5vw,3.6rem); }
+.spain-hero h1 { font-size: clamp(2.7rem,9vw,6rem); letter-spacing: -.05em; }
+.spain-hero p { font-size: clamp(1rem,3vw,1.35rem); }
+.guide-eyebrow { display: block; color: var(--spain-red); font: 800 .72rem var(--font-display); letter-spacing: .14em; }
+.spain-hero .guide-eyebrow,.guide-football .guide-eyebrow { color: var(--spain-gold); }
+.guide-jumps { display: flex; flex-wrap: wrap; gap: .35rem; padding: .65rem 0; }
+.guide-jumps a,.spain-guide button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: .45rem .75rem;
+  border: 1px solid var(--spain-line);
+  border-radius: 1.4rem;
+  background: #fff6e7;
+  color: var(--spain-red);
+  font: 700 .9rem var(--font-sans);
+  text-decoration: none;
+}
+.spain-guide button { cursor: pointer; }
+.guide-panel { margin: .8rem 0; padding: clamp(.8rem,3vw,1.5rem); border: 1px solid var(--spain-line); border-radius: .9rem; background: var(--spain-paper); box-shadow: 0 .25rem .8rem #39202913; scroll-margin-top: .3rem; }
+.guide-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,13.5rem),1fr)); gap: .7rem; }
+.guide-card,.guide-festival-grid article { border: 1px solid var(--spain-line); background: #fffdf8; border-radius: .65rem; overflow: hidden; }
+.guide-card img,.guide-tile { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; }
+.guide-tile { background: conic-gradient(from 45deg,#fff2d2 25%,#c47c67 0 50%,#fff2d2 0 75%,#63829a 0) 0 0/2.1rem 2.1rem; }
+.guide-copy { padding: .7rem; }
+.guide-copy p { font-size: .9rem; }
+.guide-fact { color: #633047; font-weight: 650; }
+.guide-copy a { display: inline-flex; align-items: center; min-height: 44px; font-size: .82rem; }
+.guide-panel details { margin-top: .45rem; border-top: 1px solid var(--spain-line); }
+.guide-panel summary { min-height: 44px; padding: .65rem 0; cursor: pointer; font-weight: 700; }
+.guide-facts { columns: 2 15rem; column-gap: 2rem; }
+.guide-panel ul { padding-inline-start: 1.2rem; }
+.guide-panel li { margin: .35rem 0; break-inside: avoid; }
+.guide-table table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: .88rem; }
+.guide-table th,.guide-table td { padding: .4rem; text-align: start; vertical-align: top; border: 1px solid var(--spain-line); }
+.guide-table thead th:first-child { width: 23%; }
+.guide-table th { background: #faedd8; }
+.guide-football { background: var(--spain-blue); border-color: #73849b; color: #fff9ed; }
+.guide-football a { color: var(--spain-gold); }
+.spain-guide progress { display:block; width:100%; max-width:25rem; accent-color:var(--spain-red); }
+.guide-checklist { display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:.4rem; }
+.guide-checklist label { display:flex; align-items:center; gap:.5rem; min-height:44px; padding:.45rem; border:1px solid var(--spain-line); border-radius:.45rem; cursor:pointer; }
+.guide-checklist input { width:1.15rem; height:1.15rem; flex:none; accent-color:var(--spain-red); }
+.guide-checklist input:checked + span { text-decoration:line-through; }
+.spain-guide .answers { display:flex; flex-wrap:wrap; gap:.4rem; }
+.spain-guide .pill { background:var(--spain-red); border-color:var(--spain-red); color:#fff8ef; }
+.guide-quiz-title { font-weight:750; }
+.spain-guide button.guide-correct { color:#244532; background:#dcebd6; border-color:#719375; }
+@media(max-width:500px) { .guide-checklist { grid-template-columns:1fr; } }
+@media(prefers-reduced-motion:reduce) { .spain-guide *, .spain-guide *::before, .spain-guide *::after { animation:none!important; transition:none!important; } }

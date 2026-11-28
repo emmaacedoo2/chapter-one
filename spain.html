@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome to Spain · Chapter One</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="spain.css">
+  <script src="navigation.js" defer></script>
+  <script src="travel-guide.js" defer></script>
+  <script src="spain-photos.js" defer></script>
+  <script src="spain.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-wordmark" href="index.html">CHAPTER ONE.</a>
+    <button class="site-menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open navigation menu"><span></span><span></span><span></span></button>
+    <nav class="site-menu" id="site-menu" aria-label="Main navigation">
+      <a href="index.html">Story</a>
+      <a href="date-ideas.html">Date Ideas</a>
+      <a href="our-songs.html">Songs</a>
+      <a href="our-calendar.html">Calendar</a>
+      <a href="movie-night.html">Movie Night</a>
+      <a href="our-bucket-list.html">Bucket List</a>
+      <a href="our-travels.html" aria-current="page">Travels</a>
+      <a href="little-surprises.html">Little Surprises</a>
+      <a href="our-arcade.html">Arcade</a>
+      <a href="our-little-corner.html">Little Corner</a>
+    </nav>
+  </header>
+  <div class="site-background" aria-hidden="true"></div>
+  <main class="spain-guide">
+    <a class="guide-back" href="our-travels.html">← Back to Travels</a>
+    <header class="spain-hero">
+      <img src="images/spain/cibeles.webp" width="840" height="556" alt="Plaza de Cibeles and the Madrid skyline" fetchpriority="high">
+      <div><span class="guide-eyebrow"><span lang="es">ESPAÑA</span> · EUROPE</span><h1>Welcome to Spain</h1><p>A little piece of my world.</p></div>
+    </header>
+    <nav class="guide-jumps" aria-label="Spain guide sections">
+      <a href="#madrid">Madrid</a><a href="#explore">Explore Spain</a><a href="#taste">Food</a>
+      <a href="#culture">Culture</a><a href="#football">Football</a><a href="#plans">Checklist</a><a href="#quiz">Quiz</a>
+    </nav>
+
+    <section class="guide-panel" id="madrid">
+      <span class="guide-eyebrow">THE CAPITAL</span><h2>Discover Madrid</h2>
+      <div class="guide-grid" id="madrid-cards"></div>
+    </section>
+    <section class="guide-panel" id="explore">
+      <span class="guide-eyebrow">POSTCARDS</span><h2>Explore Spain</h2>
+      <details open><summary>12 places to discover</summary><div class="guide-grid" id="spain-cards"></div></details>
+    </section>
+    <section class="guide-panel" id="taste">
+      <h2>A Taste of Spain</h2>
+      <details><summary>Tapas, sweets and regional favorites</summary><div class="guide-grid" id="spain-food"></div></details>
+    </section>
+    <section class="guide-panel" id="culture">
+      <h2>Spanish Culture and Traditions</h2>
+      <details open><summary>Festivals and traditions</summary><div class="guide-grid guide-festival-grid" id="spain-traditions"></div></details>
+      <details><summary>26 fun facts</summary><ul class="guide-facts" id="spain-facts"></ul></details>
+      <details><summary>Spain vs. the USA</summary><div class="guide-table"><table>
+        <thead><tr><th scope="col">Topic</th><th scope="col">Spain</th><th scope="col">USA</th></tr></thead>
+        <tbody id="spain-comparison"></tbody>
+      </table></div></details>
+    </section>
+    <section class="guide-panel guide-football" id="football">
+      <span class="guide-eyebrow">MATCH DAY</span><h2>Real Madrid and the Bernabéu</h2>
+      <p>Founded in 1902, Real Madrid won the first five European Cups. Its home ground is the Santiago Bernabéu on the Paseo de la Castellana.</p>
+      <p><em>El Clásico</em> is Real Madrid against FC Barcelona. Football also has a local side, from neighborhood clubs to rivals across the same city.</p>
+      <p><a href="https://www.fifa.com/en/articles/real-madrid-club-profile-history-players-qualified">FIFA club history</a> · <a href="https://www.laliga.com/en-CA/news/the-history-of-elclasico-decade-by-decade">LaLiga’s El Clásico guide</a></p>
+    </section>
+    <section class="guide-panel" id="plans">
+      <h2>Things to Do in Spain Together</h2>
+      <p id="spain-progress" aria-live="polite"></p>
+      <progress id="spain-progress-bar" max="22" value="0" aria-label="Spain checklist completion"></progress>
+      <details open><summary>Our Spain checklist</summary><div class="guide-checklist" id="spain-list"></div></details>
+    </section>
+    <section class="guide-panel guide-quiz" id="quiz">
+      <span class="guide-eyebrow">A QUIZ FOR DOM</span><h2>How Spanish Are You?</h2>
+      <p>Ten questions on places, food, traditions and a little fútbol.</p>
+      <div id="spain-quiz"></div>
+    </section>
+    <section class="guide-panel" aria-labelledby="spain-credits-heading">
+      <h2 id="spain-credits-heading">Sources and Credits</h2>
+      <details><summary>Reading and quiz sources</summary><ul id="spain-sources"></ul></details>
+      <details><summary>Photograph authors and licenses</summary><ul id="spain-credits"></ul></details>
+    </section>
+    <p><a class="guide-back" href="our-travels.html">← Back to Travels</a></p>
+  </main>
+</body>
+</html>
