@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>bucket list ✈️ • Chapter One</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="placeholder-pages.css">
+  <link rel="stylesheet" href="our-bucket-list.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -47,48 +47,68 @@
     </svg>
   </div>
 
-  <main class="placeholder-page-container">
-
-    <header class="placeholder-header">
-      <span class="placeholder-overline">The Adventures Ahead</span>
-      <h1 class="placeholder-title">bucket list ✈️</h1>
-      <p class="placeholder-intro">all the places we still need to go and all the things we still need to do together.</p>
+  <main class="bucket-page">
+    <header class="bucket-hero">
+      <p class="bucket-overline">The Adventures Ahead</p>
+      <h1>bucket list ✈️</h1>
+      <p class="bucket-intro">So many things to do, so many places to go.</p>
     </header>
 
-    <div class="placeholder-grid">
-      <section class="placeholder-card featured">
-        <div class="placeholder-card-icon" aria-hidden="true">🌍</div>
-        <h2>Places we want to visit</h2>
-        <p>Dream cities, familiar corners, and somewhere neither of us has been before.</p>
-        <div class="memory-frame">future photos and travel memories</div>
-      </section>
-      <section class="placeholder-card">
-        <div class="placeholder-card-icon" aria-hidden="true">✓</div>
-        <h2>Things we want to do</h2>
-        <p>Big plans and beautifully ordinary experiences to share someday.</p>
-        <div class="placeholder-empty"><span>♡</span><p>no dreams checked off yet... we're just getting started.</p></div>
-      </section>
-      <section class="placeholder-card">
-        <div class="placeholder-card-icon" aria-hidden="true">🍽️</div>
-        <h2>Food and restaurants we want to try</h2>
-        <p>Our someday table: cafés, hidden gems, favorite dishes, and desserts.</p>
-        <div class="memory-frame">tasting notes and photos</div>
-      </section>
-      <section class="placeholder-card">
-        <div class="placeholder-card-icon" aria-hidden="true">🕸️</div>
-        <h2>Little adventures</h2>
-        <p>Short road trips, spontaneous stops, and tiny days worth remembering.</p>
-        <div class="memory-frame">adventure memories</div>
-      </section>
-      <section class="placeholder-card">
-        <div class="placeholder-card-icon" aria-hidden="true">🏁</div>
-        <h2>Things we've already checked off</h2>
-        <p>A growing collection of the places and moments we made happen.</p>
-        <div class="memory-frame">checked-off memories</div>
-      </section>
-    </div>
+    <section class="bucket-progress" aria-labelledby="bucket-progress-title">
+      <h2 id="bucket-progress-title">Our progress</h2>
+      <dl class="bucket-counts" aria-live="polite">
+        <div><dt>Total experiences</dt><dd id="bucket-total">0</dd></div>
+        <div><dt>Completed</dt><dd id="bucket-completed">0</dd></div>
+        <div><dt>Remaining</dt><dd id="bucket-remaining">0</dd></div>
+      </dl>
+      <progress id="bucket-meter" max="1" value="0" aria-labelledby="bucket-progress-title"></progress>
+    </section>
+
+    <section class="bucket-experiences" aria-labelledby="bucket-experiences-title">
+      <h2 id="bucket-experiences-title">Our adventures</h2>
+      <div class="bucket-filters" role="group" aria-label="Filter adventures">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="todo" aria-pressed="false">To Do</button>
+        <button type="button" data-filter="completed" aria-pressed="false">Completed</button>
+      </div>
+
+      <details class="bucket-add" id="bucket-add">
+        <summary>Add an adventure +</summary>
+        <form id="bucket-form">
+          <label for="bucket-title">Experience
+            <input id="bucket-title" name="title" required maxlength="160">
+          </label>
+          <label for="bucket-category">Category
+            <select id="bucket-category" name="category">
+              <option>Travel &amp; Adventures</option>
+              <option>Food &amp; Drinks</option>
+              <option>Romantic Dates</option>
+              <option>Fun &amp; Random</option>
+              <option>Everyday Moments</option>
+              <option>Big Dreams</option>
+            </select>
+          </label>
+          <button type="submit">Add adventure</button>
+        </form>
+      </details>
+
+      <p class="bucket-feedback" id="bucket-feedback" role="status"></p>
+      <ul class="bucket-list" id="bucket-list"></ul>
+      <p class="bucket-empty" id="bucket-empty">Add an adventure to start your list.</p>
+      <template id="bucket-card">
+        <li class="bucket-card">
+          <div class="bucket-card-top">
+            <span class="bucket-category"></span>
+            <span class="bucket-stamp" hidden>We did it!</span>
+          </div>
+          <h3></h3>
+          <label class="bucket-check"><input type="checkbox"> <span></span></label>
+        </li>
+      </template>
+    </section>
   </main>
 
+  <script src="our-bucket-list.js" defer></script>
   <footer class="site-signature"><p>Made with love, by Emma ♡</p><p>For Dom. Always.</p></footer>
 </body>
 </html>
