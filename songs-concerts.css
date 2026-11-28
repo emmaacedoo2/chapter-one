@@ -58,8 +58,7 @@
 
 .concert-listings input,
 .concert-listings select,
-.concert-button,
-.concert-discovery a {
+.concert-button {
   color: var(--ticket-wine);
   font: 700 .9rem/1.25 "DM Sans", sans-serif;
   min-height: 44px;
@@ -130,8 +129,7 @@
   right: -.45rem;
 }
 
-.concert-ticket-body,
-.concert-discovery {
+.concert-ticket-body {
   padding: .85rem;
 }
 
@@ -150,35 +148,31 @@
   white-space: pre-wrap;
 }
 
-.concert-discovery {
-  margin-top: .85rem;
-  background: #f6e2e8;
-  border-radius: .75rem;
+#concert-month { margin: .9rem 0 .3rem; }
+#concert-status { margin: .35rem 0 .75rem; }
+#concert-more { margin-top: .85rem; }
+#concert-more[hidden] { display: none; }
+
+.concert-artwork {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  border-radius: .5rem;
+  margin-bottom: .6rem;
 }
 
-.concert-discovery h3 {
-  font: 800 1rem/1.2 "Bricolage Grotesque", sans-serif;
-  margin: 0 0 .4rem;
+.concert-listings :is(select, input) {
+  width: 100%;
+  max-width: 100%;
+  font-size: 16px;
 }
 
-.concert-discovery ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .25rem 1rem;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.concert-discovery a {
-  display: inline-flex;
-  align-items: center;
-  text-underline-offset: .18em;
+@media (max-width: 520px) {
+  .concert-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: .6rem; }
+  .concert-fields input { min-width: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .concert-button,
-  .concert-discovery a {
-    transition: none;
-  }
+  .concert-button { transition: none; }
 }

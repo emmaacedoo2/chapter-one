@@ -4,6 +4,13 @@
   });
   const dateLabel = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', dateStyle: 'medium' });
 
+  const monthLabel = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'long', year: 'numeric' });
+  const lastMonth = '2027-12';
+  const cities = new Set([
+    'Tampa', 'St. Petersburg', 'Clearwater', 'Bradenton', 'Sarasota', 'Venice',
+    'Port Charlotte', 'Punta Gorda', 'Fort Myers', 'Cape Coral', 'Estero', 'Bonita Springs', 'Naples'
+  ]);
+
   function todayInFlorida(now = new Date()) {
     const parts = Object.fromEntries(eastern.formatToParts(now).map(({ type, value }) => [type, value]));
     return [parts.year, parts.month, parts.day].join('-');
@@ -53,64 +60,108 @@
     const filters = document.getElementById('concert-filters');
     const eventList = document.getElementById('concert-events');
     if (!filters || !eventList) return;
+    const month = filters.elements.month;
+    const heading = document.getElementById('concert-month');
+    const status = document.getElementById('concert-status');
+    const more = document.getElementById('concert-more');
+    const pageSize = 8;
+    let limit = pageSize;
     const events = (globalThis.MusicConcerts || []).filter(event =>
-      event.id && event.artist && event.name && event.city && event.genre && event.venue &&
-      httpUrl(event.url) && isoDate(event.date) && isoDate(event.verified)
+      event.artist && event.name && cities.has(event.city) && event.genre && event.venue &&
+      httpUrl(event.url) && isoDate(event.date) && event.date <= '2027-12-31'
     ).sort((a, b) => a.date.localeCompare(b.date));
     let today = todayInFlorida();
+
+    document.getElementById('concert-updated').textContent =
+      'Last updated ' + formatDate(globalThis.MusicConcertsUpdated) + ' · Manually verified listings';
 
     function eventCard(event) {
       const card = node('article', '', 'concert-ticket');
       const stub = node('div', '', 'concert-ticket-stub');
       const time = node('time', formatDate(event.date));
       time.dateTime = event.date;
-      stub.append(time, node('span', event.city));
+      if (event.endDate) {
+        const end = node('time', formatDate(event.endDate));
+        end.dateTime = event.endDate;
+        const range = node('span', '');
+        range.append(time, ' – ', end);
+        stub.append(range);
+      } else stub.append(time);
+      stub.append(node('span', event.city));
 
       const body = node('div', '', 'concert-ticket-body');
       body.append(node('h3', event.artist));
-      para(body, event.name);
+      if (event.name !== event.artist) para(body, event.name);
       para(body, event.venue);
-      para(body, event.genre + ' · Checked ' + formatDate(event.verified), 'concert-muted');
+      para(body, event.genre, 'concert-muted');
+      const artwork = httpUrl(event.artwork);
+      if (artwork) {
+        const image = node('img', '', 'concert-artwork');
+        image.src = artwork;
+        image.alt = '';
+        image.loading = 'lazy';
+        body.prepend(image);
+      }
       body.append(link('Official event details', event.url));
       card.append(stub, body);
       eventList.append(card);
     }
 
+    const upcoming = () => events.filter(event => (event.endDate || event.date) >= today);
+
     function updateFilterOptions() {
-      const upcoming = events.filter(event => event.date >= today);
+      const oldMonth = month.value;
+      const firstMonth = today.slice(0, 7);
+      const months = [];
+      const cursor = isoDate(firstMonth + '-01');
+      while (cursor.toISOString().slice(0, 7) <= lastMonth) {
+        const value = cursor.toISOString().slice(0, 7);
+        months.push(new Option(monthLabel.format(cursor), value));
+        cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+      }
+      month.replaceChildren(...months);
+      if (months.some(option => option.value === oldMonth)) month.value = oldMonth;
+      month.disabled = !months.length;
+
       for (const field of ['city', 'genre']) {
         const select = filters.elements[field];
         const oldValue = select.value;
-        const values = [...new Set(upcoming.map(event => event[field]))].sort();
-        select.replaceChildren(new Option(field === 'city' ? 'All cities' : 'All genres', ''),
+        const values = [...new Set(upcoming().map(event => event[field]))].sort();
+        select.replaceChildren(new Option(field === 'city' ? 'All locations' : 'All genres', ''),
           ...values.map(value => new Option(value, value)));
         if (values.includes(oldValue)) select.value = oldValue;
       }
-
     }
 
     function renderEvents() {
-      const upcoming = events.filter(event => event.date >= today);
-      const selection = new FormData(filters);
-      const city = selection.get('city');
-      const genre = selection.get('genre');
-      const artist = selection.get('artist').trim().toLowerCase();
-      const earliest = selection.get('date');
-      const matches = upcoming.filter(event => (!city || event.city === city) &&
-        (!genre || event.genre === genre) && event.artist.toLowerCase().includes(artist) &&
-        (!earliest || event.date >= earliest));
+      const { city, genre, artist } = Object.fromEntries(new FormData(filters));
+      const search = artist.trim().toLowerCase();
+      const monthly = upcoming().filter(event =>
+        event.date.slice(0, 7) <= month.value && (event.endDate || event.date).slice(0, 7) >= month.value);
+      const matches = monthly.filter(event => (!city || event.city === city) &&
+        (!genre || event.genre === genre) && (event.artist + ' ' + event.name).toLowerCase().includes(search));
+      heading.textContent = month.selectedOptions[0]?.text || 'Upcoming concerts';
+      status.textContent = !monthly.length ? 'No concerts announced yet.' :
+        !matches.length ? 'No concerts match these filters.' :
+          'Showing ' + Math.min(limit, matches.length) + ' of ' + matches.length + ' concerts';
       eventList.replaceChildren();
-      if (!upcoming.length) {
-        para(eventList, 'There are no verified upcoming listings here right now. Browse the official calendars below.', 'concert-muted');
-      } else if (!matches.length) {
-        para(eventList, 'No upcoming concerts match these filters.', 'concert-muted');
-      }
-      matches.forEach(eventCard);
+      matches.slice(0, limit).forEach(eventCard);
+      more.hidden = matches.length <= limit;
     }
 
-    filters.addEventListener('input', renderEvents);
-    filters.addEventListener('reset', () => setTimeout(renderEvents, 0));
+    function resetLimit() {
+      limit = pageSize;
+      renderEvents();
+    }
+    filters.addEventListener('input', resetLimit);
+    filters.addEventListener('reset', () => setTimeout(resetLimit, 0));
     filters.addEventListener('submit', event => event.preventDefault());
+    more.addEventListener('click', () => {
+      const firstNew = limit;
+      limit += pageSize;
+      renderEvents();
+      eventList.children[firstNew]?.querySelector('a')?.focus();
+    });
 
     function refreshDates() {
       if (document.hidden) return;
@@ -118,7 +169,7 @@
       if (date !== today) {
         today = date;
         updateFilterOptions();
-        renderEvents();
+        resetLimit();
       }
     }
     document.addEventListener('visibilitychange', refreshDates);

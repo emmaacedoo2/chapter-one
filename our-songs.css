@@ -689,7 +689,7 @@
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: .55rem;
-  margin: 1.25rem 0;
+  margin: .9rem 0;
   text-align: center;
   font: 700 clamp(.88rem, 2.7vw, 1.25rem) "Space Grotesk", sans-serif;
 }
@@ -733,8 +733,6 @@
   background: #e99ab6;
   box-shadow: 3px 4px #99576e;
 }
-.music-mode strong, .music-mode span { display: block; }
-.music-mode span { font-size: .875rem; margin-top: .25rem; color: #f6d5df; }
 .music-battle .music-mode[aria-pressed=true] { border-color: var(--music-pink); background: #632842; }
 .music-settings {
   padding: .9rem;
@@ -745,7 +743,8 @@
 }
 .music-settings label { display: grid; gap: .35rem; min-width: 0; }
 .music-settings :is(input:not([type=checkbox]), select) { width: 100%; }
-.music-wide, #music-pool { grid-column: 1 / -1; }
+#music-start { grid-column: 1 / -1; }
+#music-storage:empty { display: none; }
 .music-battle .music-check { display: flex; align-items: center; gap: .55rem; min-height: 44px; }
 .music-check input { width: 1.2rem; height: 1.2rem; accent-color: #efaac4; }
 .music-battle .music-primary { background: var(--music-pink); border-color: var(--music-pink); color: #301020; font-weight: 800; }
@@ -764,14 +763,12 @@
 .music-finish { text-align: center; }
 .music-finish[data-winner=dom] { background: radial-gradient(ellipse at top, #233c60, #160e18 80%); }
 .music-finish[data-winner=emma] { background: radial-gradient(ellipse at top, #702747, #160e18 80%); }
-.music-finish .music-disc { margin: 1rem auto; animation: music-spin .8s ease-out; }
+.music-finish .music-disc { margin: 1rem auto; }
 .music-result-actions { justify-content: center; }
-.music-pop { animation: music-score-pop .28s ease; }
-@keyframes music-spin { from { transform: rotate(-100deg) scale(.7); } to { transform: rotate(0); } }
-@keyframes music-score-pop { 50% { transform: scale(1.055); } }
 @media (max-width: 520px) {
   .music-battle { padding: 1rem; }
-  .music-answers, .music-settings { grid-template-columns: minmax(0, 1fr); }
+  .music-answers { grid-template-columns: minmax(0, 1fr); }
+  .music-settings select { padding-inline: .4rem; font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .music-battle *, #section-remind *, #section-concerts * { animation: none !important; transition: none !important; }

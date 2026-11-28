@@ -1,13 +1,13 @@
 (() => {
   const modes = {
-    song: ['Guess the Song', 'Follow the clues to the track.'],
-    artist: ['Guess the Artist', 'Connect tracks, albums and careers.'],
-    album: ['Guess the Album', 'Find the record behind the track.'],
-    year: ['Guess the Year', 'Place releases on the timeline.'],
-    trivia: ['Music Trivia', 'Test your knowledge across genres.'],
-    personal: ['Who Knows Who Better?', 'Play questions about your music memories.'],
-    speed: ['Speed Round', 'Beat the 12-second clock.'],
-    ultimate: ['The Ultimate Battle', 'Mix all the categories.']
+    song: 'Guess the Song',
+    artist: 'Guess the Artist',
+    trivia: 'Music Trivia',
+    ultimate: 'Ultimate Battle'
+  };
+  const historyModes = {
+    ...modes, album: 'Guess the Album', year: 'Guess the Year',
+    personal: 'Who Knows Who Better?', speed: 'Speed Round'
   };
   const find = id => document.getElementById('music-' + id);
   const form = find('settings');
@@ -16,7 +16,6 @@
   const finish = find('finish');
   const answers = find('answers');
   const next = find('next');
-  const clock = find('clock');
   const sound = find('sound');
   const prefix = 'chapter_one_music_';
   const read = (key, fallback) => {
@@ -40,10 +39,10 @@
     stats = { ...blank(), domWins: old.domWins || 0, emmaWins: old.emmaWins || 0, ties: old.ties || 0 };
     stats.total = stats.domWins + stats.emmaWins + stats.ties;
   }
-  let custom = read(customKey, []);
+  const custom = read(customKey, []);
   let seen = read(seenKey, []);
   let mode = 'song';
-  let game, timer, audio;
+  let game, audio;
   sound.checked = read(prefix + 'sound_v1', false);
 
   function node(tag, text, className) {
@@ -68,46 +67,33 @@
   }
   function config() {
     const fields = new FormData(form);
-    return { mode, difficulty: fields.get('difficulty'), duo: fields.get('players') === 'duo',
-      length: Number(fields.get('length')), timed: mode === 'speed' || fields.has('timed') };
+    return { mode, duo: fields.get('players') === 'duo',
+      length: fields.get('length') === '20' ? 20 : 10 };
   }
   function pool(settings) {
-    return [...globalThis.MusicQuestions, ...custom].filter(q => q.difficulty === settings.difficulty &&
-      (q.category === settings.mode || settings.mode === 'ultimate' ||
-        (settings.mode === 'speed' && q.category !== 'personal')));
+    return [...globalThis.MusicQuestions, ...custom].filter(question =>
+      settings.mode === 'ultimate' || question.category === settings.mode ||
+      (settings.mode === 'trivia' && ['album', 'year'].includes(question.category)));
   }
   function choose(settings) {
-    const eligible = pool(settings);
-    const byId = new Map(eligible.map(q => [q.id, q]));
-    const played = new Set(seen);
-    const fresh = shuffle(eligible.filter(q => !played.has(q.id)));
-    if (settings.mode === 'speed' || settings.mode === 'ultimate') {
-      const groups = new Map();
-      for (const question of fresh) {
-        if (!groups.has(question.category)) groups.set(question.category, []);
-        groups.get(question.category).push(question);
-      }
-      fresh.length = 0;
-      const queues = [...groups.values()];
-      for (let index = 0; queues.some(queue => index < queue.length); index++) {
-        fresh.push(...shuffle(queues).flatMap(queue => queue[index] ? [queue[index]] : []));
+    const played = new Map(seen.map((id, index) => [id, index]));
+    const groups = new Map();
+    for (const question of shuffle(pool(settings))) {
+      if (!groups.has(question.category)) groups.set(question.category, []);
+      groups.get(question.category).push(question);
+    }
+    const queues = [...groups.values()];
+    for (const queue of queues) {
+      queue.sort((a, b) => (played.get(a.id) ?? -1) - (played.get(b.id) ?? -1));
+    }
+    const questions = [];
+    while (questions.length < settings.length && queues.some(queue => queue.length)) {
+      for (const queue of shuffle(queues)) {
+        if (queue.length) questions.push(queue.shift());
+        if (questions.length === settings.length) break;
       }
     }
-    return [...fresh, ...seen.filter(id => byId.has(id)).map(id => byId.get(id))].slice(0, settings.length);
-  }
-  function updateLengths() {
-    const settings = config();
-    const total = pool(settings).length;
-    const sizes = [10, 20, 30].filter(n => n <= total);
-    const short = settings.duo ? total - total % 2 : total;
-    if (!sizes.length && short) sizes.push(short);
-    form.elements.namedItem('length').replaceChildren(...sizes.map(n => new Option(n + (n === 1 ? ' question' : ' questions'), n)));
-    if (sizes.includes(settings.length)) form.elements.namedItem('length').value = settings.length;
-    find('start').disabled = !sizes.length;
-    find('pool').textContent = total + ' available at this difficulty.' +
-      (!sizes.length ? ' Choose another difficulty or add personal questions.' :
-        total < 30 ? ' Round lengths reflect the available questions.' : '');
-    find('timer-label').hidden = mode === 'speed';
+    return questions;
   }
   function board() {
     const scoreboard = find('scoreboard');
@@ -126,17 +112,15 @@
     find('totals').textContent = stats.total + ' games · ' + stats.ties + ' ties';
     find('records').textContent = 'High scores ' + format(stats.high) + ' | Best streaks ' + format(stats.streak);
     find('history').replaceChildren(...stats.history.slice().reverse().map(item => node('li',
-      new Date(item.date).toLocaleDateString() + ' · ' + modes[item.mode][0] + ' · ' +
-      item.difficulty + ' · ' + item.result + ' · ' + item.scores.join('–'))));
+      new Date(item.date).toLocaleDateString() + ' · ' + (historyModes[item.mode] || item.mode) + ' · ' +
+      (item.difficulty ? item.difficulty + ' · ' : '') + item.result + ' · ' + item.scores.join('–'))));
   }
   function dashboard() {
-    clearInterval(timer);
     game = undefined;
     setup.hidden = false;
     play.hidden = finish.hidden = true;
     board();
     records();
-    updateLengths();
     find('dashboard-title').focus();
   }
   function start(settings) {
@@ -151,57 +135,28 @@
   }
   function prepare() {
     const { index, settings } = game;
-    game.phase = 'handoff';
     game.player = settings.duo ? index % 2 : 0;
     game.question = game.questions[index];
     const name = ['Dom', 'Emma'][game.player];
     board();
     find('progress').max = game.questions.length;
     find('progress').value = index + 1;
-    find('game-mode').textContent = modes[settings.mode][0];
+    find('game-mode').textContent = modes[settings.mode];
     find('round').textContent = 'Question ' + (index + 1) + ' of ' + game.questions.length;
     find('turn').textContent = settings.duo ? name + '’s turn' : 'Solo round';
-    find('streak').textContent = 'Streak ' + game.streaks[game.player];
     find('feedback').replaceChildren();
-    next.hidden = clock.hidden = true;
+    next.hidden = true;
     answers.replaceChildren();
-    if (!settings.duo) {
-      openQuestion();
-      return;
-    }
-    find('question').textContent = 'Pass to ' + name;
-    find('ready').hidden = false;
-    find('ready').textContent = name + ' is ready';
-    find('question').focus();
-  }
-  function openQuestion() {
-    if (game?.phase !== 'handoff') return;
     game.phase = 'answer';
     const { question } = game;
     seen = [...seen.filter(id => id !== question.id), question.id];
     save(seenKey, seen);
-    find('ready').hidden = true;
     find('question').textContent = question.question;
     for (const value of shuffle([question.answer, ...question.incorrect])) {
       const choice = button(value, () => answer(value, choice), 'music-answer');
       answers.append(choice);
     }
     find('question').focus();
-    if (game.settings.timed) {
-      game.remaining = game.settings.mode === 'speed' ? 12000 : 25000;
-      clock.hidden = false;
-      clock.textContent = Math.ceil(game.remaining / 1000) + ' seconds';
-      resume();
-    }
-  }
-  function resume() {
-    if (!game?.settings.timed || game.phase !== 'answer' || document.hidden || game.deadline != null) return;
-    game.deadline = performance.now() + game.remaining;
-    timer = setInterval(() => {
-      const seconds = Math.max(0, Math.ceil((game.deadline - performance.now()) / 1000));
-      clock.textContent = seconds + ' seconds';
-      if (!seconds) answer(null);
-    }, 100);
   }
   function unlockSound() {
     const Context = window.AudioContext || window.webkitAudioContext;
@@ -225,14 +180,7 @@
   }
   function answer(value, selected) {
     if (game?.phase !== 'answer' || document.hidden) return;
-    if (game.deadline != null && performance.now() >= game.deadline) {
-      value = null;
-      selected = null;
-      clock.textContent = 'Time’s up';
-    }
     game.phase = 'answered';
-    clearInterval(timer);
-    game.deadline = null;
     const { question, player } = game;
     const correct = value === question.answer;
     for (const choice of answers.children) {
@@ -246,10 +194,8 @@
       game.best[player] = Math.max(game.best[player], game.streaks[player]);
     } else game.streaks[player] = 0;
     board();
-    if (correct) find('scoreboard').children[player ? 2 : 0]?.classList.add('music-pop');
-    find('streak').textContent = 'Streak ' + game.streaks[player];
     const feedback = find('feedback');
-    feedback.textContent = (correct ? 'Correct! ' : value === null ? 'Time’s up. ' : 'Incorrect. ') +
+    feedback.textContent = (correct ? 'Correct! ' : 'Incorrect. ') +
       (correct ? '' : 'Answer: ' + question.answer + '. ') + question.explanation;
     if (/^https:\/\//.test(question.source || '') ||
         /^(?:our-songs\.html)?#section-[a-z-]+$/.test(question.source || '')) {
@@ -281,7 +227,7 @@
       stats.streak[name] = Math.max(stats.streak[name] || 0, best[index]);
     });
     stats.total++;
-    stats.history.push({ date: new Date().toISOString(), mode: settings.mode, difficulty: settings.difficulty,
+    stats.history.push({ date: new Date().toISOString(), mode: settings.mode,
       length: settings.length, scores, result: titles[winner] });
     save(statsKey, stats);
     play.hidden = true;
@@ -289,56 +235,25 @@
     finish.dataset.winner = winner;
     find('result').textContent = titles[winner];
     find('result-detail').textContent = names.map((name, index) =>
-      name + ' · ' + scores[index] + '/' + (settings.length / scores.length) + ' correct · best streak ' + best[index]
+      name + ' · ' + scores[index] + '/' + (settings.length / scores.length) + ' correct'
     ).join('  |  ');
     find('result').focus();
   }
-  function renderCustom() {
-    const list = find('custom-list');
-    list.replaceChildren();
-    for (const question of custom) {
-      const item = node('li', question.question + ' ');
-      item.append(button('Remove', () => {
-        const updated = custom.filter(entry => entry.id !== question.id);
-        if (!save(customKey, updated)) return;
-        custom = updated;
-        renderCustom();
-        updateLengths();
-        find('custom').querySelector('input').focus();
-      }));
-      list.append(item);
-    }
-  }
-
-  Object.entries(modes).forEach(([id, [title, description]]) => {
-    const card = button('', () => {
+  Object.entries(modes).forEach(([id, title]) => {
+    const card = button(title, () => {
       mode = id;
       find('modes').querySelectorAll('button').forEach(el => {
         el.setAttribute('aria-pressed', String(el === card));
       });
-      updateLengths();
     }, 'music-mode');
     card.setAttribute('aria-pressed', String(mode === id));
-    card.dataset.mode = id;
-    card.append(node('strong', title), node('span', description));
     find('modes').append(card);
   });
-  form.addEventListener('change', updateLengths);
   form.addEventListener('submit', event => { event.preventDefault(); start(config()); });
   sound.addEventListener('change', () => {
     save(prefix + 'sound_v1', sound.checked);
     unlockSound();
   });
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      clearInterval(timer);
-      if (game?.deadline != null) {
-        game.remaining = Math.max(0, game.deadline - performance.now());
-        game.deadline = null;
-      }
-    } else resume();
-  });
-  find('ready').addEventListener('click', openQuestion);
   next.addEventListener('click', () => {
     if (game?.phase !== 'answered') return;
     game.index++;
@@ -352,44 +267,6 @@
     if (game?.phase === 'finished') start(game.settings);
   });
   find('menu').addEventListener('click', dashboard);
-  find('reset').addEventListener('click', () => {
-    if (!confirm('Reset the Music Battle statistics and history in this browser?')) return;
-    const reset = blank();
-    if (save(statsKey, reset)) {
-      stats = reset;
-      board();
-      records();
-    }
-  });
-  find('custom').addEventListener('submit', event => {
-    event.preventDefault();
-    const fields = new FormData(event.target);
-    const field = name => String(fields.get(name)).trim();
-    const question = field('question');
-    const correct = field('answer');
-    const incorrect = ['wrong1', 'wrong2', 'wrong3'].map(field);
-    const explanation = field('explanation');
-    const difficulty = field('difficulty');
-    const status = find('custom-status');
-    const choices = [correct, ...incorrect];
-    if (!question || !explanation || choices.some(value => !value) ||
-        new Set(choices.map(value => value.toLowerCase())).size !== choices.length ||
-        [...globalThis.MusicQuestions, ...custom].some(entry => entry.question.toLowerCase() === question.toLowerCase())) {
-      status.textContent = 'Enter a new question, four different choices and an explanation.';
-      return;
-    }
-    const id = 'personal-' + Date.now() + '-' + Math.random().toString(36).slice(2);
-    const updated = [...custom, { id, category: 'personal', difficulty, question, answer: correct, incorrect, explanation }];
-    if (!save(customKey, updated)) return;
-    custom = updated;
-    event.target.reset();
-    status.textContent = 'Question saved in this browser.';
-    renderCustom();
-    updateLengths();
-  });
-
   board();
   records();
-  updateLengths();
-  renderCustom();
 })();

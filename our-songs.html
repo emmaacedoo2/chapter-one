@@ -199,55 +199,33 @@
       <header class="music-battle-header">
         <div class="music-disc" aria-hidden="true"></div>
         <h2 id="music-dashboard-title" tabindex="-1">THE MUSIC BATTLE</h2>
-        <p>Two players. One playlist. Who knows music better?</p>
       </header>
       <div id="music-scoreboard" class="music-scoreboard" aria-live="polite"></div>
       <p id="music-storage" role="status"></p>
       <div id="music-setup">
-        <h3>Choose a game</h3>
         <div id="music-modes" class="music-mode-grid" role="group" aria-label="Game category"></div>
         <form id="music-settings" class="music-settings">
           <label>Players
             <select name="players"><option value="duo">Dom vs. Emma</option><option value="solo">Solo</option></select>
           </label>
-          <label>Difficulty
-            <select name="difficulty"><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select>
+          <label>Questions
+            <select name="length"><option value="10">10 questions</option><option value="20">20 questions</option></select>
           </label>
-          <label>Round length <select name="length" aria-describedby="music-pool"></select></label>
-          <label id="music-timer-label" class="music-check"><input name="timed" type="checkbox"> 25-second timer</label>
-          <p id="music-pool" role="status"></p>
           <button type="submit" id="music-start" class="music-primary">Start game</button>
         </form>
         <details>
-          <summary>Add your own personal questions</summary>
-          <p>Save questions about your music memories in this browser.</p>
-          <form id="music-custom" class="music-settings">
-            <label class="music-wide">Question <input name="question" required maxlength="240"></label>
-            <label>Correct answer <input name="answer" required maxlength="100"></label>
-            <label>Wrong answer 1 <input name="wrong1" required maxlength="100"></label>
-            <label>Wrong answer 2 <input name="wrong2" required maxlength="100"></label>
-            <label>Wrong answer 3 <input name="wrong3" required maxlength="100"></label>
-            <label>Difficulty <select name="difficulty"><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></label>
-            <label class="music-wide">Explanation <input name="explanation" required maxlength="240"></label>
-            <button type="submit" class="music-primary">Save question</button>
-          </form>
-          <p id="music-custom-status" role="status"></p>
-          <ul id="music-custom-list"></ul>
-        </details>
-        <details>
-          <summary>Battle records and history</summary>
+          <summary>Battle history &amp; settings</summary>
           <p id="music-totals"></p>
           <p id="music-records"></p>
           <ol id="music-history"></ol>
-          <button type="button" id="music-reset">Reset battle statistics</button>
+          <label class="music-check music-sound"><input id="music-sound" type="checkbox"> Sound effects</label>
         </details>
       </div>
       <div id="music-play" class="music-stage" hidden>
         <p id="music-game-mode" class="music-game-mode"></p>
-        <div class="music-round-meta"><strong id="music-turn"></strong><span id="music-round"></span><span id="music-streak"></span><span id="music-clock" hidden></span></div>
+        <div class="music-round-meta"><strong id="music-turn"></strong><span id="music-round"></span></div>
         <progress id="music-progress" aria-label="Round progress"></progress>
         <h3 id="music-question" tabindex="-1"></h3>
-        <button type="button" id="music-ready" class="music-primary" hidden></button>
         <div id="music-answers" class="music-answers" role="group" aria-label="Answer choices"></div>
         <p id="music-feedback" aria-live="polite"></p>
         <button type="button" id="music-next" class="music-primary" hidden>Next turn</button>
@@ -262,31 +240,23 @@
           <button type="button" id="music-menu">Return to game selection</button>
         </div>
       </div>
-      <label class="music-check music-sound"><input id="music-sound" type="checkbox"> Sound effects</label>
     </section>
 
     <section id="section-concerts" class="music-section-card concert-listings" aria-labelledby="concert-heading">
       <h2 class="section-heading" id="concert-heading">UPCOMING CONCERTS</h2>
-      <p class="section-intro-text">Find upcoming concerts and live music events near us.</p>
       <div class="concert-panel">
-        <p class="concert-muted">These listings are checked and added by hand. Confirm details with the venue before making plans.</p>
+        <p class="concert-muted" id="concert-updated"></p>
         <form class="concert-fields" id="concert-filters" aria-label="Filter upcoming concerts">
-          <label>City <select name="city"><option value="">All cities</option></select></label>
+          <label>Month <select name="month"></select></label>
+          <label>Location <select name="city"><option value="">All cities</option></select></label>
           <label>Artist <input name="artist" type="search" placeholder="Search by name"></label>
           <label>Genre <select name="genre"><option value="">All genres</option></select></label>
-          <label>On or after <input name="date" type="date"></label>
           <button class="concert-button" type="reset">Clear filters</button>
         </form>
-        <div class="concert-card-grid" id="concert-events" aria-label="Upcoming concert results"></div>
-        <div class="concert-discovery">
-          <h3>Browse official venue calendars</h3>
-          <ul>
-            <li><a href="https://www.benchmarkintlarena.com/venue/benchmark-international-arena/" target="_blank" rel="noopener noreferrer">Tampa · Benchmark International Arena</a></li>
-            <li><a href="https://jannuslive.com/shows/calendar/" target="_blank" rel="noopener noreferrer">St. Petersburg · Jannus Live</a></li>
-            <li><a href="https://www.kiacenter.com/events/calendar" target="_blank" rel="noopener noreferrer">Orlando · Kia Center</a></li>
-            <li><a href="https://www.vanwezel.org/events" target="_blank" rel="noopener noreferrer">Sarasota · Van Wezel</a></li>
-          </ul>
-        </div>
+        <h3 id="concert-month"></h3>
+        <p id="concert-status" class="concert-muted" role="status"></p>
+        <div class="concert-card-grid" id="concert-events" aria-labelledby="concert-month"></div>
+        <button type="button" id="concert-more" class="concert-button" hidden>Load more</button>
       </div>
     </section>
   </div>
