@@ -451,6 +451,7 @@ const MusicApp = {
           frame.src = 'https://open.spotify.com/embed/track/' + track;
           frame.width = '100%';
           frame.height = '152';
+          frame.loading = 'lazy';
           frame.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
           frame.allowFullscreen = true;
           player.append(frame);
@@ -482,7 +483,7 @@ const MusicApp = {
 
   selectArtist(key) {
     const artist = this.artists[key];
-    if (!artist) return;
+    if (!artist || this.activeArtistKey === key) return;
     this.activeArtistKey = key;
 
     // Update active vinyl styling
@@ -536,4 +537,10 @@ const MusicApp = {
 
 document.addEventListener('DOMContentLoaded', () => {
   MusicApp.init();
+
+  const backToTop = document.getElementById('songs-back-top');
+  const updateBackToTop = () => { backToTop.hidden = window.scrollY < 650; };
+  window.addEventListener('scroll', updateBackToTop, { passive: true });
+  window.addEventListener('pageshow', updateBackToTop);
+  updateBackToTop();
 });

@@ -6,26 +6,27 @@
 .page-container {
   max-width: 860px;
   margin: 0 auto;
-  padding: 3.5rem 1.25rem 2.5rem;
+  padding: clamp(1.25rem, 4vw, 2.5rem) clamp(.75rem, 3vw, 1.25rem) 1.5rem;
   position: relative;
 }
 
 /* Navigation & Sub-nav */
 .top-nav {
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  margin-bottom: clamp(1rem, 3vw, 1.6rem);
 }
 
 .music-quick-jumps {
   display: flex;
   gap: 0.45rem;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .quick-jump-pill {
-  font-size: 0.72rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.8rem;
   color: var(--text-muted);
   text-decoration: none;
   background: rgba(255, 255, 255, 0.85);
@@ -44,7 +45,7 @@
 /* Header */
 .music-header {
   text-align: center;
-  margin-bottom: 3.5rem;
+  margin-bottom: clamp(1.4rem, 4vw, 2.4rem);
 }
 
 .music-main-title {
@@ -69,8 +70,10 @@
   backdrop-filter: blur(8px);
   border: 1.5px solid #8B1E2D;
   border-radius: 14px;
-  padding: 2.2rem;
-  margin-bottom: 3rem;
+  padding: clamp(1rem, 4vw, 2.2rem);
+  margin-bottom: clamp(1.15rem, 3vw, 2rem);
+  scroll-margin-top: .5rem;
+  overflow-wrap: anywhere;
   box-shadow: 0 7px 22px rgba(36, 33, 38, 0.08);
   position: relative;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -80,9 +83,8 @@
   border-color: #242126;
 }
 
-.music-section-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(36, 33, 38, 0.12);
+@media (hover: hover) {
+  .music-section-card:hover { box-shadow: 0 12px 28px rgba(36, 33, 38, 0.12); }
 }
 
 .section-badge-tag {
@@ -109,7 +111,7 @@
   font-size: 0.92rem;
   line-height: 1.65;
   color: #555566;
-  margin-bottom: 1.6rem;
+  margin-bottom: 1.25rem;
 }
 
 /* Buttons */
@@ -117,6 +119,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  min-height: 44px;
   background: #8B1E2D;
   color: #ffffff;
   font-size: 0.75rem;
@@ -135,6 +138,7 @@
 }
 
 .btn-action-outline {
+  min-height: 44px;
   background: transparent;
   color: var(--text-main);
   border: 1.5px solid #242126;
@@ -157,7 +161,6 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
   gap: 0.6rem;
   margin-bottom: 1rem;
 }
@@ -175,9 +178,8 @@
    ========================================================================== */
 .vinyl-shelf {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 2.2rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(.65rem, 3vw, 1.5rem);
 }
 
 .vinyl-item-card {
@@ -223,6 +225,8 @@
   animation: vinylSpin 14s linear infinite;
 }
 
+.quick-jump-pill:focus-visible,
+.songs-back-top:focus-visible,
 .interactive-vinyl:focus-visible,
 .btn-action-outline:focus-visible,
 .btn-spotify-pill:focus-visible {
@@ -295,6 +299,7 @@
 
 /* Active Artist Spotlight Player */
 .active-artist-spotlight {
+  margin-top: 1.25rem;
   background: #FAF8F5;
   border: 1.5px solid #8B1E2D;
   border-radius: 14px;
@@ -465,17 +470,12 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .page-container {
-    padding-top: 2.5rem;
-  }
-  .vinyl-shelf {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
   .interactive-vinyl {
-    width: 120px;
-    height: 120px;
+    width: min(100%, 120px);
+    height: auto;
+    aspect-ratio: 1;
   }
+  .vinyl-caption-title { font-size: clamp(.75rem, 2.5vw, 1.05rem); }
   .spotlight-header {
     flex-direction: column;
   }
@@ -564,7 +564,7 @@
 .remind-song-title {
   color: #231720;
   font: 750 clamp(1.08rem, 2.3vw, 1.3rem)/1.2 var(--font-serif);
-  scroll-margin-block: 5rem 1rem;
+  scroll-margin-block: .5rem 1rem;
 }
 .remind-song-artist {
   margin-top: .35rem;
@@ -607,6 +607,7 @@
 .remind-preview { border-top: 1px solid #e3c5ce; }
 .remind-preview summary {
   padding-block: .65rem;
+  line-height: 1.5;
   cursor: pointer;
   font-size: .88rem;
   font-weight: 700;
@@ -618,11 +619,6 @@
   max-width: 100%;
   border: 0;
   border-radius: .55rem;
-}
-@media (max-width: 360px) {
-  #section-remind { padding-inline: .5rem; }
-  .remind-preview { margin-inline: -.65rem; }
-  .remind-preview summary { padding-inline: .65rem; }
 }
 #remind-toggle {
   display: block;
@@ -772,4 +768,34 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .music-battle *, #section-remind *, #section-concerts * { animation: none !important; transition: none !important; }
+}
+
+/* Keep the shortcut outside the content column and in flow on narrow screens. */
+.songs-back-top {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  min-height: 44px;
+  margin: 0 auto 1rem;
+  padding: .35rem .75rem;
+  border: 1px solid #a45c6b;
+  border-radius: 1.5rem;
+  background: #faf8f5;
+  color: #751d39;
+  text-decoration: none;
+  font-size: .8rem;
+  font-weight: 600;
+}
+
+.songs-back-top[hidden] { display: none; }
+.songs-back-top:hover { background: #f6e1e7; }
+
+@media (min-width: 1140px) {
+  .songs-back-top {
+    position: fixed;
+    z-index: 5;
+    right: 1rem;
+    bottom: 1rem;
+    margin: 0;
+  }
 }
