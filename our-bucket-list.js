@@ -1,14 +1,30 @@
 (() => {
   const storageKey = 'chapter_one_bucket_list_v1';
-  const defaults = [
-    ['new-york', 'Travel to New York together', 'Travel & Adventures'],
-    ['greece', 'Travel to Greece together', 'Travel & Adventures'],
-    ['california', 'Explore California together', 'Travel & Adventures'],
-    ['steelers', 'Go to a Pittsburgh Steelers game together', 'Sports'],
-    ['real-madrid', 'Watch Real Madrid play at the Santiago Bernabéu', 'Sports']
-  ].map(([id, title, category]) => ({ id, title, category, completed: false }));
+  const storageVersion = 2;
   const normalize = title => title.normalize('NFKD').toLowerCase()
     .replace(/\p{M}/gu, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+  const defaults = [
+    ['new-york', 'Travel to New York together', 'Travel & Adventures'],
+    ['greece', 'Spend a summer in Greece', 'Travel & Adventures', 'Travel to Greece together'],
+    ['california', 'Explore California together', 'Travel & Adventures'],
+    ['steelers', 'Go to a Pittsburgh Steelers game', 'Sports', 'Go to a Pittsburgh Steelers game together'],
+    ['real-madrid', 'Watch Real Madrid play at the Santiago Bernabéu', 'Sports'],
+    ['cruise', 'Go on a cruise together', 'Travel & Adventures', 'Take a cruise together'],
+    ['disney-world', 'Spend a day at Disney World', 'Fun & Random', 'Go to Disney World'],
+    ['universal-studios', 'Go to Universal Studios together', 'Fun & Random', 'Go to Universal Studios'],
+    ['formula-one', 'Go to a Formula 1 race', 'Sports', 'Attend a Formula 1 race'],
+    ['concert', 'Go to a concert together', 'Music'],
+    ['american-road-trip', 'Go on an American road trip', 'Travel & Adventures'],
+    ['bahamas', 'Visit the Bahamas together', 'Travel & Adventures', 'Visit the Bahamas'],
+    ['northern-lights', 'See the Northern Lights', 'Travel & Adventures'],
+    ['cabin', 'Spend a weekend in a cabin', 'Travel & Adventures'],
+    ['new-country', 'Visit a new country together', 'Travel & Adventures']
+  ].map(([id, title, category, ...aliases]) => ({ id, title, category, aliases }));
+  const defaultById = new Map(defaults.map(entry => [entry.id, entry]));
+  const defaultByTitle = new Map(defaults.flatMap(entry =>
+    [entry.title, ...entry.aliases].map(title => [normalize(title), entry])));
+  const firstRelease = new Set(['new-york', 'greece', 'california', 'steelers', 'real-madrid']);
+  const identity = title => defaultByTitle.get(normalize(title))?.title ?? normalize(title);
   const get = id => document.getElementById('bucket-' + id);
   const list = get('list');
   const empty = get('empty');
@@ -40,7 +56,7 @@
   function save(message = '', status = feedback) {
     if (canSave) {
       try {
-        localStorage.setItem(storageKey, JSON.stringify({ experiences, nextId }));
+        localStorage.setItem(storageKey, JSON.stringify({ version: storageVersion, experiences, nextId }));
         status.textContent = message;
         return;
       } catch {
@@ -58,13 +74,25 @@
     experiences = items.filter(item => typeof item?.title === 'string' && typeof item.category === 'string');
     nextId = Math.max(1, saved.nextId || 1, ...experiences.map(item =>
       Number(/^personal-(\d+)$/.exec(item.id)?.[1] || 0) + 1));
-    if (legacy) {
+    if (legacy || (saved.version ?? 1) < storageVersion) {
       for (const item of experiences) {
-        const match = defaults.find(entry => normalize(entry.title) === normalize(item.title) &&
-          !experiences.some(other => other.id === entry.id));
-        item.id = match?.id ?? personalId();
+        if (legacy && !item.id) {
+          const match = defaultByTitle.get(normalize(item.title));
+          item.id = match && !experiences.some(other => other.id === match.id) ? match.id : personalId();
+        }
+        const match = defaultById.get(item.id);
+        if (match?.aliases.some(title => normalize(title) === normalize(item.title)) &&
+            !experiences.some(other => other !== item && normalize(other.title) === normalize(match.title))) {
+          item.title = match.title;
+        }
       }
-      experiences.push(...defaults.filter(entry => !experiences.some(item => item.id === entry.id)));
+      for (const { id, title, category } of defaults) {
+        // The previous release already seeded these IDs. An absent one was deleted.
+        if (!legacy && firstRelease.has(id)) continue;
+        if (!experiences.some(item => item.id === id) && !alreadyAdded(title)) {
+          experiences.push({ id, title, category, completed: false });
+        }
+      }
       save();
     }
   } catch {
@@ -73,7 +101,7 @@
   }
 
   function alreadyAdded(title, except) {
-    return experiences.some(item => item !== except && normalize(item.title) === normalize(title));
+    return experiences.some(item => item !== except && identity(item.title) === identity(title));
   }
 
   function updateProgress() {
@@ -113,8 +141,16 @@
       card.querySelector('h3').textContent = item.title;
       card.querySelector('.bucket-category').textContent = item.category;
       const illustration = card.querySelector('.bucket-illustration');
-      illustration.dataset.art = item.category === 'Sports' ? 'sports' :
-        item.category === 'Travel & Adventures' ? 'travel' : 'postcard';
+      const artwork = defaultById.get(item.id) ?? defaultByTitle.get(normalize(item.title));
+      if (artwork) {
+        const image = document.createElement('img');
+        image.src = 'images/bucket-list/' + artwork.id + '.svg';
+        image.alt = '';
+        image.width = 96;
+        image.height = 72;
+        image.decoding = 'async';
+        illustration.append(image);
+      }
       const checkbox = card.querySelector('input');
       checkbox.setAttribute('aria-label', 'Completed: ' + item.title);
       updateCard(card, item);
@@ -193,25 +229,34 @@
     return true;
   }
 
-  function shuffleIdeas() {
+  function renderIdeas(shuffle = false) {
+    const owned = new Set(experiences.map(item => identity(item.title)));
+    const available = ideas.filter(idea => !owned.has(identity(idea.title)));
     const previous = new Set(lineup);
-    const next = [];
-    while (next.length < 6) {
+    const next = shuffle ? [] : lineup.filter(idea => available.includes(idea));
+    deck = deck.filter(idea => available.includes(idea));
+    while (next.length < Math.min(6, available.length)) {
       if (!deck.length) {
-        deck = [...ideas];
+        deck = available.filter(idea => !next.includes(idea));
         for (let index = deck.length - 1; index > 0; index--) {
           const other = Math.floor(Math.random() * (index + 1));
           [deck[index], deck[other]] = [deck[other], deck[index]];
         }
       }
-      const idea = deck.pop();
-      if (!previous.has(idea) && !next.includes(idea)) next.push(idea);
+      let index = deck.findIndex(idea => !previous.has(idea) && !next.includes(idea));
+      if (index === -1) {
+        index = deck.findIndex(idea => !next.includes(idea));
+        if (index === -1) {
+          deck = [];
+          continue;
+        }
+      }
+      next.push(deck.splice(index, 1)[0]);
     }
     lineup = next;
-    renderIdeas();
-  }
-
-  function renderIdeas() {
+    const shuffleButton = get('shuffle');
+    shuffleButton.disabled = available.length <= 6;
+    get('idea-empty').hidden = available.length > 0;
     ideasList.replaceChildren(...lineup.map(idea => {
       const row = document.createElement('li');
       const copy = document.createElement('div');
@@ -222,14 +267,13 @@
       copy.append(category, title);
       const button = document.createElement('button');
       button.type = 'button';
-      const added = alreadyAdded(idea.title);
-      button.textContent = added ? '✓' : '+';
-      button.disabled = added;
-      button.setAttribute('aria-label', (added ? 'Already added: ' : 'Add ') + idea.title);
+      button.textContent = '+';
+      button.setAttribute('aria-label', 'Add ' + idea.title);
       button.addEventListener('click', () => {
         if (addAdventure(idea.title, idea.category, ideaFeedback)) {
           renderIdeas();
-          get('shuffle').focus();
+          const nextButton = ideasList.querySelector('button');
+          (nextButton ?? get('form-toggle')).focus();
         }
       });
       row.append(copy, button);
@@ -239,7 +283,7 @@
 
   filters.forEach(button => button.addEventListener('click', () => selectFilter(button.dataset.filter)));
   categoryFilter.addEventListener('change', render);
-  get('shuffle').addEventListener('click', shuffleIdeas);
+  get('shuffle').addEventListener('click', () => renderIdeas(true));
   titleInput.addEventListener('input', () => titleInput.setCustomValidity(''));
   get('cancel').addEventListener('click', () => {
     closeForm();
@@ -275,5 +319,5 @@
 
   syncCategories();
   render();
-  shuffleIdeas();
+  renderIdeas();
 })();

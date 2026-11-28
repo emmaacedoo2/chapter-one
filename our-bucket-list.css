@@ -209,24 +209,18 @@
 .bucket-illustration {
   display: grid;
   place-items: center;
-  width: clamp(2.2rem, 7vw, 3rem);
-  aspect-ratio: 1;
-  border: 1px dashed #ae7285;
-  border-radius: .25rem;
-  background: #f8e2e7;
-  color: var(--bucket-wine);
+  width: clamp(3.4rem, 12vw, 5.4rem);
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--bucket-line);
+  border-radius: .35rem;
+  background: repeating-linear-gradient(-45deg, #f8e3e8 0 4px, #fceef0 4px 8px);
+  overflow: hidden;
 }
-.bucket-illustration::before { content: "✦"; font-size: 1.15rem; }
-.bucket-illustration[data-art="travel"]::before { content: "✈"; transform: rotate(-15deg); }
-.bucket-illustration[data-art="sports"]::before {
-  content: "";
-  width: .8rem;
-  aspect-ratio: 1;
-  border: 2px solid currentColor;
-  border-radius: 50%;
-  background: linear-gradient(45deg, transparent 43%, currentColor 44% 55%, transparent 56%),
-    linear-gradient(-45deg, transparent 43%, currentColor 44% 55%, transparent 56%);
+.bucket-illustration:empty {
+  width: 2.65rem;
+  border-style: dashed;
 }
+.bucket-illustration img { display: block; width: 100%; height: auto; }
 
 .bucket-inspiration-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .4rem; }
 .bucket-ideas {
@@ -252,7 +246,8 @@
 }
 .bucket-ideas small { display: block; color: var(--bucket-wine); font-weight: 700; }
 .bucket-ideas button { flex: 0 0 44px; padding: 0; }
-.bucket-ideas button:disabled { cursor: default; background: var(--bucket-pink); }
+.bucket-inspiration button:disabled { cursor: default; opacity: .65; }
+.bucket-ideas:empty { display: none; }
 
 @media (hover: hover) {
   .bucket-card:hover { transform: translateY(-2px); box-shadow: 0 .35rem .9rem #42132322; }
