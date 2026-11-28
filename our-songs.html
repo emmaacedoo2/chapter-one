@@ -121,10 +121,6 @@
         <div id="remind-songs-list"></div>
         <div id="remind-expanded" hidden>
           <div id="remind-more-songs"></div>
-          <div class="remind-signoff">
-            <p class="section-intro-text">From late night road trips listening to Gigi Perez to spinning Mac Miller and $uicideboy$ at home, music has been the heartbeat of our first year together. <em>Swimming</em> and <em>Circles</em> were on heavy rotation.</p>
-            <p id="remind-closing">Ten different songs, ten different reasons, but always the same person. You. ♡</p>
-          </div>
         </div>
       </div>
       <button type="button" id="remind-toggle" class="btn-action-outline" aria-expanded="false" aria-controls="remind-expanded" hidden>View All 10 Songs ♡</button>
@@ -269,73 +265,29 @@
       <label class="music-check music-sound"><input id="music-sound" type="checkbox"> Sound effects</label>
     </section>
 
-    <section id="section-concerts" class="music-section-card concert-planner" aria-labelledby="concert-heading">
-      <h2 class="section-heading" id="concert-heading">OUR CONCERT BUCKET LIST</h2>
-      <p class="concert-subtitle">One day, front row with you. ♡</p>
-      <p class="section-intro-text">A little collection of artists we want to see, concerts we could go to, and memories we haven't made yet.</p>
-      <p class="concert-muted">Your wishlist, plans, and memories are saved in this browser and stay on this device.</p>
-      <p class="concert-status" id="concert-status" role="status"></p>
-
-      <details class="concert-panel" open>
-        <summary>Upcoming Concerts</summary>
-        <div class="concert-panel-body">
-          <p class="concert-muted">These listings are checked and added by hand. Confirm details with the venue before making plans.</p>
-          <form class="concert-fields" id="concert-filters" aria-label="Filter upcoming concerts">
-            <label>City <select name="city"><option value="">All cities</option></select></label>
-            <label>Artist <input name="artist" type="search" placeholder="Search by name"></label>
-            <label>Genre <select name="genre"><option value="">All genres</option></select></label>
-            <label>On or after <input name="date" type="date"></label>
-            <button class="concert-button" type="reset">Clear filters</button>
-          </form>
-          <div class="concert-card-grid" id="concert-events" aria-label="Upcoming concert results"></div>
-          <div class="concert-discovery">
-            <h3>Browse official venue calendars</h3>
-            <ul>
-              <li><a href="https://www.benchmarkintlarena.com/venue/benchmark-international-arena/" target="_blank" rel="noopener noreferrer">Tampa · Benchmark International Arena</a></li>
-              <li><a href="https://jannuslive.com/shows/calendar/" target="_blank" rel="noopener noreferrer">St. Petersburg · Jannus Live</a></li>
-              <li><a href="https://www.kiacenter.com/events/calendar" target="_blank" rel="noopener noreferrer">Orlando · Kia Center</a></li>
-              <li><a href="https://www.vanwezel.org/events" target="_blank" rel="noopener noreferrer">Sarasota · Van Wezel</a></li>
-            </ul>
-          </div>
-          <details class="concert-expired" id="concert-expired" hidden>
-            <summary>Past listings <span id="concert-expired-count"></span></summary>
-            <div class="concert-card-grid" id="concert-expired-list"></div>
-          </details>
+    <section id="section-concerts" class="music-section-card concert-listings" aria-labelledby="concert-heading">
+      <h2 class="section-heading" id="concert-heading">UPCOMING CONCERTS</h2>
+      <p class="section-intro-text">Find upcoming concerts and live music events near us.</p>
+      <div class="concert-panel">
+        <p class="concert-muted">These listings are checked and added by hand. Confirm details with the venue before making plans.</p>
+        <form class="concert-fields" id="concert-filters" aria-label="Filter upcoming concerts">
+          <label>City <select name="city"><option value="">All cities</option></select></label>
+          <label>Artist <input name="artist" type="search" placeholder="Search by name"></label>
+          <label>Genre <select name="genre"><option value="">All genres</option></select></label>
+          <label>On or after <input name="date" type="date"></label>
+          <button class="concert-button" type="reset">Clear filters</button>
+        </form>
+        <div class="concert-card-grid" id="concert-events" aria-label="Upcoming concert results"></div>
+        <div class="concert-discovery">
+          <h3>Browse official venue calendars</h3>
+          <ul>
+            <li><a href="https://www.benchmarkintlarena.com/venue/benchmark-international-arena/" target="_blank" rel="noopener noreferrer">Tampa · Benchmark International Arena</a></li>
+            <li><a href="https://jannuslive.com/shows/calendar/" target="_blank" rel="noopener noreferrer">St. Petersburg · Jannus Live</a></li>
+            <li><a href="https://www.kiacenter.com/events/calendar" target="_blank" rel="noopener noreferrer">Orlando · Kia Center</a></li>
+            <li><a href="https://www.vanwezel.org/events" target="_blank" rel="noopener noreferrer">Sarasota · Van Wezel</a></li>
+          </ul>
         </div>
-      </details>
-
-      <details class="concert-panel">
-        <summary>Artists We Want to See</summary>
-        <div class="concert-panel-body">
-          <form class="concert-fields" id="concert-artist-form">
-            <label>Artist <input name="artist" required maxlength="100"></label>
-            <label>Official artist or tour link <input name="url" type="url" placeholder="https://"></label>
-            <button type="submit" class="concert-button concert-primary">Add artist</button>
-          </form>
-          <div class="concert-card-grid" id="concert-artists"></div>
-        </div>
-      </details>
-
-      <details class="concert-panel" id="concert-plans">
-        <summary>Our Concert Plans</summary>
-        <div class="concert-panel-body">
-          <form class="concert-fields concert-plan-form" id="concert-plan-form" aria-label="Add or edit a concert plan">
-            <label>Artist <input name="artist" required maxlength="100"></label>
-            <label>Date <input name="date" type="date"></label>
-            <label>Venue <input name="venue" maxlength="150"></label>
-            <label>City <input name="city" maxlength="80"></label>
-            <label>Ticket link <input name="url" type="url" placeholder="https://"></label>
-            <label>Status <select name="status"><option value="wishlist">Wishlist</option><option value="planning">Planning</option><option value="attended">Attended</option></select></label>
-            <label class="concert-form-wide">Personal notes <textarea name="note" rows="2" maxlength="600"></textarea></label>
-            <label class="concert-form-wide" id="concert-memory-label" hidden>Memory after attending <textarea name="memory" rows="2" maxlength="1000"></textarea></label>
-            <div class="concert-actions concert-form-wide">
-              <button type="submit" class="concert-button concert-primary" id="concert-plan-save">Add concert</button>
-              <button type="button" class="concert-button" id="concert-plan-cancel" hidden>Cancel edit</button>
-            </div>
-          </form>
-          <div id="concert-plan-list"></div>
-        </div>
-      </details>
+      </div>
     </section>
   </div>
 
@@ -386,6 +338,5 @@
   <script src="songs-events.js" defer></script>
   <script src="songs-concerts.js" defer></script>
 
-  <footer class="site-signature"><p>Made with love, by Emma ♡</p><p>For Dom. Always.</p></footer>
 </body>
 </html>

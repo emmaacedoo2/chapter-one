@@ -6,7 +6,7 @@
 .page-container {
   max-width: 860px;
   margin: 0 auto;
-  padding: 3.5rem 1.25rem 7rem;
+  padding: 3.5rem 1.25rem 2.5rem;
   position: relative;
 }
 
@@ -511,6 +511,7 @@
 .remind-songs-container {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  align-items: start;
   gap: 1rem;
 }
 #remind-songs-list, #remind-more-songs, #remind-expanded:not([hidden]) { display: contents; }
@@ -580,7 +581,6 @@
 }
 .remind-song-quote {
   position: relative;
-  flex: 1;
   margin: 0;
   padding: .8rem .75rem;
   background: linear-gradient(155deg, #f7e8ec, #fcf0ee);
@@ -605,17 +605,24 @@
   text-decoration: underline;
 }
 .remind-preview { border-top: 1px solid #e3c5ce; }
-.remind-preview summary { padding-block: .65rem; cursor: pointer; font-size: .88rem; color: var(--remind-wine); }
-.remind-spotify-embed { display: block; max-width: 100%; border: 0; border-radius: .55rem; }
-.remind-signoff {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 1.15rem .5rem .2rem;
-}
-.remind-signoff .section-intro-text { max-width: 36rem; margin: 0 auto .65rem; }
-#remind-closing {
+.remind-preview summary {
+  padding-block: .65rem;
+  cursor: pointer;
+  font-size: .88rem;
+  font-weight: 700;
   color: var(--remind-wine);
-  font: italic 1.12rem/1.5 Georgia, serif;
+}
+.remind-spotify-embed {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+  border-radius: .55rem;
+}
+@media (max-width: 360px) {
+  #section-remind { padding-inline: .5rem; }
+  .remind-preview { margin-inline: -.65rem; }
+  .remind-preview summary { padding-inline: .65rem; }
 }
 #remind-toggle {
   display: block;

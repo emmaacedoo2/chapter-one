@@ -52,7 +52,6 @@ const MusicApp = {
       "artwork": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e020f588c6bdb28000656d084bf",
       "spotifyTrackId": "0UYnhUfnUj5adChuAXvLUB",
       "spotifyUrl": "https://open.spotify.com/track/0UYnhUfnUj5adChuAXvLUB",
-      "previewTrackId": "21IYMdzTrzSe191Cy5eMap",
       "appleUrl": "https://music.apple.com/us/album/sailor-song-single/1770187509",
       "youtubeUrl": "https://www.youtube.com/watch?v=1lrFsXkT_rM"
     },
@@ -265,6 +264,12 @@ const MusicApp = {
     const toggle = document.getElementById('remind-toggle');
     toggle.addEventListener('click', () => {
       expanded.hidden = !expanded.hidden;
+      if (expanded.hidden) {
+        for (const player of expanded.querySelectorAll('.remind-preview[open]')) {
+          player.open = false;
+          player.querySelector('iframe')?.remove();
+        }
+      }
       this.updateRemindToggle(this.getRemindSongs().length);
       const target = expanded.hidden ? toggle : expanded.querySelector('h3');
       if (target) {
@@ -370,9 +375,6 @@ const MusicApp = {
     toggle.hidden = total <= 3;
     toggle.setAttribute('aria-expanded', String(!expanded.hidden));
     toggle.textContent = expanded.hidden ? 'View All ' + total + ' Songs ♡' : 'Show Less ♡';
-    document.getElementById('remind-closing').textContent = total === 10
-      ? 'Ten different songs, ten different reasons, but always the same person. You. ♡'
-      : total + ' different songs, ' + total + ' different reasons, but always the same person. You. ♡';
   },
 
   renderRemindSongs() {
@@ -383,6 +385,7 @@ const MusicApp = {
       return el;
     };
     const songs = this.getRemindSongs();
+    let activePlayer;
     const cards = songs.map(song => {
       const card = create('article', '', 'remind-song-card');
       const cover = create('div', '', 'remind-cover');
@@ -427,26 +430,32 @@ const MusicApp = {
       }
       if (links.children.length) card.append(links);
 
-      // Keep the existing Sailor Song player and previews for saved tracks, loaded on demand.
-      const previewId = song.previewTrackId || (!this.initialRemindSongs.includes(song) && track);
-      if (/^[a-zA-Z0-9]{22}$/.test(previewId)) {
-        const preview = create('details', '', 'remind-preview');
-        preview.append(create('summary', 'Spotify preview'));
-        preview.addEventListener('toggle', () => {
-          if (!preview.open) {
-            preview.querySelector('iframe')?.remove();
+      if (track) {
+        const player = create('details', '', 'remind-preview');
+        player.append(create('summary', 'Listen here ♡'));
+        player.addEventListener('toggle', () => {
+          if (!player.open) {
+            player.querySelector('iframe')?.remove();
+            if (activePlayer === player) activePlayer = undefined;
             return;
           }
-          if (preview.querySelector('iframe')) return;
+          if (activePlayer && activePlayer !== player) {
+            activePlayer.open = false;
+            activePlayer.querySelector('iframe')?.remove();
+          }
+          activePlayer = player;
+          if (player.querySelector('iframe')) return;
+
           const frame = create('iframe', '', 'remind-spotify-embed');
-          frame.title = 'Spotify preview: ' + song.title;
-          frame.src = 'https://open.spotify.com/embed/track/' + previewId + '?theme=0';
+          frame.title = 'Spotify player: ' + song.title;
+          frame.src = 'https://open.spotify.com/embed/track/' + track;
           frame.width = '100%';
           frame.height = '152';
           frame.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
-          preview.append(frame);
+          frame.allowFullscreen = true;
+          player.append(frame);
         });
-        card.append(preview);
+        card.append(player);
       }
       return card;
     });
