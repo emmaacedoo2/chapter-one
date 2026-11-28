@@ -170,69 +170,6 @@
   border-radius: 12px;
 }
 
-/* Remind Me Of You */
-.remind-songs-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.remind-song-card {
-  background: #FAF8F5;
-  border: 1.5px solid #242126;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 14px rgba(36, 33, 38, 0.05);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.remind-song-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(36, 33, 38, 0.09);
-}
-
-.remind-song-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.8rem;
-}
-
-.song-note-badge {
-  font-size: 0.7rem;
-  color: var(--accent-red);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 600;
-  display: block;
-  margin-bottom: 0.2rem;
-}
-
-.remind-song-title {
-  font-family: var(--font-serif);
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-.remind-song-artist {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-.remind-song-quote {
-  font-family: var(--font-sans);
-  font-size: 0.92rem;
-  font-style: italic;
-  line-height: 1.65;
-  color: #3b3b48;
-  padding: 0.6rem 0.9rem;
-  border-left: 2px solid var(--accent-red);
-  background: #fafafc;
-  border-radius: 0 6px 6px 0;
-  margin-bottom: 1rem;
-}
-
 /* ==========================================================================
    Interactive Vinyl Records
    ========================================================================== */
@@ -433,362 +370,6 @@
   }
 }
 
-/* ==========================================================================
-   Music Games
-   ========================================================================== */
-.game-tabs-nav {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.8rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  padding-bottom: 0.8rem;
-}
-
-.game-tab-btn {
-  background: transparent;
-  border: 1px solid transparent;
-  padding: 0.4rem 0.9rem;
-  border-radius: 18px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.game-tab-btn:hover {
-  background: rgba(255, 255, 255, 0.8);
-  color: var(--text-main);
-}
-
-.game-tab-btn.active {
-  background: #ffffff;
-  color: var(--accent-red);
-  border-color: rgba(168, 29, 29, 0.25);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.game-view-panel {
-  background: #FAF8F5;
-  border: 1.5px solid #242126;
-  border-radius: 14px;
-  padding: 1.8rem;
-  box-shadow: 0 5px 16px rgba(36, 33, 38, 0.05);
-}
-
-.game-status-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.4rem;
-}
-
-.game-score-badge {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--accent-red);
-  background: rgba(168, 29, 29, 0.08);
-  padding: 0.25rem 0.7rem;
-  border-radius: 14px;
-}
-
-.game-question-box {
-  margin-bottom: 1.5rem;
-}
-
-.game-clue-label {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
-  display: block;
-  margin-bottom: 0.3rem;
-}
-
-.game-clue-body {
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
-  color: var(--text-main);
-  line-height: 1.4;
-  margin-bottom: 0.4rem;
-}
-
-.game-sub-clue {
-  font-size: 0.82rem;
-  color: #727282;
-}
-
-.game-choices-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.game-choice-btn {
-  background: #f8f8fb;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
-  color: var(--text-main);
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.2s ease;
-}
-
-.game-choice-btn:hover:not(:disabled) {
-  background: #ffffff;
-  border-color: var(--accent-red);
-  transform: translateY(-1px);
-}
-
-.game-choice-btn.correct-choice {
-  background: rgba(34, 197, 94, 0.15) !important;
-  border-color: #22c55e !important;
-  color: #15803d !important;
-  font-weight: 600;
-}
-
-.game-choice-btn.wrong-choice {
-  background: rgba(239, 68, 68, 0.15) !important;
-  border-color: #ef4444 !important;
-  color: #b91c1c !important;
-}
-
-.game-feedback-text {
-  min-height: 24px;
-  font-size: 0.82rem;
-  font-weight: 600;
-}
-
-.correct-text {
-  color: #16a34a;
-}
-
-.incorrect-text {
-  color: #dc2626;
-}
-
-/* This or That Matchup */
-.this-or-that-grid {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 1.2rem;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.versus-badge {
-  font-family: var(--font-serif);
-  font-size: 1.1rem;
-  font-style: italic;
-  color: var(--accent-red);
-  font-weight: 700;
-}
-
-.song-choice-card {
-  background: #FAF8F5;
-  border: 1.5px solid #242126;
-  border-radius: 12px;
-  padding: 1.5rem 1.2rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.song-choice-card:hover {
-  background: #ffffff;
-  border-color: var(--accent-red);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(168, 29, 29, 0.1);
-}
-
-.song-card-title {
-  font-family: var(--font-serif);
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: 0.3rem;
-}
-
-.song-card-artist {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  margin-bottom: 0.8rem;
-}
-
-.btn-vote-pill {
-  background: #141419;
-  color: #ffffff;
-  border: none;
-  font-size: 0.75rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 14px;
-  cursor: pointer;
-}
-
-/* Dom vs Emma Battle */
-.battle-score-row {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 1.5rem;
-  padding: 0.8rem;
-  background: #f8f8fb;
-  border-radius: 8px;
-}
-
-.battle-team-score strong {
-  font-size: 1.2rem;
-  color: var(--accent-red);
-}
-
-/* ==========================================================================
-   Music Wrapped Section
-   ========================================================================== */
-/* ==========================================================================
-   Concerts Near Us — Tampa
-   ========================================================================== */
-.concert-filter-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.concert-select {
-  padding: 0.35rem 0.8rem;
-  border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  font-size: 0.78rem;
-  background: #ffffff;
-  color: var(--text-main);
-}
-
-.concerts-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.concert-card {
-  background: #FAF8F5;
-  border: 1.5px solid #242126;
-  border-radius: 12px;
-  padding: 1.2rem;
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.concert-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(168, 29, 29, 0.3);
-}
-
-.concert-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.4rem;
-}
-
-.concert-badge {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--accent-red);
-  background: rgba(168, 29, 29, 0.08);
-  padding: 0.15rem 0.5rem;
-  border-radius: 10px;
-}
-
-.concert-new-indicator {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: #ffffff;
-  background: var(--accent-red);
-  padding: 0.15rem 0.45rem;
-  border-radius: 10px;
-}
-
-.concert-artist-name {
-  font-family: var(--font-serif);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: 0.3rem;
-}
-
-.concert-venue-text {
-  font-size: 0.8rem;
-  color: #666675;
-  margin-bottom: 0.2rem;
-}
-
-.concert-date-text {
-  font-size: 0.78rem;
-  color: #444452;
-  font-weight: 500;
-  margin-bottom: 0.9rem;
-}
-
-.concert-actions-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.btn-ticket-link {
-  font-size: 0.75rem;
-  color: var(--accent-red);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.btn-wishlist-add {
-  background: #f8f8fb;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 0.25rem 0.6rem;
-  border-radius: 12px;
-  font-size: 0.7rem;
-  cursor: pointer;
-}
-
-.btn-wishlist-add:hover {
-  background: #ffffff;
-  border-color: var(--accent-red);
-  color: var(--accent-red);
-}
-
-.ticketmaster-info-box {
-  margin-top: 1.5rem;
-  padding: 0.9rem 1.1rem;
-  background: #fafafc;
-  border: 1px dashed rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
-  font-size: 0.76rem;
-  color: #727282;
-  line-height: 1.6;
-}
-
-/* Bucket List & Attended */
-.bucket-add-form {
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.8rem;
-}
-
-.bucket-input {
-  flex: 1;
-  min-width: 180px;
-  padding: 0.5rem 0.8rem;
-  border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  font-size: 0.8rem;
-}
-
 .btn-add-bucket {
   background: #141419;
   color: #ffffff;
@@ -802,135 +383,6 @@
 
 .btn-add-bucket:hover {
   background: var(--accent-red);
-}
-
-.bucket-columns-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
-.bucket-subheading {
-  font-family: var(--font-serif);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: 0.9rem;
-}
-
-.bucket-cards-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-.bucket-card {
-  background: #FAF8F5;
-  border: 1.5px solid #8B1E2D;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 4px 14px rgba(36, 33, 38, 0.04);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.bucket-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(36, 33, 38, 0.08);
-}
-
-.bucket-columns-grid > div:nth-child(2) .bucket-card {
-  border-color: #242126;
-}
-
-.bucket-card-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.3rem;
-}
-
-.bucket-artist-title {
-  font-family: var(--font-serif);
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-.btn-delete-item {
-  background: transparent;
-  border: none;
-  color: #9999a8;
-  cursor: pointer;
-  padding: 0 0.4rem;
-}
-
-.btn-delete-item:hover {
-  color: var(--accent-red);
-}
-
-.bucket-venue {
-  font-size: 0.78rem;
-  color: #666675;
-  margin-bottom: 0.3rem;
-}
-
-.bucket-note {
-  font-size: 0.78rem;
-  color: #3b3b48;
-  font-style: italic;
-  margin-bottom: 0.5rem;
-}
-
-.bucket-card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.bucket-added-date {
-  font-size: 0.7rem;
-  color: #888898;
-}
-
-.btn-mark-attended {
-  background: rgba(30, 130, 60, 0.1);
-  color: #1e823c;
-  border: 1px solid rgba(30, 130, 60, 0.2);
-  padding: 0.25rem 0.6rem;
-  border-radius: 12px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.btn-mark-attended:hover {
-  background: #1e823c;
-  color: #ffffff;
-}
-
-.attended-memory-card {
-  background: #fbfdfc;
-  border-color: rgba(30, 130, 60, 0.2);
-}
-
-.attended-photo-placeholder {
-  height: 90px;
-  background: #f2f5f3;
-  border: 1px dashed rgba(30, 130, 60, 0.3);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0.6rem 0;
-  font-size: 0.7rem;
-  color: #607d68;
-}
-
-.bucket-attended-date {
-  font-size: 0.7rem;
-  color: #1e823c;
-  font-weight: 500;
 }
 
 /* Modals */
@@ -1030,78 +482,290 @@
   .active-artist-spotlight {
     padding: 1.2rem;
   }
-  .game-choices-grid {
-    grid-template-columns: 1fr;
-  }
-  .this-or-that-grid {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
-  }
-  .versus-badge {
-    margin: 0.4rem 0;
-  }
-  .concerts-grid {
-    grid-template-columns: 1fr;
-  }
-  .bucket-columns-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
-.bucket-add-form label { display: grid; gap: .25rem; font-size: .85rem; }
-.bucket-card button { margin: .4rem .4rem 0 0; }
-
-.wrapped-carousel-box {
-  background: #FAF8F5;
-  border: 1.5px solid #8B1E2D;
-  border-radius: 14px;
-  padding: 2.5rem 2rem;
-  text-align: center;
-  position: relative;
-  min-height: 280px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-shadow: 0 8px 30px rgba(168, 29, 29, 0.05);
+/* Songs that remind me of you */
+#section-remind {
+  --remind-wine: #751d39;
+  --remind-paper: #fffbf6;
+  padding: clamp(1rem, 4vw, 2.2rem);
+  background: radial-gradient(ellipse at top right, #f6e1e7, #faf6ee 60%);
+  border-color: #9b576c;
 }
-
-.wrapped-slide {
-  display: none;
-  animation: heroFadeIn 0.5s ease-out;
-}
-
-.wrapped-slide.active {
-  display: block;
-}
-
-.wrapped-tag {
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent-red);
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.wrapped-highlight-title {
-  font-family: var(--font-serif);
-  font-size: clamp(1.6rem, 3.5vw, 2.3rem);
-  font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: 0.8rem;
-}
-
-.wrapped-desc-text {
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  color: #555562;
-  max-width: 520px;
-  margin: 0 auto;
-}
-
-.wrapped-nav-row {
+#section-remind:hover { transform: none; }
+.remind-heading-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1.8rem;
+  flex-wrap: wrap;
+  gap: .4rem 1rem;
+  margin-bottom: .75rem;
+}
+.remind-heading-row .section-badge-tag { margin: 0; }
+#remind-heading {
+  font-size: clamp(1.55rem, 4.5vw, 2.5rem);
+  line-height: 1.05;
+  letter-spacing: -.035em;
+}
+.remind-intro { font-size: 1rem; color: var(--remind-wine); }
+.remind-songs-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+#remind-songs-list, #remind-more-songs, #remind-expanded:not([hidden]) { display: contents; }
+#section-remind [hidden] { display: none !important; }
+.remind-song-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  padding: .85rem;
+  border: 1px solid #e3c5ce;
+  border-radius: .8rem;
+  background: var(--remind-paper);
+  box-shadow: 0 4px 12px #5423320e;
+  overflow-wrap: anywhere;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+@media (hover: hover) {
+  .remind-song-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 17px #5423321a;
+  }
+}
+.remind-cover {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: .35rem;
+  background: radial-gradient(ellipse at 20% 15%, #8f3c56, #260d1a 85%);
+  color: #fff0e6;
+  text-align: center;
+}
+.remind-cover-caption {
+  font-family: Georgia, serif;
+  padding: .9rem;
+  border-block: 1px solid #ecc6c580;
+  max-width: 84%;
+}
+.remind-artwork {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #260d1a;
+}
+.remind-song-title {
+  color: #231720;
+  font: 750 clamp(1.08rem, 2.3vw, 1.3rem)/1.2 var(--font-serif);
+  scroll-margin-block: 5rem 1rem;
+}
+.remind-song-artist {
+  margin-top: .35rem;
+  color: var(--remind-wine);
+  font-size: .9rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+.remind-song-release {
+  margin-top: .3rem;
+  color: #5b4b53;
+  font-size: .82rem;
+  line-height: 1.35;
+}
+.remind-song-quote {
+  position: relative;
+  flex: 1;
+  margin: 0;
+  padding: .8rem .75rem;
+  background: linear-gradient(155deg, #f7e8ec, #fcf0ee);
+  border-radius: .2rem .35rem .35rem .2rem;
+  border-inline-start: 2px solid #ad6980;
+  color: #442738;
+  font: italic 1rem/1.55 Georgia, serif;
+}
+.remind-music-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem .6rem;
+}
+#section-remind :is(.btn-action-outline, .btn-spotify-pill, .remind-alt-link, summary) { min-height: 44px; }
+#section-remind :is(.btn-action-outline, .btn-spotify-pill, .remind-alt-link) { font-size: .87rem; }
+.remind-alt-link {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: .2rem;
+  color: var(--remind-wine);
+  text-decoration: underline;
+}
+.remind-preview { border-top: 1px solid #e3c5ce; }
+.remind-preview summary { padding-block: .65rem; cursor: pointer; font-size: .88rem; color: var(--remind-wine); }
+.remind-spotify-embed { display: block; max-width: 100%; border: 0; border-radius: .55rem; }
+.remind-signoff {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 1.15rem .5rem .2rem;
+}
+.remind-signoff .section-intro-text { max-width: 36rem; margin: 0 auto .65rem; }
+#remind-closing {
+  color: var(--remind-wine);
+  font: italic 1.12rem/1.5 Georgia, serif;
+}
+#remind-toggle {
+  display: block;
+  margin: 1.15rem auto 0;
+  background: var(--remind-wine);
+  border-color: var(--remind-wine);
+  color: #fff9f1;
+  font-weight: 700;
+}
+#remind-toggle:hover { background: #3e1b2c; }
+#section-remind :focus-visible { outline: 2px solid var(--remind-wine); outline-offset: 3px; }
+@media (min-width: 560px) {
+  .remind-songs-container { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 760px) {
+  .remind-songs-container { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #section-remind, .remind-song-card { transition: none; }
+  .remind-song-card:hover { transform: none; }
+}
+
+#remind-song-modal {
+  margin: auto;
+  max-width: min(480px, calc(100% - 2rem));
+  max-height: calc(100% - 2rem);
+  overflow: auto;
+}
+#remind-song-modal::backdrop { background: rgb(24 11 19 / 65%); }
+#song-memory-form label { display: grid; gap: .25rem; margin: .65rem 0; }
+#song-memory-form input, #song-memory-form textarea { font-size: 1rem; min-height: 44px; }
+#song-memory-form summary { padding-block: .75rem; cursor: pointer; }
+
+.music-battle {
+  --music-cream: #fff0e4;
+  --music-pink: #ffb9d0;
+  --music-border: #99576e;
+  color: var(--music-cream);
+  background: radial-gradient(ellipse at 95% 5%, #60223b 0%, #301320 36%, #180d15 72%);
+  border-color: #743349;
+  overflow-wrap: anywhere;
+}
+.music-battle:hover { transform: none; }
+.music-battle [hidden] { display: none !important; }
+.music-battle-header { position: relative; padding-inline-end: clamp(42px, 13vw, 120px); }
+.music-battle-header h2 {
+  color: var(--music-cream);
+  font: 800 clamp(2rem, 5vw, 3.6rem)/.96 "Bricolage Grotesque", sans-serif;
+  letter-spacing: -.04em;
+  margin: 0 0 .8rem;
+}
+.music-battle p { line-height: 1.5; }
+.music-disc {
+  width: clamp(48px, 15vw, 110px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #180d15 0 5%, #ffb9d0 6% 19%, transparent 20%),
+    repeating-radial-gradient(circle, #110a10 0 4px, #743349 5px, #211219 6px 8px);
+  box-shadow: 0 0 0 1px #99576e, 0 0 28px #ffb9d035;
+}
+.music-battle-header .music-disc { position: absolute; inset: .15rem 0 auto auto; }
+.music-scoreboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: .55rem;
+  margin: 1.25rem 0;
+  text-align: center;
+  font: 700 clamp(.88rem, 2.7vw, 1.25rem) "Space Grotesk", sans-serif;
+}
+.music-scoreboard span:not(.music-versus) {
+  padding: .8rem .3rem;
+  border: 1px solid currentColor;
+  border-radius: 10px;
+  background: #170d15;
+}
+.music-scoreboard span:only-child { grid-column: 1 / -1; }
+.music-dom { color: #b8d6ff; }
+.music-emma, .music-versus { color: var(--music-pink); }
+.music-mode-grid, .music-settings, .music-answers {
+  display: grid;
+  gap: .7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.music-battle :is(button, select, input:not([type=checkbox])) {
+  color: var(--music-cream);
+  background: #2e1725;
+  border: 1px solid var(--music-border);
+  border-radius: 8px;
+  font: inherit;
+  min-height: 44px;
+  padding: .55rem .75rem;
+}
+.music-battle button { cursor: pointer; }
+.music-battle button:disabled { cursor: default; }
+.music-battle button:disabled:not(.music-correct, .music-incorrect) { opacity: .65; }
+.music-battle button:not(:disabled):hover { border-color: var(--music-pink); }
+.music-battle :focus-visible, #remind-song-modal :focus-visible { outline: 3px solid #e277a1; outline-offset: 3px; }
+.music-battle a { color: #ffc6d9; text-decoration: underline; }
+.music-battle .music-mode { text-align: left; position: relative; padding: .85rem .7rem .85rem 1.1rem; min-width: 0; }
+.music-mode::before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 15px;
+  top: .95rem;
+  left: .45rem;
+  background: #e99ab6;
+  box-shadow: 3px 4px #99576e;
+}
+.music-mode strong, .music-mode span { display: block; }
+.music-mode span { font-size: .875rem; margin-top: .25rem; color: #f6d5df; }
+.music-battle .music-mode[aria-pressed=true] { border-color: var(--music-pink); background: #632842; }
+.music-settings {
+  padding: .9rem;
+  margin-block: 1rem;
+  background: #170d1580;
+  border: 1px solid #754056;
+  border-radius: 10px;
+}
+.music-settings label { display: grid; gap: .35rem; min-width: 0; }
+.music-settings :is(input:not([type=checkbox]), select) { width: 100%; }
+.music-wide, #music-pool { grid-column: 1 / -1; }
+.music-battle .music-check { display: flex; align-items: center; gap: .55rem; min-height: 44px; }
+.music-check input { width: 1.2rem; height: 1.2rem; accent-color: #efaac4; }
+.music-battle .music-primary { background: var(--music-pink); border-color: var(--music-pink); color: #301020; font-weight: 800; }
+.music-battle summary { cursor: pointer; padding: .7rem 0; min-height: 44px; }
+.music-battle details { border-top: 1px solid #754056; }
+.music-battle :is(ol, ul) { padding-left: 1.35rem; }
+.music-stage { background: #1b0f19; border: 1px solid #754056; border-radius: 12px; padding: clamp(.8rem, 4vw, 2rem); }
+.music-game-mode { color: #f4acc8; font-weight: 700; margin-bottom: .45rem; }
+.music-round-meta, .music-result-actions { display: flex; align-items: center; gap: .4rem 1rem; flex-wrap: wrap; }
+.music-stage progress { margin-top: .7rem; width: 100%; height: .65rem; accent-color: #f1a6c2; }
+.music-stage h3 { margin: .85rem 0; font: 700 clamp(1.2rem, 4vw, 2rem)/1.25 "Bricolage Grotesque", sans-serif; }
+.music-battle .music-answer { text-align: left; min-height: 54px; }
+.music-battle .music-correct { background: #174032; border-color: #9bf4bf; }
+.music-battle .music-incorrect { background: #6d2441; border-color: #ffaac5; }
+.music-battle .music-quiet { background: transparent; margin-top: .7rem; }
+.music-finish { text-align: center; }
+.music-finish[data-winner=dom] { background: radial-gradient(ellipse at top, #233c60, #160e18 80%); }
+.music-finish[data-winner=emma] { background: radial-gradient(ellipse at top, #702747, #160e18 80%); }
+.music-finish .music-disc { margin: 1rem auto; animation: music-spin .8s ease-out; }
+.music-result-actions { justify-content: center; }
+.music-pop { animation: music-score-pop .28s ease; }
+@keyframes music-spin { from { transform: rotate(-100deg) scale(.7); } to { transform: rotate(0); } }
+@keyframes music-score-pop { 50% { transform: scale(1.055); } }
+@media (max-width: 520px) {
+  .music-battle { padding: 1rem; }
+  .music-answers, .music-settings { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .music-battle *, #section-remind *, #section-concerts * { animation: none !important; transition: none !important; }
 }
