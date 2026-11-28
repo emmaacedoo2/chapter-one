@@ -71,9 +71,12 @@
         <button type="button" data-filter="todo" aria-pressed="false">To Do</button>
         <button type="button" data-filter="completed" aria-pressed="false">Completed</button>
       </div>
+      <label class="bucket-category-filter">Category
+        <select id="bucket-filter-category"><option value="">All categories</option></select>
+      </label>
 
       <details class="bucket-add" id="bucket-add">
-        <summary>Add an adventure +</summary>
+        <summary id="bucket-form-toggle">Add an adventure +</summary>
         <form id="bucket-form">
           <label for="bucket-title">Experience
             <input id="bucket-title" name="title" required maxlength="160">
@@ -86,9 +89,12 @@
               <option>Fun &amp; Random</option>
               <option>Everyday Moments</option>
               <option>Big Dreams</option>
+              <option>Sports</option>
+              <option>Music</option>
             </select>
           </label>
-          <button type="submit">Add adventure</button>
+          <button type="submit" id="bucket-submit">Add adventure</button>
+          <button type="button" id="bucket-cancel" hidden>Cancel edit</button>
         </form>
       </details>
 
@@ -97,17 +103,33 @@
       <p class="bucket-empty" id="bucket-empty">Add an adventure to start your list.</p>
       <template id="bucket-card">
         <li class="bucket-card">
-          <div class="bucket-card-top">
-            <span class="bucket-category"></span>
-            <span class="bucket-stamp" hidden>We did it!</span>
+          <span class="bucket-illustration" aria-hidden="true"></span>
+          <div class="bucket-card-copy">
+            <div class="bucket-card-top">
+              <span class="bucket-category"></span>
+              <span class="bucket-stamp" hidden>We did it!</span>
+            </div>
+            <h3></h3>
+            <div class="bucket-card-controls">
+              <label class="bucket-check"><input type="checkbox"> <span></span></label>
+              <button type="button" class="bucket-edit">Edit</button>
+              <button type="button" class="bucket-remove">Delete</button>
+            </div>
           </div>
-          <h3></h3>
-          <label class="bucket-check"><input type="checkbox"> <span></span></label>
         </li>
       </template>
     </section>
+    <section class="bucket-inspiration" aria-labelledby="bucket-inspiration-title">
+      <div class="bucket-inspiration-heading">
+        <h2 id="bucket-inspiration-title">A little inspiration</h2>
+        <button type="button" id="bucket-shuffle">Shuffle ideas</button>
+      </div>
+      <p class="bucket-feedback" id="bucket-idea-feedback" role="status"></p>
+      <ul class="bucket-ideas" id="bucket-ideas"></ul>
+    </section>
   </main>
 
+  <script src="our-bucket-ideas.js" defer></script>
   <script src="our-bucket-list.js" defer></script>
   <footer class="site-signature"><p>Made with love, by Emma ♡</p><p>For Dom. Always.</p></footer>
 </body>
